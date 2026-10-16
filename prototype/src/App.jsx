@@ -1,22 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react'
-import HomeA from './homes/HomeA.jsx'
-import HomeB from './homes/HomeB.jsx'
-import HomeC from './homes/HomeC.jsx'
+import HomeScreen from './screens/HomeScreen.jsx'
+import CategoryScreen from './screens/CategoryScreen.jsx'
+import { savedSearches as seedSaved } from './data.js'
 import { BottomNav, Icon } from './ui.jsx'
 
-const VARIANTS = [
-  { id: 'a', name: 'search + browse', Comp: HomeA,
-    pitch: 'Search on top, six section tiles, your saved searches, then a grid of fresh listings.',
-    plus: 'Familiar and balanced: works for "I know what I want" and "just looking".',
-    minus: 'The safest option, so the least memorable.' },
-  { id: 'b', name: 'local feed', Comp: HomeB,
-    pitch: 'Home is a newest-first feed of listings near you. Chips filter it in place.',
-    plus: 'Zero taps to real listings. The chips work, so try them.',
-    minus: 'Can drift toward Facebook Marketplace. Strictly chronological keeps it craigslist.' },
-  { id: 'c', name: 'the board', Comp: HomeC,
-    pitch: 'The classic craigslist homepage, rebuilt as section cards with demand-ordered subcategories and fresh thumbnails.',
-    plus: 'The most on-brand and distinctive. A strong story for the deck.',
-    minus: 'More scrolling before a listing, and it needs craft to avoid looking busy.' },
+const SCREENS = [
+  { id: 'a', name: 'home', status: 'built', note: 'Search, six section tiles, your saved searches, fresh listings near you.' },
+  { id: 'b', name: 'category → list', status: 'built', note: 'Subcategory tabs, filter chips in plain sight, a price sheet with the typical price, dealer reposts grouped, save search with alerts on.' },
+  { id: 'c', name: 'search', status: 'next', note: 'Typeahead with results by category, recent and saved searches.' },
+  { id: 'd', name: 'listing detail', status: 'next', note: 'Swipeable photos, key specs, trust signals, a one-tap reply sheet.' },
 ]
 
 const store = {
@@ -24,24 +16,14 @@ const store = {
   set(k, v) { try { localStorage.setItem(k, v) } catch { /* storage blocked */ } },
 }
 
-function initialVariant() {
-  const h = location.hash.replace('#', '')
-  if (VARIANTS.some(v => v.id === h)) return h
-  const s = store.get('cl-home')
-  return VARIANTS.some(v => v.id === s) ? s : 'a'
-}
-
 export default function App() {
-  const [variant, setVariant] = useState(initialVariant)
+  // route: null = home, or { section, sub } for a category list
+  const [route, setRoute] = useState(() => (location.hash === '#b' ? { section: 'sale', sub: 'all' } : null))
+  const [saved, setSaved] = useState(seedSaved)
   const [theme, setTheme] = useState(() => store.get('cl-theme') || 'system')
   const [toastMsg, setToastMsg] = useState(null)
   const screenRef = useRef(null)
   const timer = useRef()
-
-  useEffect(() => {
-    store.set('cl-home', variant)
-    screenRef.current?.scrollTo({ top: 0 })
-  }, [variant])
 
   useEffect(() => {
     const root = document.documentElement
@@ -50,43 +32,44 @@ export default function App() {
     store.set('cl-theme', theme)
   }, [theme])
 
+  // Android back gesture / browser back returns to home.
   useEffect(() => {
-    const onKey = e => {
-      if (e.target.closest?.('input, textarea')) return
-      const v = VARIANTS[Number(e.key) - 1]
-      if (v) setVariant(v.id)
-    }
-    addEventListener('keydown', onKey)
-    return () => removeEventListener('keydown', onKey)
+    const onPop = () => setRoute(null)
+    addEventListener('popstate', onPop)
+    return () => removeEventListener('popstate', onPop)
   }, [])
+
+  useEffect(() => { screenRef.current?.scrollTo({ top: 0 }) }, [route])
 
   const toast = msg => {
     clearTimeout(timer.current)
     setToastMsg(msg)
-    timer.current = setTimeout(() => setToastMsg(null), 2200)
+    timer.current = setTimeout(() => setToastMsg(null), 2400)
   }
+  const openCategory = (section, sub = 'all') => {
+    try { history.pushState({ cat: section }, '') } catch { /* sandboxed */ }
+    setRoute({ section, sub })
+  }
+  const goHome = () => (history.state?.cat ? history.back() : setRoute(null))
+  const addSaved = entry => setSaved(prev => [{ id: 'u' + Date.now(), fresh: 0, section: route.section, sub: route.sub === 'all' ? null : route.sub, ...entry }, ...prev])
 
-  const current = VARIANTS.find(v => v.id === variant)
-  const Home = current.Comp
+  const current = route ? 'b' : 'a'
 
   return (
     <div className="stage">
       <aside className="panel">
         <p className="eyebrow">craigslist redesign · prototype</p>
-        <h1>home directions</h1>
-        <p className="panel-lede">Three takes on screen (a), with the same Minneapolis data. Switch between them, or press 1, 2 or 3.</p>
-        <div className="options" role="radiogroup" aria-label="home direction">
-          {VARIANTS.map((v, i) => (
-            <button key={v.id} type="button" role="radio" aria-checked={v.id === variant}
-              className={'option' + (v.id === variant ? ' option-on' : '')} onClick={() => setVariant(v.id)}>
-              <span className="option-key">{String.fromCharCode(65 + i)}</span>
+        <h1>minneapolis, reimagined</h1>
+        <p className="panel-lede">An Android prototype of the four screens in the brief, with mock Minneapolis data. Tap around in the phone, or jump to a screen here.</p>
+        <div className="options">
+          {SCREENS.map(s => (
+            <button key={s.id} type="button" disabled={s.status !== 'built'}
+              className={'option' + (s.id === current ? ' option-on' : '')}
+              onClick={() => (s.id === 'a' ? setRoute(null) : s.id === 'b' ? openCategory('sale') : null)}>
+              <span className="option-key">{s.id}</span>
               <span className="option-body">
-                <strong>{v.name}</strong>
-                <span>{v.pitch}</span>
-                {v.id === variant && <>
-                  <span className="pro">+ {v.plus}</span>
-                  <span className="con">− {v.minus}</span>
-                </>}
+                <strong>{s.name}{s.status === 'next' && <em className="soon">next</em>}</strong>
+                <span>{s.note}</span>
               </span>
             </button>
           ))}
@@ -104,25 +87,13 @@ export default function App() {
 
       <div className="device">
         <div className="statusbar" aria-hidden="true"><span>9:41</span><span className="sb-icons">▲ ◢ ▮</span></div>
-        <main className="screen" ref={screenRef} key={variant}>
-          <Home toast={toast} />
+        <main className="screen" ref={screenRef}>
+          {route
+            ? <CategoryScreen key={route.section + route.sub} sectionId={route.section} initialSub={route.sub} onBack={goHome} toast={toast} onSaveSearch={addSaved} />
+            : <HomeScreen toast={toast} onOpen={openCategory} savedSearches={saved} />}
         </main>
-
-        <div className="switcher" role="radiogroup" aria-label="home direction">
-          {VARIANTS.map((v, i) => (
-            <button key={v.id} type="button" role="radio" aria-checked={v.id === variant}
-              className={v.id === variant ? 'on' : ''} onClick={() => { setVariant(v.id); toast(`${String.fromCharCode(65 + i)} · ${v.name}`) }}>
-              {String.fromCharCode(65 + i)}
-            </button>
-          ))}
-          <button type="button" className="sw-theme" aria-label="toggle theme"
-            onClick={() => setTheme(t => (t === 'dark' || (t === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)) ? 'light' : 'dark')}>
-            <Icon name="moon" size={16} />
-          </button>
-        </div>
-
         {toastMsg && <div className="snackbar" role="status">{toastMsg}</div>}
-        <BottomNav onTap={toast} />
+        <BottomNav onTap={toast} onHome={goHome} />
         <div className="gesture" aria-hidden="true" />
       </div>
     </div>

@@ -24,6 +24,15 @@ const P = {
   shelf: <><rect x="4" y="4" width="16" height="16" rx="1" /><path d="M12 4v16M4 12h16" /></>,
   camera: <><path d="M4 8h3.5L9 6h6l1.5 2H20v11H4z" /><circle cx="12" cy="13" r="3.3" /></>,
   sparkle: <path d="M12 3.5 13.8 10l6.7 2-6.7 2L12 20.5 10.2 14l-6.7-2 6.7-2z" />,
+  sofa: <><path d="M5 11V8a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v3" /><path d="M3.5 11.5a1.5 1.5 0 0 1 3 0V14h11v-2.5a1.5 1.5 0 0 1 3 0V17h-17zM5.5 17v2M18.5 17v2" /></>,
+  desk: <path d="M3.5 8h17M5 8v12M19 8v12M5 13h6v7M11 13V8" />,
+  back: <path d="M19 12H5m6-6-6 6 6 6" />,
+  close: <path d="M6 6l12 12M18 6 6 18" />,
+  sliders: <path d="M4 7h10m4 0h2M4 17h4m4 0h8M14 5v4M8 15v4" />,
+  grid: <><rect x="4" y="4" width="7" height="7" rx="1.5" /><rect x="13" y="4" width="7" height="7" rx="1.5" /><rect x="4" y="13" width="7" height="7" rx="1.5" /><rect x="13" y="13" width="7" height="7" rx="1.5" /></>,
+  list: <><rect x="4" y="5" width="5" height="5" rx="1" /><rect x="4" y="14" width="5" height="5" rx="1" /><path d="M12 6.5h8M12 9h5M12 15.5h8M12 18h5" /></>,
+  check: <path d="m5 12.5 4.5 4.5L19 7.5" />,
+  sort: <path d="M7 4v16m0 0-3-3m3 3 3-3M17 20V4m0 0-3 3m3-3 3 3" />,
   sun: <><circle cx="12" cy="12" r="4" /><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8" /></>,
   moon: <path d="M19.5 14.5A8 8 0 0 1 9.5 4.5a8 8 0 1 0 10 10z" />,
 }
@@ -95,7 +104,7 @@ export function Thumb({ listing, big }) {
   )
 }
 
-export function ListingCard({ listing, variant = 'grid', onTap }) {
+export function ListingCard({ listing, variant = 'grid', onTap, similar = 0 }) {
   return (
     <button type="button" className={'card card-' + variant} onClick={onTap}>
       <Thumb listing={listing} big={variant === 'hero'} />
@@ -106,8 +115,25 @@ export function ListingCard({ listing, variant = 'grid', onTap }) {
         </div>
         <span className="card-title">{listing.title}</span>
         <span className="card-meta">{listing.age} · {listing.hood} · {listing.mi} mi</span>
+        {listing.dealer && <span className="card-seller">dealer · {listing.seller}{similar > 0 && ` · +${similar} similar`}</span>}
       </div>
     </button>
+  )
+}
+
+// Material bottom sheet, scoped to the device frame.
+export function Sheet({ title, onClose, children, footer }) {
+  return (
+    <div className="sheet-layer">
+      <button type="button" className="scrim" aria-label="close" onClick={onClose} />
+      <div className="sheet" role="dialog" aria-label={title}>
+        <span className="sheet-handle" />
+        <div className="sheet-head"><h2>{title}</h2>
+          <button type="button" className="icon-btn" aria-label="close" onClick={onClose}><Icon name="close" /></button></div>
+        <div className="sheet-body">{children}</div>
+        {footer && <div className="sheet-foot">{footer}</div>}
+      </div>
+    </div>
   )
 }
 
@@ -115,12 +141,12 @@ const NAV = [
   ['home', 'home'], ['bookmark', 'saved'], ['plus', 'post'], ['chat', 'chat'], ['person', 'account'],
 ]
 
-export function BottomNav({ onTap }) {
+export function BottomNav({ onTap, onHome }) {
   return (
     <nav className="navbar" aria-label="main">
       {NAV.map(([icon, label], i) => (
         <button key={label} type="button" className={'nav-item' + (i === 0 ? ' active' : '') + (label === 'post' ? ' nav-post' : '')}
-          onClick={() => i !== 0 && onTap(`${label} isn't built yet`)}>
+          onClick={() => (i === 0 ? onHome() : onTap(`${label} isn't built yet`))}>
           <span className="nav-pill"><Icon name={icon} /></span>
           <span className="nav-label">{label}</span>
         </button>

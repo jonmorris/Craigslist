@@ -31,9 +31,9 @@ export const sections = [
 ]
 
 export const savedSearches = [
-  { id: 's1', label: 'road bike', detail: 'under $500 · 10 mi', fresh: 3, section: 'sale' },
-  { id: 's2', label: '1br northeast', detail: 'under $1,400', fresh: 5, section: 'housing' },
-  { id: 's3', label: 'fat bike', detail: 'any price', fresh: 1, section: 'sale' },
+  { id: 's1', label: 'road bike', detail: 'under $500 · 10 mi', fresh: 3, section: 'sale', sub: 'bicycles' },
+  { id: 's2', label: '1br northeast', detail: 'under $1,400', fresh: 5, section: 'housing', sub: 'apartments' },
+  { id: 's3', label: 'fat bike', detail: 'any price', fresh: 1, section: 'sale', sub: 'bicycles' },
 ]
 
 // fair: 'below' | 'typical' | 'above' — derived from the category price histogram.
@@ -53,12 +53,27 @@ export const listings = [
   { id: 13, section: 'housing', sub: 'rooms & shares', title: 'room in 3br house near the greenway', price: 725, per: 'mo', fair: 'below', hood: 'seward', mi: 2.9, age: '4 h', glyph: 'house', meta: 'private room · nov 1' },
   { id: 14, section: 'sale', sub: 'bicycles', title: 'fuji nevada 29er, hydraulic discs', price: 1000, fair: 'above', hood: 'bloomington', mi: 10.6, age: '5 h', photo: fuji, photos: 4 },
   { id: 15, section: 'services', sub: 'snow removal', title: 'snow removal — seasonal contracts open', price: null, pay: 'from $45/visit', hood: 'south mpls', mi: 3.5, age: '5 h', glyph: 'snow' },
-  { id: 16, section: 'sale', sub: 'bicycles', title: 'haro delsol single speed cruiser', price: 128, fair: 'below', hood: 'roseville', mi: 9.2, age: '6 h', photo: haroGreen, photos: 3, dealer: true },
+  { id: 16, section: 'sale', sub: 'bicycles', title: 'haro delsol single speed cruiser', price: 128, fair: 'below', hood: 'roseville', mi: 9.2, age: '6 h', photo: haroGreen, photos: 3, dealer: true, seller: 'roseville cycle' },
   { id: 17, section: 'sale', sub: 'bicycles', title: '3 schwinn stingray choppers', price: 50, fair: 'below', hood: 'brooklyn park', mi: 11.4, age: '7 h', photo: choppers, photos: 2 },
   { id: 18, section: 'community', sub: 'events', title: 'free bike tune-up clinic at the hub co-op', price: null, pay: 'sat 10–2', hood: 'seward', mi: 2.8, age: '8 h', glyph: 'people' },
   { id: 19, section: 'sale', sub: 'bicycles', title: 'surly karate monkey frame (medium)', price: 800, fair: 'typical', hood: 'northeast', mi: 1.6, age: '9 h', photo: karate, photos: 6 },
-  { id: 20, section: 'sale', sub: 'bicycles', title: 'haro delsol single speed, womens', price: 128, fair: 'below', hood: 'roseville', mi: 9.2, age: '9 h', photo: haroRed, photos: 3, dealer: true },
+  { id: 20, section: 'sale', sub: 'bicycles', title: 'haro delsol single speed, womens', price: 128, fair: 'below', hood: 'roseville', mi: 9.2, age: '9 h', photo: haroRed, photos: 3, dealer: true, seller: 'roseville cycle' },
+  { id: 21, section: 'sale', sub: 'furniture', title: 'west elm harmony sofa, 82in, dove gray', price: 300, fair: 'below', hood: 'north loop', mi: 1.1, age: '10 h', glyph: 'sofa' },
+  { id: 22, section: 'sale', sub: 'sporting', title: 'fischer cross-country skis + boots, size 43', price: 90, fair: 'typical', hood: 'linden hills', mi: 4.7, age: '11 h', glyph: 'snow' },
+  { id: 23, section: 'sale', sub: 'furniture', title: 'uplift standing desk, 60×30, walnut top', price: 450, fair: 'typical', hood: 'downtown', mi: 0.6, age: '12 h', glyph: 'desk' },
+  { id: 24, section: 'sale', sub: 'household', title: 'lodge cast iron set — 8, 10, 12 in', price: 40, fair: 'below', hood: 'bryn mawr', mi: 2.4, age: '13 h', glyph: 'tag' },
 ]
+
+export function ageMinutes(age) {
+  const [n, unit] = age.split(' ')
+  return unit === 'min' ? +n : +n * 60
+}
+
+// Price spread for the fair-price histogram (for sale, all of minneapolis).
+export const priceHistogram = {
+  max: 2000, avg: 264, step: 100,
+  bins: [118, 86, 61, 40, 28, 22, 15, 12, 9, 8, 6, 5, 4, 4, 3, 3, 2, 2, 2, 1],
+}
 
 export const bySection = id => listings.filter(l => l.section === id)
 
