@@ -3,7 +3,7 @@
    - Type: M3 type scale roles below; brand serif (Young Serif) on title/headline roles,
      Figtree everywhere else. px here = dp/sp on device.
    - Shape: M3 shape scale only. Elevation: M3 levels. Interaction: M3 state layers
-     (hover 8% / focus 10% / pressed 10%), no scale or web-only effects.
+     (pressed 10%, keyboard focus 10%). No hover: this is a touch-first phone app.
    Layout: desktop = notes panel beside an Android-size device; phone = app full-screen. */
 :root {
   --brand: 'Young Serif', Georgia, 'Times New Roman', serif;
@@ -40,7 +40,6 @@ h1, h2, h3, p { margin: 0; font: inherit; }
 
 /* M3 state layer: currentColor overlay at the spec opacities */
 button::before { content: ""; position: absolute; inset: 0; border-radius: inherit; background: currentColor; opacity: 0; pointer-events: none; transition: opacity .15s; }
-@media (hover: hover) { button:hover::before { opacity: .08; } }
 button:focus-visible::before { opacity: .10; }
 button:active::before { opacity: .10; }
 button:disabled::before { display: none; }
@@ -146,7 +145,6 @@ button:disabled::before { display: none; }
 .nav-pill { position: relative; width: 64px; height: 32px; border-radius: var(--md-shape-full); display: grid; place-items: center; }
 .nav-pill::before { content: ""; position: absolute; inset: 0; border-radius: inherit; background: currentColor; opacity: 0; transition: opacity .15s; }
 .nav-item:active .nav-pill::before { opacity: .10; }
-@media (hover: hover) { .nav-item:hover .nav-pill::before { opacity: .08; } }
 .nav-item.active { color: var(--md-sys-color-on-surface); font-weight: 700; }
 .nav-item.active .nav-pill { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); }
 

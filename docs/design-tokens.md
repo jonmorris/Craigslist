@@ -137,4 +137,4 @@ All are standard M3 / Compose Material 3 components. Nothing is web-only.
 | confirmations | `Snackbar` |
 | price histogram | custom `Canvas` composable |
 
-**Interaction:** M3 state layers (hover 8%, focus 10%, pressed 10%) stand in for the ripple. There are no scale or web-only effects. **Motion:** emphasized-decelerate easing; sheets slide up over 400ms.
+**Interaction:** M3 state layers (pressed 10%, keyboard focus 10%) stand in for the ripple. No hover states: the app is touch-first. There are no scale or web-only effects. **Motion:** emphasized-decelerate easing; sheets slide up over 400ms.
