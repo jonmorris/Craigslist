@@ -352,8 +352,8 @@ button:disabled::before { display: none; }
 .specs { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; margin: 0; border-radius: var(--md-shape-md); overflow: hidden; background: var(--md-sys-color-outline-variant); border: 1px solid var(--md-sys-color-outline-variant); }
 .spec { background: var(--md-sys-color-surface); padding: 12px 14px; min-width: 0; }
 .spec:last-child:nth-child(odd) { grid-column: span 2; }
-.spec dt { font: var(--md-body-small); color: var(--md-sys-color-on-surface-variant); }
-.spec dd { margin: 2px 0 0; font: var(--md-body-large); }
+.spec-k { display: block; font: var(--md-body-small); color: var(--md-sys-color-on-surface-variant); }
+.spec-v { display: block; margin-top: 2px; font: var(--md-body-large); }
 .desc { font: var(--md-body-large); max-width: 60ch; }
 .map-card { border-radius: var(--md-shape-md); overflow: hidden; border: 1px solid var(--md-sys-color-outline-variant); }
 .area-map { display: block; width: 100%; height: auto; }

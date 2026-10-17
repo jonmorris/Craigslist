@@ -48,9 +48,9 @@ export default function DetailScreen({ id, favorites, onToggleFav, onBack, onOpe
 
         <section className="detail-block">
           <h2>details</h2>
-          <dl className="specs">
-            {d.specs.map(([k, v]) => <div key={k} className="spec"><dt>{k}</dt><dd>{v}</dd></div>)}
-          </dl>
+          <div className="specs" role="list">
+            {d.specs.map(([k, v]) => <div key={k} className="spec" role="listitem"><span className="spec-k">{k}</span><span className="spec-v">{v}</span></div>)}
+          </div>
         </section>
 
         <section className="detail-block">
@@ -129,7 +129,7 @@ export default function DetailScreen({ id, favorites, onToggleFav, onBack, onOpe
         <Sheet title="this listing" onClose={() => setSheet(null)}>
           <div className="menu-list">
             {[['share', 'share'], ['link', 'copy link'], ['hide', 'hide this listing'], ['flag', 'report this listing']].map(([ic, label]) => (
-              <button key={label} type="button" className="menu-row" onClick={() => { setSheet(null); toast(label === 'report this listing' ? 'thanks — we review every report' : label === 'hide this listing' ? 'hidden · you won’t see it again' : label === 'copy link' ? 'link copied' : 'share sheet opens here') }}>
+              <button key={label} type="button" className="menu-row" onClick={() => { setSheet(null); toast(label === 'report this listing' ? 'thanks for flagging it. we\u2019ll take a look' : label === 'hide this listing' ? 'hidden · you won’t see it again' : label === 'copy link' ? 'link copied' : 'share sheet opens here') }}>
                 <Icon name={ic} />{label}
               </button>
             ))}
