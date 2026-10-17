@@ -86,7 +86,11 @@ for (const l of listings) {
   l.fair = r && l.price ? (l.price < r[0] ? 'below' : l.price > r[1] ? 'above' : 'typical') : null
 }
 
-export const bySection = id => listings.filter(l => l.section === id)
+// Listings the viewer hid from the detail screen; every list skips them.
+export const hidden = new Set()
+export const visible = list => list.filter(l => !hidden.has(l.id))
+
+export const bySection = id => visible(listings).filter(l => l.section === id)
 
 export function priceLabel(l) {
   if (l.pay) return l.pay

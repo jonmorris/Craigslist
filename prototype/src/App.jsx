@@ -4,7 +4,7 @@ import CategoryScreen from './screens/CategoryScreen.jsx'
 import SearchScreen from './screens/SearchScreen.jsx'
 import DetailScreen from './screens/DetailScreen.jsx'
 import { seedRecent } from './search.js'
-import { savedSearches as seedSaved } from './data.js'
+import { savedSearches as seedSaved, hidden } from './data.js'
 import { BottomNav, Icon } from './ui.jsx'
 
 const SCREENS = [
@@ -28,7 +28,8 @@ export default function App() {
   const [recent, setRecent] = useState(seedRecent)
   const [favorites, setFavorites] = useState(() => new Set())
   const [theme, setTheme] = useState(() => store.get('cl-theme') || 'system')
-  const [toastMsg, setToastMsg] = useState(null)
+  const [toastMsg, setToastMsg] = useState(null) // { msg, action?: { label, run } }
+  const [, setHiddenVersion] = useState(0)
   const screenRef = useRef(null)
   const timer = useRef()
 
@@ -48,10 +49,10 @@ export default function App() {
 
   useEffect(() => { screenRef.current?.scrollTo({ top: 0 }) }, [route])
 
-  const toast = msg => {
+  const toast = (msg, action) => {
     clearTimeout(timer.current)
-    setToastMsg(msg)
-    timer.current = setTimeout(() => setToastMsg(null), 2400)
+    setToastMsg({ msg, action })
+    timer.current = setTimeout(() => setToastMsg(null), action ? 5000 : 2400)
   }
   const push = r => {
     try { history.pushState({ depth: stack.length }, '') } catch { /* sandboxed */ }
@@ -67,6 +68,10 @@ export default function App() {
 
   const openCategory = (section, sub = 'all') => push({ name: 'cat', section, sub })
   const openListing = id => push({ name: 'detail', id })
+  const hideListing = id => {
+    hidden.add(id); setHiddenVersion(v => v + 1); back()
+    toast('hidden · you won\u2019t see it in lists or search', { label: 'undo', run: () => { hidden.delete(id); setHiddenVersion(v => v + 1) } })
+  }
   const toggleFav = id => setFavorites(f => { const n = new Set(f); n.has(id) ? (n.delete(id), toast('removed from saved')) : (n.add(id), toast('saved · find it under saved')); return n })
   const openSearch = (scope = null, q = '') => push({ name: 'search', scope, q })
   const runSearch = (query, section, sub) => {
@@ -122,10 +127,15 @@ export default function App() {
           {route.name === 'search' && <SearchScreen key={'s' + stack.length} scopeSection={route.scope} initialQuery={route.q} recent={recent} saved={saved}
             onSubmit={runSearch} onOpenSaved={openSaved} onOpenListing={openListing} onBack={back} toast={toast}
             onRemoveRecent={r => setRecent(x => x.filter(y => y !== r))} onClearRecent={() => setRecent([])} />}
-          {route.name === 'detail' && <DetailScreen key={'d' + route.id} id={route.id} favorites={favorites} onToggleFav={toggleFav}
+          {route.name === 'detail' && <DetailScreen key={'d' + route.id} id={route.id} favorites={favorites} onToggleFav={toggleFav} onHide={hideListing}
             onBack={back} onOpenListing={openListing} onOpenCategory={openCategory} toast={toast} />}
         </main>
-        {toastMsg && <div className="snackbar" role="status">{toastMsg}</div>}
+        {toastMsg && (
+          <div className="snackbar" role="status">
+            <span className="snack-text">{toastMsg.msg}</span>
+            {toastMsg.action && <button type="button" className="snack-action" onClick={() => { toastMsg.action.run(); setToastMsg(null) }}>{toastMsg.action.label}</button>}
+          </div>
+        )}
         {route.name !== 'search' && route.name !== 'detail' && <BottomNav onTap={toast} onHome={goHome} />}
         <div className="gesture" aria-hidden="true" />
       </div>

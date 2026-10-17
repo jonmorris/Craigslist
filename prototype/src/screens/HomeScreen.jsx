@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { sections, listings, city, fmt } from '../data.js'
+import { sections, listings, city, fmt, visible } from '../data.js'
 import { Icon, PeaceSign, LocationButton, SearchBar, ListingCard } from '../ui.jsx'
 
 // (a) Home — search hero, six section tiles, saved searches, fresh grid.
 export default function HomeScreen({ toast, onOpen, onSearch, onOpenSaved, onOpenListing, savedSearches }) {
-  const fresh = listings.filter(l => l.photo || l.section === 'sale').slice(0, 8)
+  const fresh = visible(listings).filter(l => l.photo || l.section === 'sale').slice(0, 8)
   // Brand + location row scrolls away; the search bar pins and picks up the mark.
   const barRef = useRef(null)
   const [collapsed, setCollapsed] = useState(false)

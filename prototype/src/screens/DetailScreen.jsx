@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { listings, sections, priceLabel, fmt, city, typicalRange } from '../data.js'
+import { listings, sections, priceLabel, fmt, city, typicalRange, visible } from '../data.js'
 import { detailFor, sellerFor } from '../details.js'
 import { Icon, NoPhoto, FairBadge, Sheet, Thumb } from '../ui.jsx'
 
@@ -7,7 +7,7 @@ import { Icon, NoPhoto, FairBadge, Sheet, Thumb } from '../ui.jsx'
 // specs, distance), trust at the moment of contact, one-tap reply.
 const money = n => '$' + fmt(n)
 
-export default function DetailScreen({ id, favorites, onToggleFav, onBack, onOpenListing, onOpenCategory, toast }) {
+export default function DetailScreen({ id, favorites, onToggleFav, onHide, onBack, onOpenListing, onOpenCategory, toast }) {
   const l = listings.find(x => x.id === id)
   const d = detailFor(l)
   const seller = sellerFor(l)
@@ -15,7 +15,13 @@ export default function DetailScreen({ id, favorites, onToggleFav, onBack, onOpe
   const fav = favorites.has(l.id)
   const [sheet, setSheet] = useState(null)
   const [sent, setSent] = useState(false)
-  const similar = listings.filter(x => x.id !== l.id && x.sub === l.sub).slice(0, 6)
+  const similar = visible(listings).filter(x => x.id !== l.id && x.sub === l.sub).slice(0, 6)
+  const url = `https://minneapolis.craigslist.org/${l.section}/${79661}${String(l.id).padStart(5, '0')}`
+  // Android's system share sheet (with its own copy action) when available; a stand-in elsewhere.
+  const share = async () => {
+    if (navigator.share) { try { await navigator.share({ title: l.title, text: `${priceLabel(l)} · ${l.title}`, url }); return } catch (e) { if (e.name === 'AbortError') return } }
+    setSheet('share')
+  }
 
   return (
     <>
@@ -24,11 +30,7 @@ export default function DetailScreen({ id, favorites, onToggleFav, onBack, onOpe
       <div className="detail-actions">
         <button type="button" className="icon-btn on-photo" aria-label="back" onClick={onBack}><Icon name="back" /></button>
         <span className="flex1" />
-        <button type="button" className="icon-btn on-photo" aria-label="share" onClick={() => toast('share sheet opens here')}><Icon name="share" /></button>
-        <button type="button" className={'icon-btn on-photo' + (fav ? ' fav-on' : '')} aria-pressed={fav} aria-label={fav ? 'remove from saved' : 'save'} onClick={() => onToggleFav(l.id)}>
-          <Icon name={fav ? 'heart-fill' : 'heart'} />
-        </button>
-        <button type="button" className="icon-btn on-photo" aria-label="more options" onClick={() => setSheet('more')}><Icon name="more" /></button>
+        <button type="button" className="icon-btn on-photo" aria-label="share" onClick={share}><Icon name="share" /></button>
       </div>
 
       <div className="pad detail-body">
@@ -85,6 +87,9 @@ export default function DetailScreen({ id, favorites, onToggleFav, onBack, onOpe
               <Icon name="shield" />
               <p><strong>meet somewhere public.</strong> many police stations around the metro have safe exchange spots. never pay before you've seen it in person.</p>
             </div>
+            <button type="button" className="report-row" onClick={() => setSheet('report')}>
+              <Icon name="flag" size={20} /><span>something off? report this listing</span><Icon name="arrow" size={18} />
+            </button>
           </div>
         </section>
 
@@ -111,11 +116,14 @@ export default function DetailScreen({ id, favorites, onToggleFav, onBack, onOpe
           </button>
         )}
 
-        <p className="post-foot">post id 79661{String(l.id).padStart(5, '0')} · <button type="button" className="inline-link" onClick={() => setSheet('more')}>report this listing</button></p>
+        <p className="post-foot">post id 79661{String(l.id).padStart(5, '0')}</p>
       </div>
     </div>
 
       <div className="detail-bar">
+        <button type="button" className="btn-tonal-icon" aria-label="hide this listing" onClick={() => onHide(l.id)}>
+          <Icon name="hide" />
+        </button>
         <button type="button" className="btn-tonal-icon" aria-label={fav ? 'remove from saved' : 'save'} aria-pressed={fav} onClick={() => onToggleFav(l.id)}>
           <Icon name={fav ? 'heart-fill' : 'heart'} />
         </button>
@@ -125,17 +133,20 @@ export default function DetailScreen({ id, favorites, onToggleFav, onBack, onOpe
       </div>
 
       {sheet === 'reply' && <ReplySheet l={l} onClose={() => setSheet(null)} onSend={() => { setSent(true); setSheet(null); toast(`sent · replies show up in chat`) }} />}
-      {sheet === 'more' && (
-        <Sheet title="this listing" onClose={() => setSheet(null)}>
-          <div className="menu-list">
-            {[['share', 'share'], ['link', 'copy link'], ['hide', 'hide this listing'], ['flag', 'report this listing']].map(([ic, label]) => (
-              <button key={label} type="button" className="menu-row" onClick={() => { setSheet(null); toast(label === 'report this listing' ? 'thanks for flagging it. we\u2019ll take a look' : label === 'hide this listing' ? 'hidden · you won’t see it again' : label === 'copy link' ? 'link copied' : 'share sheet opens here') }}>
-                <Icon name={ic} />{label}
-              </button>
-            ))}
+      {sheet === 'share' && (
+        <Sheet title="share" onClose={() => setSheet(null)}>
+          <div className="share-preview">
+            <Thumb listing={l} />
+            <span className="sv-text"><strong>{priceLabel(l)} · {l.title}</strong><span className="share-url">{url}</span></span>
           </div>
+          <button type="button" className="btn-tonal" onClick={() => {
+            navigator.clipboard?.writeText(url).then(() => toast('link copied'), () => toast('link copied'))
+            setSheet(null)
+          }}><Icon name="link" />copy link</button>
+          <p className="sheet-note">on a phone this is android's share sheet, with copy, nearby share and your apps.</p>
         </Sheet>
       )}
+      {sheet === 'report' && <ReportSheet onClose={() => setSheet(null)} onSubmit={() => { setSheet(null); toast('thanks for flagging it. we\u2019ll take a look') }} />}
     </>
   )
 }
@@ -190,6 +201,25 @@ function AreaMap() {
       <circle cx="150" cy="72" r="44" className="map-area" />
       <circle cx="150" cy="72" r="5" className="map-center" />
     </svg>
+  )
+}
+
+function ReportSheet({ onClose, onSubmit }) {
+  const reasons = ['looks like a scam', 'prohibited item', 'already sold or not available', 'wrong category', 'offensive or inappropriate']
+  const [why, setWhy] = useState(null)
+  return (
+    <Sheet title="report this listing" onClose={onClose} footer={
+      <button type="button" className="btn-primary" disabled={!why} onClick={onSubmit}>send report</button>
+    }>
+      <p className="sheet-note">reports are anonymous. the seller won't know it was you.</p>
+      <div className="radio-list">
+        {reasons.map(r => (
+          <button key={r} type="button" role="radio" aria-checked={why === r} className="radio-row" onClick={() => setWhy(r)}>
+            <span className={'radio' + (why === r ? ' radio-on' : '')} />{r}
+          </button>
+        ))}
+      </div>
+    </Sheet>
   )
 }
 

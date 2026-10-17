@@ -1,5 +1,5 @@
 // Mock search: token match on title + subcategory with a few synonyms.
-import { listings, sections } from './data.js'
+import { listings, sections, visible } from './data.js'
 
 const SYN = {
   bike: ['bicycle'], bikes: ['bicycle', 'bike'], bicycle: ['bike'],
@@ -17,7 +17,7 @@ export function matches(l, query) {
 }
 
 export const searchListings = (query, sectionId = null) =>
-  listings.filter(l => (!sectionId || l.section === sectionId) && matches(l, query))
+  visible(listings).filter(l => (!sectionId || l.section === sectionId) && matches(l, query))
 
 // "search in" scopes: the section, then its subcategories, most results first.
 export function scopes(query, sectionId = null) {

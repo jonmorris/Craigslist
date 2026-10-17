@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from 'react'
-import { sections, listings, priceHistogram, ageMinutes, city, fmt } from '../data.js'
+import React, { useState } from 'react'
+import { sections, listings, priceHistogram, ageMinutes, city, fmt, visible } from '../data.js'
 import { Icon, ListingCard, Sheet, PeaceSign } from '../ui.jsx'
 import { matches } from '../search.js'
 
@@ -49,7 +49,8 @@ const priceChipLabel = (min, max) =>
 // Also renders search results: pass `query` (and optionally no sectionId = all sections).
 export default function CategoryScreen({ sectionId, initialSub = 'all', query = null, onBack, onSearch, onOpenListing, toast, onSaveSearch }) {
   const section = sectionId ? sections.find(s => s.id === sectionId) : null
-  const all = useMemo(() => listings.filter(l => (!sectionId || l.section === sectionId) && (!query || matches(l, query))), [sectionId, query])
+  // not memoized: hiding or un-hiding a listing must show up immediately
+  const all = visible(listings).filter(l => (!sectionId || l.section === sectionId) && (!query || matches(l, query)))
   // Category: subcategories in demand order. Search: the subcategories the results fall in, most first.
   // counted after grouping dealer reposts, so tab counts match the results line
   const subCounts = groupDealers(all).reduce((m, { l }) => m.set(l.sub, (m.get(l.sub) || 0) + 1), new Map())
