@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { REGIONS, COORDS, distMeters, MI } from './area.js'
@@ -43,58 +43,70 @@ const cssVar = name => getComputedStyle(document.documentElement).getPropertyVal
 const isDark = () => document.documentElement.dataset.theme === 'dark'
   || (document.documentElement.dataset.theme !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches)
 
+// Fixed circle in the middle of the view; the map pans underneath it (like the
+// current app). The circle's size in miles comes from the distance choice, so the
+// map zooms to make the fixed circle cover exactly that radius. Panning sets a
+// custom center when you let go.
+const CIRCLE = 0.38 // circle radius as a share of the map's shorter side
+
 export default function RealMap({ area, interactive = true, height = 240, onCenterChange }) {
   const el = useRef(null)
   const map = useRef(null)
   const layers = useRef(null)
+  const [box, setBox] = useState({ w: 0, h: height })
+  const latest = useRef({ r: 0, onCenterChange })
+  latest.current.onCenterChange = onCenterChange
 
   useEffect(() => {
     const m = L.map(el.current, {
-      zoomControl: false, attributionControl: true, dragging: interactive, scrollWheelZoom: false,
-      touchZoom: interactive, doubleClickZoom: interactive, boxZoom: false, keyboard: interactive,
+      zoomControl: false, attributionControl: true, zoomSnap: 0, dragging: interactive, scrollWheelZoom: false,
+      touchZoom: false, doubleClickZoom: false, boxZoom: false, keyboard: interactive, inertia: false,
     })
     L.imageOverlay(metroMap, IMAGE_BOUNDS, { className: 'map-image' + (isDark() ? ' map-image-dark' : '') }).addTo(m)
-    m.setMaxBounds(IMAGE_BOUNDS.pad(0.02))
     m.attributionControl.addAttribution('map image for prototype use')
     m.attributionControl.setPrefix(false)
     m.setView(METRO.center, 11)
-    m.setMinZoom(9)
-    m.setMaxZoom(12) // the image gets soft past this
+    m.setMaxBounds(IMAGE_BOUNDS) // keep the image under the circle
     layers.current = L.layerGroup().addTo(m)
+    // user pan ends → the map's center is the new search center
+    m.on('dragend', () => {
+      const c = m.getCenter()
+      latest.current.onCenterChange?.([c.lat, c.lng], latest.current.r / MI)
+    })
     map.current = m
-    return () => m.remove()
+    const ro = new ResizeObserver(([e]) => setBox({ w: e.contentRect.width, h: e.contentRect.height }))
+    ro.observe(el.current)
+    return () => { ro.disconnect(); m.remove() }
   }, [interactive])
 
   useEffect(() => {
     const m = map.current
+    if (!box.w) return
+    m.invalidateSize()
     const { center, r } = cutoutFor(area)
-    const primary = cssVar('--md-sys-color-primary') || '#6a2bb8'
+    latest.current.r = r
+    // zoom so that r meters spans the fixed circle's radius in pixels
+    const px = Math.min(box.w, box.h) * CIRCLE
+    const zoom = Math.log2((156543.03392 * Math.cos((center[0] * Math.PI) / 180) * px) / r)
+    m.setView(center, zoom, { animate: false })
     layers.current.clearLayers()
-    const world = [[85, -179.9], [85, 179.9], [-85, 179.9], [-85, -179.9]]
-    const hole = L.polygon([world, ring(center, r)], { stroke: false, fillColor: primary, fillOpacity: 0.28, interactive: false }).addTo(layers.current)
-    const edge = L.circle(center, { radius: r, color: primary, weight: 2.5, fill: false, interactive: false }).addTo(layers.current)
-    // "you" only when the area is measured from you (no neighborhoods picked)
-    if (interactive && onCenterChange) {
-      // drag handle in the middle of the circle: moves the cutout live, commits on release
-      const handle = L.marker(center, {
-        draggable: true, keyboard: true, title: 'drag to move the search area',
-        icon: L.divIcon({ className: 'map-handle', html: '<span></span>', iconSize: [44, 44], iconAnchor: [22, 22] }),
-      }).addTo(layers.current)
-      handle.on('drag', e => {
-        const c = e.target.getLatLng()
-        hole.setLatLngs([world, ring([c.lat, c.lng], r)])
-        edge.setLatLng(c)
-      })
-      handle.on('dragend', e => {
-        const c = e.target.getLatLng()
-        onCenterChange([c.lat, c.lng], Math.round(r / MI))
-      })
-    }
+    const primary = cssVar('--md-sys-color-primary') || '#6a2bb8'
     if (!area.places.length && !area.center) L.circleMarker(YOU, { radius: 6, color: '#fff', weight: 3, fillColor: primary, fillOpacity: 1, interactive: false })
       .bindTooltip('you', { permanent: true, direction: 'bottom', className: 'map-you-tip', offset: [0, 6] }).addTo(layers.current)
-    // bounds from center + radius (getBounds needs a projected view, which a fresh map doesn't have yet)
-    m.fitBounds(L.latLng(center).toBounds(r * 2), { padding: [16, 16], animate: false, maxZoom: 12 })
-  }, [area])
+  }, [area, box])
 
-  return <div ref={el} className="real-map" style={{ height }} role="img" aria-label="map of the area you're searching" />
+  const R = Math.min(box.w, box.h) * CIRCLE
+  return (
+    <div className={'real-map-wrap' + (interactive ? ' can-pan' : '')} style={{ height }}>
+      <div ref={el} className="real-map" style={{ height }} role="img" aria-label="map of the area you're searching" />
+      {box.w > 0 && (
+        <svg className="map-overlay" width={box.w} height={box.h} aria-hidden="true">
+          <defs><mask id="cutout"><rect width="100%" height="100%" fill="white" /><circle cx={box.w / 2} cy={box.h / 2} r={R} fill="black" /></mask></defs>
+          <rect width="100%" height="100%" className="map-tint" mask="url(#cutout)" />
+          <circle cx={box.w / 2} cy={box.h / 2} r={R} className="map-cut" />
+          <circle cx={box.w / 2} cy={box.h / 2} r="4" className="map-crosshair" />
+        </svg>
+      )}
+    </div>
+  )
 }

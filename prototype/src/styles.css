@@ -548,3 +548,14 @@ button:disabled::before { display: none; }
 .map-handle:active { cursor: grabbing; }
 .map-handle:active span { transform: scale(1.15); }
 .map-hint { display: flex; align-items: center; gap: 6px; margin-top: -8px; font: var(--md-body-small); color: var(--md-sys-color-on-surface-variant); }
+
+/* fixed circle over a pannable map */
+.real-map-wrap { position: relative; border-radius: var(--md-shape-md); overflow: hidden; border: 1px solid var(--md-sys-color-outline-variant); }
+.real-map-wrap .real-map { border: 0; border-radius: 0; }
+.real-map-wrap.can-pan .real-map { cursor: grab; }
+.real-map-wrap.can-pan .real-map:active { cursor: grabbing; }
+.map-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 500; }
+.map-overlay .map-tint { fill: var(--md-sys-color-primary); fill-opacity: .28; }
+.map-overlay .map-cut { fill: none; stroke: var(--md-sys-color-primary); stroke-width: 2.5; }
+.map-crosshair { fill: var(--md-sys-color-primary); stroke: #fff; stroke-width: 2; }
+.real-map-wrap .leaflet-control-container { position: relative; z-index: 600; }

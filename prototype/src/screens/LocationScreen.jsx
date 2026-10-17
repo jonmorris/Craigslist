@@ -77,7 +77,7 @@ export default function LocationScreen({ area, context, onApply, onClose, toast 
             <RealMap area={next} onCenterChange={(center, mi) => setNext(n => ({
               places: [], center, radius: n.radius ?? [2, 5, 10, 25].reduce((b, r) => (Math.abs(r - mi) < Math.abs(b - mi) ? r : b), 5),
             }))} />
-            <p className="map-hint"><Icon name="pin" size={16} />drag the circle's center to move your search area</p>
+            <p className="map-hint"><Icon name="pin" size={16} />drag the map to move your search area</p>
             <p className="loc-summary" role="status"><strong>{areaFull(next, city.name)}</strong> · {countText}</p>
             {n === 0 && <p className="area-zero"><Icon name="pin" size={18} />nothing here yet. a bigger distance or nearby neighborhood should help.</p>}
 
