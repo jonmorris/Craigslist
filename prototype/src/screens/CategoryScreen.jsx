@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { sections, listings, priceHistogram, ageMinutes, city, fmt, visible } from '../data.js'
 import { Icon, ListingCard, Sheet, PeaceSign } from '../ui.jsx'
 import { matches } from '../search.js'
+import { taxonomy } from '../taxonomy.js'
+import { REGIONS, NEIGHBORHOODS, RADII, ALL_AREAS, inArea, areaLabel, areaFull } from '../area.js'
 
 // (b) Category → list. Filters live in plain sight as chips; price uses the
 // fair-price histogram; repeat dealer posts collapse; save search = alerts on.
@@ -47,10 +49,11 @@ const priceChipLabel = (min, max) =>
   min == null && max == null ? 'price' : min == null ? `under ${money(max)}` : max == null ? `${money(min)}+` : `${money(min)}–${money(max)}`
 
 // Also renders search results: pass `query` (and optionally no sectionId = all sections).
-export default function CategoryScreen({ sectionId, initialSub = 'all', query = null, onBack, onSearch, onOpenListing, toast, onSaveSearch }) {
+export default function CategoryScreen({ sectionId, initialSub = 'all', query = null, area = ALL_AREAS, onAreaChange, onBack, onSearch, onOpenListing, toast, onSaveSearch }) {
   const section = sectionId ? sections.find(s => s.id === sectionId) : null
   // not memoized: hiding or un-hiding a listing must show up immediately
-  const all = visible(listings).filter(l => (!sectionId || l.section === sectionId) && (!query || matches(l, query)))
+  const anyArea = visible(listings).filter(l => (!sectionId || l.section === sectionId) && (!query || matches(l, query)))
+  const all = anyArea.filter(l => inArea(l, area))
   // Category: subcategories in demand order. Search: the subcategories the results fall in, most first.
   // counted after grouping dealer reposts, so tab counts match the results line
   const subCounts = groupDealers(all).reduce((m, { l }) => m.set(l.sub, (m.get(l.sub) || 0) + 1), new Map())
@@ -76,6 +79,7 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
     f.photosOnly && ['include posts without photos', { photosOnly: false }],
     f.sub !== 'all' && [`all of ${sectionName}`, { sub: 'all' }],
   ].filter(Boolean).map(([label, patch]) => [label, patch, groupDealers(applyFilters(all, { ...f, ...patch })).length])
+  if (area.places.length || area.radius != null) relaxers.unshift(['search all areas', 'area', groupDealers(applyFilters(anyArea, f)).length])
 
   return (
     <div className="cat">
@@ -83,23 +87,23 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
         <header className="cat-bar">
           <button type="button" className="icon-btn" aria-label="back" onClick={onBack}><Icon name="back" /></button>
           <div className="cat-title">
-            <h1>{heading}</h1>
-            <span>{query ? `in ${subName} · ` : f.sub === 'all' ? '' : sectionName + ' · '}{city.name}, {city.area}</span>
+            {query
+              ? <h1>{heading}</h1>
+              : <button type="button" className="title-switch" onClick={() => setSheet('sub')} aria-label={`subcategory: ${subName}. change`}>
+                  <h1>{heading}</h1><Icon name="chevron" />
+                </button>}
+            <div className="cat-sub">
+              {query && <button type="button" className="sub-switch" onClick={() => setSheet('sub')}>in {subName}<Icon name="chevron" size={16} /></button>}
+              {!query && f.sub !== 'all' && <span>{sectionName} ·</span>}
+              <button type="button" className="sub-switch" onClick={() => setSheet('area')} aria-label={`area: ${areaLabel(area)}. change`}>
+                <Icon name="pin" size={16} /><span className="ellipsis">{areaFull(area, city.name)}</span><Icon name="chevron" size={16} />
+              </button>
+            </div>
           </div>
           <button type="button" className="icon-btn" aria-label={'search ' + subName} onClick={() => onSearch(sectionId, query || '')}><Icon name="search" /></button>
           <button type="button" className="icon-btn" aria-label={view === 'grid' ? 'show as list' : 'show as grid'}
             onClick={() => setView(v => (v === 'grid' ? 'list' : 'grid'))}><Icon name={view === 'grid' ? 'list' : 'grid'} /></button>
         </header>
-
-        <div className="hscroll subs-row" role="tablist" aria-label="subcategory">
-          {['all', ...subs].map(s => (
-            <button key={s} type="button" role="tab" aria-selected={f.sub === s}
-              className={'subtab' + (f.sub === s ? ' subtab-on' : '')} onClick={() => set({ sub: s })}>
-              {s === 'all' ? 'all' : s}{query && <span className="subtab-n">{s === 'all' ? groupDealers(all).length : subCounts.get(s)}</span>}
-            </button>
-          ))}
-          {!query && <button type="button" className="subtab" onClick={() => toast(`all ${section.subs.length + section.more} subcategories`)}>+{section.more} more</button>}
-        </div>
 
         <div className="hscroll chips filter-row" aria-label="filters">
           <button type="button" className="chip" onClick={() => setSheet('sort')}>
@@ -107,9 +111,6 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
           </button>
           <button type="button" className={'chip' + (f.min != null || f.max != null ? ' chip-on' : '')} onClick={() => setSheet('price')}>
             {priceChipLabel(f.min, f.max)}<Icon name="chevron" size={16} />
-          </button>
-          <button type="button" className="chip" onClick={() => toast('neighborhood sheet comes later')}>
-            <Icon name="pin" size={18} />{city.area}<Icon name="chevron" size={16} />
           </button>
           <button type="button" className={'chip' + (f.ownerOnly ? ' chip-on' : '')} aria-pressed={f.ownerOnly} onClick={() => set({ ownerOnly: !f.ownerOnly })}>
             {f.ownerOnly && <Icon name="check" size={18} />}by owner
@@ -145,7 +146,7 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
           <p>try widening your search:</p>
           <div className="relaxers">
             {relaxers.map(([label, patch, n]) => (
-              <button key={label} type="button" className="relaxer" disabled={n === 0} onClick={() => set(patch)}>
+              <button key={label} type="button" className="relaxer" disabled={n === 0} onClick={() => (patch === 'area' ? onAreaChange(ALL_AREAS) : set(patch))}>
                 <span>{label}</span><span className="relaxer-n">{n} listing{n === 1 ? '' : 's'}</span><Icon name="arrow" size={18} />
               </button>
             ))}
@@ -157,6 +158,14 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
         <Icon name={saved ? 'check' : 'bell'} />{saved ? 'alerts on' : 'save search'}
       </button>
 
+      {sheet === 'sub' && (
+        <SubSheet query={query} section={section} sectionId={sectionId} current={f.sub} counts={subCounts} total={groupDealers(all).length}
+          onClose={() => setSheet(null)} onPick={sub => { set({ sub }); setSheet(null) }} toast={toast} />
+      )}
+      {sheet === 'area' && (
+        <AreaSheet area={area} countFor={a => groupDealers(applyFilters(anyArea.filter(l => inArea(l, a)), f)).length}
+          onClose={() => setSheet(null)} onApply={a => { onAreaChange(a); setSheet(null); setSaved(false) }} />
+      )}
       {sheet === 'sort' && (
         <Sheet title="sort by" onClose={() => setSheet(null)}>
           <div className="radio-list">
@@ -173,12 +182,74 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
       {sheet === 'price' && <PriceSheet all={all} f={f} onClose={() => setSheet(null)} onApply={p => { set(p); setSheet(null) }} />}
 
       {sheet === 'save' && (
-        <SaveSheet name={query || subName} f={f} onClose={() => setSheet(null)} onSave={entry => {
+        <SaveSheet name={query || subName} f={f} area={area} onClose={() => setSheet(null)} onSave={entry => {
           setSaved(true); setSheet(null); onSaveSearch({ ...entry, query, section: sectionId, sub: f.sub === 'all' ? null : f.sub })
           toast(entry.alerts ? `saved · we'll tell you when new ${query ? '“' + query + '”' : subName} listings post` : 'saved')
         }} />
       )}
     </div>
+  )
+}
+
+// Subcategory switcher: the section's full taxonomy (or, for search results,
+// the subcategories the results fall in, with counts).
+function SubSheet({ query, section, sectionId, current, counts, total, onClose, onPick, toast }) {
+  const rows = query
+    ? [...counts].sort((a, b) => b[1] - a[1]).map(([key, n]) => ({ name: key, key, count: n }))
+    : taxonomy[sectionId].map(t => ({ ...t, count: t.count }))
+  const allLabel = query ? 'all results' : `all of ${section.name}`
+  return (
+    <Sheet title={query ? 'show results in' : section.name} onClose={onClose}>
+      <div className="radio-list">
+        <button type="button" role="radio" aria-checked={current === 'all'} className="radio-row" onClick={() => onPick('all')}>
+          <span className={'radio' + (current === 'all' ? ' radio-on' : '')} /><span className="flex1">{allLabel}</span>
+          <span className="az-count">{fmt(query ? total : section.count)}</span>
+        </button>
+        {rows.map(r => (
+          <button key={r.name} type="button" role="radio" aria-checked={current === r.key} className="radio-row"
+            onClick={() => (r.key ? onPick(r.key) : toast(`prototype: no mock listings for ${r.name} yet`))}>
+            <span className={'radio' + (current === r.key && r.key ? ' radio-on' : '')} /><span className="flex1">{r.name}</span>
+            <span className="az-count">{fmt(r.count)}</span>
+          </button>
+        ))}
+      </div>
+    </Sheet>
+  )
+}
+
+// Area: regions and neighborhoods (multi-select) plus distance from you, with a live count.
+function AreaSheet({ area, countFor, onClose, onApply }) {
+  const [places, setPlaces] = useState(area.places)
+  const [radius, setRadius] = useState(area.radius)
+  const toggle = p => setPlaces(ps => (ps.includes(p) ? ps.filter(x => x !== p) : [...ps, p]))
+  const next = { places, radius }
+  const n = countFor(next)
+  const chip = (p, label = p) => (
+    <button key={p} type="button" className={'chip' + (places.includes(p) ? ' chip-on' : '')} aria-pressed={places.includes(p)} onClick={() => toggle(p)}>
+      {places.includes(p) && <Icon name="check" size={18} />}{label}
+    </button>
+  )
+  return (
+    <Sheet title="area" onClose={onClose} footer={
+      <button type="button" className="btn-primary" onClick={() => onApply(next)}>show {n} listing{n === 1 ? '' : 's'}</button>
+    }>
+      <div className="presets">
+        <button type="button" className={'chip' + (!places.length ? ' chip-on' : '')} onClick={() => setPlaces([])}>
+          {!places.length && <Icon name="check" size={18} />}all areas
+        </button>
+        {Object.keys(REGIONS).map(r => chip(r, r === 'suburbs' ? 'the suburbs' : `all of ${r}`))}
+      </div>
+      <p className="area-label">neighborhoods</p>
+      <div className="presets">{NEIGHBORHOODS.map(h => chip(h))}</div>
+      <p className="area-label">distance from you</p>
+      <div className="segmented" role="radiogroup" aria-label="distance">
+        {RADII.map(r => (
+          <button key={String(r)} type="button" role="radio" aria-checked={radius === r} className={radius === r ? 'seg-on' : ''} onClick={() => setRadius(r)}>
+            {radius === r && <Icon name="check" size={18} />}{r == null ? 'any' : `${r} mi`}
+          </button>
+        ))}
+      </div>
+    </Sheet>
   )
 }
 
@@ -218,11 +289,11 @@ function PriceSheet({ all, f, onClose, onApply }) {
   )
 }
 
-function SaveSheet({ name, f, onClose, onSave }) {
+function SaveSheet({ name, f, area, onClose, onSave }) {
   const [label, setLabel] = useState(name)
   const [alerts, setAlerts] = useState(true)
   const [freq, setFreq] = useState('instantly')
-  const parts = [priceChipLabel(f.min, f.max) !== 'price' && priceChipLabel(f.min, f.max), f.ownerOnly && 'by owner', f.photosOnly && 'has photos', city.area].filter(Boolean)
+  const parts = [priceChipLabel(f.min, f.max) !== 'price' && priceChipLabel(f.min, f.max), f.ownerOnly && 'by owner', f.photosOnly && 'has photos', areaLabel(area)].filter(Boolean)
   return (
     <Sheet title="save this search" onClose={onClose} footer={
       <button type="button" className="btn-primary" onClick={() => onSave({ label, detail: parts.join(' · '), alerts })}>save search</button>

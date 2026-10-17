@@ -25,11 +25,11 @@ export function PeaceSign({ size = 28 }) {
   )
 }
 
-export function LocationButton({ compact }) {
+export function LocationButton({ compact, area = 'all areas' }) {
   return (
     <button className="loc" type="button">
       {!compact && <span className="loc-label">location</span>}
-      <span className="loc-value">minneapolis <span className="loc-area">· all areas</span>
+      <span className="loc-value">{area.startsWith('minneapolis') ? <>minneapolis <span className="loc-area">{area.slice(11)}</span></> : <span>{area}</span>}
         <Icon name="chevron" size={18} /></span>
     </button>
   )

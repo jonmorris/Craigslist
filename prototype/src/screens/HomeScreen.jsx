@@ -3,7 +3,7 @@ import { sections, listings, city, fmt, visible } from '../data.js'
 import { Icon, PeaceSign, LocationButton, SearchBar, ListingCard } from '../ui.jsx'
 
 // (a) Home — search hero, six section tiles, saved searches, fresh grid.
-export default function HomeScreen({ toast, onOpen, onOpenSection, onSearch, onOpenSaved, onOpenListing, savedSearches }) {
+export default function HomeScreen({ toast, onOpen, onOpenSection, onSearch, onOpenSaved, onOpenListing, savedSearches, areaText }) {
   const fresh = visible(listings).filter(l => l.photo || l.section === 'sale').slice(0, 8)
   // Brand + location row scrolls away; the search bar pins and picks up the mark.
   const barRef = useRef(null)
@@ -20,7 +20,7 @@ export default function HomeScreen({ toast, onOpen, onOpenSection, onSearch, onO
     <div className="home">
       <header className="appbar" ref={barRef}>
         <PeaceSign size={30} />
-        <LocationButton />
+        <LocationButton area={areaText} />
         <button className="icon-btn" type="button" aria-label="notifications" onClick={() => toast('notifications come later')}>
           <Icon name="bell" /><span className="dot" />
         </button>

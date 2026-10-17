@@ -5,6 +5,7 @@ import SearchScreen from './screens/SearchScreen.jsx'
 import DetailScreen from './screens/DetailScreen.jsx'
 import SectionScreen from './screens/SectionScreen.jsx'
 import { seedRecent } from './search.js'
+import { ALL_AREAS, areaFull } from './area.js'
 import { savedSearches as seedSaved, hidden } from './data.js'
 import { BottomNav, Icon } from './ui.jsx'
 
@@ -28,6 +29,7 @@ export default function App() {
   const [saved, setSaved] = useState(seedSaved)
   const [recent, setRecent] = useState(seedRecent)
   const [favorites, setFavorites] = useState(() => new Set())
+  const [area, setArea] = useState(ALL_AREAS)
   const [theme, setTheme] = useState(() => store.get('cl-theme') || 'system')
   const [toastMsg, setToastMsg] = useState(null) // { msg, action?: { label, run } }
   const [, setHiddenVersion] = useState(0)
@@ -121,13 +123,13 @@ export default function App() {
       <div className="device">
         <div className="statusbar" aria-hidden="true"><span>9:41</span><span className="sb-icons">▲ ◢ ▮</span></div>
         <main className="screen" ref={screenRef}>
-          {route.name === 'home' && <HomeScreen toast={toast} onOpen={openCategory} onOpenSection={openSection} onSearch={() => openSearch()} onOpenSaved={openSaved} onOpenListing={openListing} savedSearches={saved} />}
+          {route.name === 'home' && <HomeScreen toast={toast} onOpen={openCategory} onOpenSection={openSection} onSearch={() => openSearch()} onOpenSaved={openSaved} onOpenListing={openListing} savedSearches={saved} areaText={areaFull(area)} />}
           {route.name === 'section' && <SectionScreen key={'sec' + route.section} sectionId={route.section} onBack={back}
             onOpenList={openCategory} onSearch={scope => openSearch(scope)} onRunSearch={(q, sec) => runSearch(q, sec, 'all')}
             onOpenListing={openListing} toast={toast} />}
-          {route.name === 'cat' && <CategoryScreen key={'c' + route.section + route.sub} sectionId={route.section} initialSub={route.sub}
+          {route.name === 'cat' && <CategoryScreen key={'c' + route.section + route.sub} sectionId={route.section} initialSub={route.sub} area={area} onAreaChange={setArea}
             onBack={back} onSearch={searchFromList} onOpenListing={openListing} toast={toast} onSaveSearch={addSaved} />}
-          {route.name === 'results' && <CategoryScreen key={'r' + route.query + route.section + route.sub} sectionId={route.section} initialSub={route.sub} query={route.query}
+          {route.name === 'results' && <CategoryScreen key={'r' + route.query + route.section + route.sub} sectionId={route.section} initialSub={route.sub} query={route.query} area={area} onAreaChange={setArea}
             onBack={back} onSearch={searchFromList} onOpenListing={openListing} toast={toast} onSaveSearch={addSaved} />}
           {route.name === 'search' && <SearchScreen key={'s' + stack.length} scopeSection={route.scope} initialQuery={route.q} recent={recent} saved={saved}
             onSubmit={runSearch} onOpenSaved={openSaved} onOpenListing={openListing} onBack={back} toast={toast}
