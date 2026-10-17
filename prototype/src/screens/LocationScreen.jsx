@@ -26,11 +26,11 @@ export default function LocationScreen({ area, context, onApply, onClose, toast 
   const matches = q.trim() ? SITES.filter(([name]) => name.includes(q.trim().toLowerCase()) || (/^\d{5}$/.test(q.trim()) && name.startsWith('minneapolis'))) : []
 
   const useMyLocation = () => {
-    const near = () => { setNext({ places: [], radius: 5 }); toast('using your location · within 5 mi') }
+    const near = () => { setNext({ places: [], radius: 5, center: null }); toast('using your location · within 5 mi') }
     if (!navigator.geolocation) return near()
     navigator.geolocation.getCurrentPosition(pos => {
       const km = distKm([pos.coords.latitude, pos.coords.longitude], YOU)
-      if (km > 60) { setNext({ places: [], radius: 5 }); toast(`you're ${Math.round(km / 1.609)} mi from minneapolis · showing 5 mi around downtown`) }
+      if (km > 60) { setNext({ places: [], radius: 5, center: null }); toast(`you're ${Math.round(km / 1.609)} mi from minneapolis · showing 5 mi around downtown`) }
       else near()
     }, near, { timeout: 6000 })
   }
@@ -74,7 +74,10 @@ export default function LocationScreen({ area, context, onApply, onClose, toast 
               <button type="button" className="link" onClick={() => document.getElementById('locq')?.focus()}>change city</button>
             </div>
 
-            <RealMap area={next} />
+            <RealMap area={next} onCenterChange={(center, mi) => setNext(n => ({
+              places: [], center, radius: n.radius ?? [2, 5, 10, 25].reduce((b, r) => (Math.abs(r - mi) < Math.abs(b - mi) ? r : b), 5),
+            }))} />
+            <p className="map-hint"><Icon name="pin" size={16} />drag the circle's center to move your search area</p>
             <p className="loc-summary" role="status"><strong>{areaFull(next, city.name)}</strong> · {countText}</p>
             {n === 0 && <p className="area-zero"><Icon name="pin" size={18} />nothing here yet. a bigger distance or nearby neighborhood should help.</p>}
 

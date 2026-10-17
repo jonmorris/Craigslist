@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
-import { REGIONS } from './area.js'
+import { REGIONS, COORDS, distMeters, MI } from './area.js'
 import metroMap from './assets/metro-map.webp'
 
 // Map (Leaflet) over a static metro map image for now, georeferenced from known
@@ -11,22 +11,15 @@ import metroMap from './assets/metro-map.webp'
 // app's style: everything outside the search area is tinted purple, with a
 // circular cutout where you're looking. The circle follows the choice:
 // distance from you, the chosen neighborhoods, or the whole metro.
-export const COORDS = {
-  northeast: [45.0016, -93.256], 'north loop': [44.988, -93.278], downtown: [44.9778, -93.265], uptown: [44.949, -93.298],
-  whittier: [44.959, -93.278], powderhorn: [44.942, -93.256], longfellow: [44.936, -93.219], seward: [44.959, -93.235],
-  'linden hills': [44.924, -93.315], 'bryn mawr': [44.97, -93.315], 'south mpls': [44.92, -93.26], 'mac-groveland': [44.931, -93.17],
-  como: [44.98, -93.15], richfield: [44.8833, -93.283], 'st. louis park': [44.948, -93.348], edina: [44.8897, -93.35],
-  bloomington: [44.8408, -93.2983], roseville: [45.0061, -93.1566], 'brooklyn park': [45.0941, -93.3563],
-}
 export const YOU = COORDS.downtown
 const METRO = { center: [44.965, -93.24], r: 22000 }
 // [south-west, north-east] of the 2000×1851 map image
 const IMAGE_BOUNDS = L.latLngBounds([44.618, -93.9376], [45.5367, -92.5368])
-const MI = 1609.34
 
-const dist = (a, b) => L.latLng(a).distanceTo(L.latLng(b))
+const dist = distMeters
 
 export function cutoutFor(area) {
+  if (area.center) return { center: area.center, r: (area.radius ?? 5) * MI }
   const picked = area.places.flatMap(p => REGIONS[p] || [p]).map(n => COORDS[n]).filter(Boolean)
   if (!picked.length && area.radius == null) return METRO
   const center = picked.length
@@ -50,7 +43,7 @@ const cssVar = name => getComputedStyle(document.documentElement).getPropertyVal
 const isDark = () => document.documentElement.dataset.theme === 'dark'
   || (document.documentElement.dataset.theme !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches)
 
-export default function RealMap({ area, interactive = true, height = 240 }) {
+export default function RealMap({ area, interactive = true, height = 240, onCenterChange }) {
   const el = useRef(null)
   const map = useRef(null)
   const layers = useRef(null)
@@ -78,10 +71,26 @@ export default function RealMap({ area, interactive = true, height = 240 }) {
     const primary = cssVar('--md-sys-color-primary') || '#6a2bb8'
     layers.current.clearLayers()
     const world = [[85, -179.9], [85, 179.9], [-85, 179.9], [-85, -179.9]]
-    L.polygon([world, ring(center, r)], { stroke: false, fillColor: primary, fillOpacity: 0.28, interactive: false }).addTo(layers.current)
-    L.circle(center, { radius: r, color: primary, weight: 2.5, fill: false, interactive: false }).addTo(layers.current)
+    const hole = L.polygon([world, ring(center, r)], { stroke: false, fillColor: primary, fillOpacity: 0.28, interactive: false }).addTo(layers.current)
+    const edge = L.circle(center, { radius: r, color: primary, weight: 2.5, fill: false, interactive: false }).addTo(layers.current)
     // "you" only when the area is measured from you (no neighborhoods picked)
-    if (!area.places.length) L.circleMarker(YOU, { radius: 6, color: '#fff', weight: 3, fillColor: primary, fillOpacity: 1, interactive: false })
+    if (interactive && onCenterChange) {
+      // drag handle in the middle of the circle: moves the cutout live, commits on release
+      const handle = L.marker(center, {
+        draggable: true, keyboard: true, title: 'drag to move the search area',
+        icon: L.divIcon({ className: 'map-handle', html: '<span></span>', iconSize: [44, 44], iconAnchor: [22, 22] }),
+      }).addTo(layers.current)
+      handle.on('drag', e => {
+        const c = e.target.getLatLng()
+        hole.setLatLngs([world, ring([c.lat, c.lng], r)])
+        edge.setLatLng(c)
+      })
+      handle.on('dragend', e => {
+        const c = e.target.getLatLng()
+        onCenterChange([c.lat, c.lng], Math.round(r / MI))
+      })
+    }
+    if (!area.places.length && !area.center) L.circleMarker(YOU, { radius: 6, color: '#fff', weight: 3, fillColor: primary, fillOpacity: 1, interactive: false })
       .bindTooltip('you', { permanent: true, direction: 'bottom', className: 'map-you-tip', offset: [0, 6] }).addTo(layers.current)
     // bounds from center + radius (getBounds needs a projected view, which a fresh map doesn't have yet)
     m.fitBounds(L.latLng(center).toBounds(r * 2), { padding: [16, 16], animate: false, maxZoom: 12 })

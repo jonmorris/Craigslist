@@ -9,9 +9,29 @@ export const REGIONS = {
 export const NEIGHBORHOODS = Object.values(REGIONS).flat()
 export const RADII = [null, 2, 5, 10, 25]
 
-export const ALL_AREAS = { places: [], radius: null }
+// approximate neighborhood centers (lat, lng); listings sit at their neighborhood
+export const COORDS = {
+  northeast: [45.0016, -93.256], 'north loop': [44.988, -93.278], downtown: [44.9778, -93.265], uptown: [44.949, -93.298],
+  whittier: [44.959, -93.278], powderhorn: [44.942, -93.256], longfellow: [44.936, -93.219], seward: [44.959, -93.235],
+  'linden hills': [44.924, -93.315], 'bryn mawr': [44.97, -93.315], 'south mpls': [44.92, -93.26], 'mac-groveland': [44.931, -93.17],
+  como: [44.98, -93.15], richfield: [44.8833, -93.283], 'st. louis park': [44.948, -93.348], edina: [44.8897, -93.35],
+  bloomington: [44.8408, -93.2983], roseville: [45.0061, -93.1566], 'brooklyn park': [45.0941, -93.3563],
+}
+export const MI = 1609.34
+export function distMeters([a1, o1], [a2, o2]) {
+  const r = Math.PI / 180, x = (o2 - o1) * r * Math.cos(((a1 + a2) / 2) * r), y = (a2 - a1) * r
+  return Math.sqrt(x * x + y * y) * 6371000
+}
+// nearest named neighborhood to a point, for labels like "near uptown"
+export function nearestHood(c) {
+  return Object.entries(COORDS).sort((a, b) => distMeters(a[1], c) - distMeters(b[1], c))[0][0]
+}
+
+// An area may also have a custom center (dragged on the map): { center: [lat, lng], radius }.
+export const ALL_AREAS = { places: [], radius: null, center: null }
 
 export function inArea(l, area) {
+  if (area.center) return COORDS[l.hood] ? distMeters(COORDS[l.hood], area.center) <= (area.radius ?? 5) * MI : false
   if (area.radius != null && l.mi > area.radius) return false
   if (!area.places.length) return true
   return area.places.some(p => p === l.hood || (REGIONS[p] || []).includes(l.hood))
@@ -20,6 +40,7 @@ export function inArea(l, area) {
 // Full label with the city, without repeating it: "minneapolis · all areas",
 // "minneapolis · 5 mi", "northeast +1 · 5 mi", "st. paul".
 export function areaFull(area, city = 'minneapolis') {
+  if (area.center) return areaLabel(area)
   if (!area.places.length) return `${city} · ${areaLabel(area)}`
   return areaLabel(area)
 }
@@ -46,6 +67,7 @@ export function widenOptions(area, count) {
 }
 
 export function areaLabel(area) {
+  if (area.center) return `near ${nearestHood(area.center)} · ${area.radius ?? 5} mi`
   const where = !area.places.length ? 'all areas'
     : area.places.length === 1 ? area.places[0] : `${area.places[0]} +${area.places.length - 1}`
   return area.radius != null ? `${where} · ${area.radius} mi` : where

@@ -7,7 +7,8 @@ import { Icon } from '../ui.jsx'
 export default function AreaControls({ value, onChange }) {
   const { places, radius } = value
   const set = patch => onChange({ ...value, ...patch })
-  const toggle = p => set({ places: places.includes(p) ? places.filter(x => x !== p) : [...places, p] })
+  // picking places switches out of a dragged custom center
+  const toggle = p => set({ center: null, places: places.includes(p) ? places.filter(x => x !== p) : [...places, p] })
   const chip = (p, label = p) => (
     <button key={p} type="button" className={'chip' + (places.includes(p) ? ' chip-on' : '')} aria-pressed={places.includes(p)} onClick={() => toggle(p)}>
       {places.includes(p) && <Icon name="check" size={18} />}{label}
@@ -16,8 +17,8 @@ export default function AreaControls({ value, onChange }) {
   return (
     <>
       <div className="presets">
-        <button type="button" className={'chip' + (!places.length ? ' chip-on' : '')} onClick={() => set({ places: [] })}>
-          {!places.length && <Icon name="check" size={18} />}all areas
+        <button type="button" className={'chip' + (!places.length && !value.center ? ' chip-on' : '')} onClick={() => set({ places: [], center: null })}>
+          {!places.length && !value.center && <Icon name="check" size={18} />}all areas
         </button>
         {Object.keys(REGIONS).map(r => chip(r, r === 'suburbs' ? 'the suburbs' : `all of ${r}`))}
       </div>
