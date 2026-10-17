@@ -10,6 +10,7 @@ Vector files for the redesign. The wordmark is converted to outlines, so it need
 | `craigslist-logo.svg` / `-on-dark.svg` | horizontal lockup: mark + wordmark |
 | `craigslist-wordmark.svg` / `-on-dark.svg` | wordmark alone, in Young Serif |
 | `app-icon.svg` | Android adaptive icon, 108dp canvas with the mark inside the 66dp safe zone |
+| `icons/` | every UI icon used (Material Symbols Rounded 500), with a name list in `icons/README.md` |
 
 Regenerate with `node scripts/logo.mjs` from `prototype/`.
 

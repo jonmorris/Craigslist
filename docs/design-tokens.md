@@ -140,3 +140,6 @@ All are standard M3 / Compose Material 3 components. Nothing is web-only.
 | listing detail | `LazyColumn` with a `HorizontalPager` photo gallery, `BottomAppBar` with `FilledTonalIconButton` + `Button`, `ModalBottomSheet` for reply and overflow |
 
 **Interaction:** M3 state layers (pressed 10%, keyboard focus 10%) stand in for the ripple. No hover states: the app is touch-first. There are no scale or web-only effects. **Motion:** emphasized-decelerate easing; sheets slide up over 400ms.
+
+## Icons
+[Material Symbols](https://fonts.google.com/icons), Rounded, weight 500, from the official `@material-symbols/svg-500` package (Apache 2.0). The full list with Material names is in [`brand/icons/README.md`](../brand/icons/README.md), with one SVG per icon next to it. Strategy: platform icons for everyday controls (back, search, share, favorite, nav), so they're instantly familiar; the six category icons are the first candidates for custom brand icons.

@@ -1,58 +1,12 @@
 import React from 'react'
 import { priceLabel } from './data.js'
+import { ICONS } from './icons.js'
 
-// 24px outline icons, Material-ish proportions, stroked with currentColor.
-const P = {
-  search: <><circle cx="11" cy="11" r="6.5" /><path d="m16 16 4.5 4.5" /></>,
-  bell: <><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15z" /><path d="M10 20.5a2 2 0 0 0 4 0" /></>,
-  chevron: <path d="m7 10 5 5 5-5" />,
-  arrow: <path d="M5 12h14m-5-5 5 5-5 5" />,
-  home: <path d="M4 11 12 4l8 7v9h-5v-6H9v6H4z" />,
-  bookmark: <path d="M7 4h10v17l-5-4-5 4z" />,
-  plus: <path d="M12 5v14M5 12h14" />,
-  chat: <path d="M5 5h14v10H10l-4 4v-4H5z" />,
-  person: <><circle cx="12" cy="8.5" r="3.5" /><path d="M5 20c1-4 4-5.5 7-5.5s6 1.5 7 5.5" /></>,
-  tag: <><path d="M4 12V4h8l8 8-8 8z" /><circle cx="8.5" cy="8.5" r="1.3" /></>,
-  house: <><path d="M4 11 12 4l8 7" /><path d="M6 9.5V20h12V9.5" /><path d="M10 20v-5h4v5" /></>,
-  briefcase: <><rect x="3.5" y="7.5" width="17" height="12" rx="2" /><path d="M9 7.5V5h6v2.5M3.5 13h17" /></>,
-  wrench: <path d="M14.5 4.5a4 4 0 0 0-4.8 5.3L4 15.5 8.5 20l5.7-5.7a4 4 0 0 0 5.3-4.8l-2.6 2.6-2.8-.8-.8-2.8z" />,
-  bolt: <path d="M13 3 5 13.5h6L10 21l8-10.5h-6z" />,
-  people: <><circle cx="9" cy="9" r="3" /><circle cx="16.5" cy="10" r="2.3" /><path d="M3.5 19c.8-3.4 3-4.8 5.5-4.8s4.7 1.4 5.5 4.8M15 14.6c2.6-.3 4.6 1 5.3 4.4" /></>,
-  pin: <><path d="M12 21s-6-5.6-6-11a6 6 0 1 1 12 0c0 5.4-6 11-6 11z" /><circle cx="12" cy="10" r="2.2" /></>,
-  snow: <path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9M9.5 4.5 12 7l2.5-2.5M9.5 19.5 12 17l2.5 2.5" />,
-  dresser: <><rect x="4.5" y="4" width="15" height="14" rx="1.5" /><path d="M4.5 8.7h15M4.5 13.3h15M11 6.4h2M11 11h2M11 15.6h2M6.5 18v2M17.5 18v2" /></>,
-  shelf: <><rect x="4" y="4" width="16" height="16" rx="1" /><path d="M12 4v16M4 12h16" /></>,
-  camera: <><path d="M4 8h3.5L9 6h6l1.5 2H20v11H4z" /><circle cx="12" cy="13" r="3.3" /></>,
-  sparkle: <path d="M12 3.5 13.8 10l6.7 2-6.7 2L12 20.5 10.2 14l-6.7-2 6.7-2z" />,
-  sofa: <><path d="M5 11V8a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v3" /><path d="M3.5 11.5a1.5 1.5 0 0 1 3 0V14h11v-2.5a1.5 1.5 0 0 1 3 0V17h-17zM5.5 17v2M18.5 17v2" /></>,
-  desk: <path d="M3.5 8h17M5 8v12M19 8v12M5 13h6v7M11 13V8" />,
-  back: <path d="M19 12H5m6-6-6 6 6 6" />,
-  close: <path d="M6 6l12 12M18 6 6 18" />,
-  sliders: <path d="M4 7h10m4 0h2M4 17h4m4 0h8M14 5v4M8 15v4" />,
-  grid: <><rect x="4" y="4" width="7" height="7" rx="1.5" /><rect x="13" y="4" width="7" height="7" rx="1.5" /><rect x="4" y="13" width="7" height="7" rx="1.5" /><rect x="13" y="13" width="7" height="7" rx="1.5" /></>,
-  list: <><rect x="4" y="5" width="5" height="5" rx="1" /><rect x="4" y="14" width="5" height="5" rx="1" /><path d="M12 6.5h8M12 9h5M12 15.5h8M12 18h5" /></>,
-  check: <path d="m5 12.5 4.5 4.5L19 7.5" />,
-  sort: <path d="M7 4v16m0 0-3-3m3 3 3-3M17 20V4m0 0-3 3m3-3 3 3" />,
-  share: <><circle cx="17.5" cy="5.5" r="2.5" /><circle cx="6.5" cy="12" r="2.5" /><circle cx="17.5" cy="18.5" r="2.5" /><path d="m8.7 10.8 6.6-4M8.7 13.2l6.6 4" /></>,
-  heart: <path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.2a4.3 4.3 0 0 1 7.5 2.6C19.5 15.4 12 20 12 20z" />,
-  'heart-fill': <path fill="currentColor" d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.2a4.3 4.3 0 0 1 7.5 2.6C19.5 15.4 12 20 12 20z" />,
-  more: <><circle cx="12" cy="5.5" r="1.3" fill="currentColor" /><circle cx="12" cy="12" r="1.3" fill="currentColor" /><circle cx="12" cy="18.5" r="1.3" fill="currentColor" /></>,
-  shield: <><path d="M12 3.5 5 6.5v5c0 4.4 3 7.8 7 9 4-1.2 7-4.6 7-9v-5z" /><path d="m9 12 2.2 2.2L15.5 10" /></>,
-  link: <path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3A4 4 0 0 0 11 18.7l1-1" />,
-  hide: <><path d="M3.5 12S6.5 6 12 6s8.5 6 8.5 6-3 6-8.5 6-8.5-6-8.5-6z" /><path d="M4 4l16 16" /></>,
-  flag: <path d="M6 21V4m0 1h11l-2 4 2 4H6" />,
-  history: <><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3" /><path d="M4 4.5v3.5h3.5M12 8v4.5l3 2" /></>,
-  fill: <path d="M17 17 7.5 7.5M7 15V7h8" />,
-  trend: <path d="m4 16 5-5 4 4 7-7M15 8h5v5" />,
-  sun: <><circle cx="12" cy="12" r="4" /><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8" /></>,
-  moon: <path d="M19.5 14.5A8 8 0 0 1 9.5 4.5a8 8 0 1 0 10 10z" />,
-}
-
-export function Icon({ name, size = 24, className = '', strokeWidth = 1.8 }) {
+// Material Symbols Rounded (generated into icons.js by scripts/icons.mjs).
+export function Icon({ name, size = 24, className = '' }) {
   return (
-    <svg className={'icon ' + className} width={size} height={size} viewBox="0 0 24 24"
-      fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round"
-      strokeLinejoin="round" aria-hidden="true">{P[name]}</svg>
+    <svg className={'icon ' + className} width={size} height={size} viewBox="0 -960 960 960"
+      fill="currentColor" aria-hidden="true">{(ICONS[name] || []).map((d, i) => <path key={i} d={d} />)}</svg>
   )
 }
 
@@ -99,7 +53,7 @@ export function FairBadge({ fair }) {
 export function NoPhoto({ listing, big }) {
   return (
     <div className={'nophoto tint-' + listing.section + (big ? ' big' : '')}>
-      <Icon name={listing.glyph || 'tag'} size={big ? 56 : 40} strokeWidth={1.4} />
+      <Icon name={listing.glyph || 'tag'} size={big ? 56 : 40} />
       {listing.meta && <span className="nophoto-meta">{listing.meta}</span>}
     </div>
   )
