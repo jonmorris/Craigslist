@@ -38,30 +38,30 @@ export const savedSearches = [
 
 // fair: 'below' | 'typical' | 'above' — derived from the category price histogram.
 export const listings = [
-  { id: 1, section: 'sale', sub: 'bicycles', title: 'surly straggler 54cm, barely ridden', price: 1150, fair: 'typical', hood: 'northeast', mi: 1.4, age: '12 min', photo: straggler, photos: 9 },
-  { id: 2, section: 'sale', sub: 'tools', title: 'toro power max 824 snowblower — starts first pull', price: 350, fair: 'below', hood: 'richfield', mi: 6.2, age: '25 min', glyph: 'snow' },
-  { id: 3, section: 'sale', sub: 'bicycles', title: 'electra townie 7d step-over, blue', price: 235, fair: 'below', hood: 'longfellow', mi: 3.8, age: '38 min', photo: townie, photos: 5 },
-  { id: 4, section: 'housing', sub: 'apartments', title: '1br in a fourplex, heat included, cats ok', price: 1295, per: 'mo', fair: 'typical', hood: 'northeast', mi: 1.9, age: '44 min', glyph: 'house', meta: '1br · 650 ft² · oct 1' },
-  { id: 5, section: 'sale', sub: 'furniture', title: 'mid-century walnut dresser, 6 drawers', price: 180, fair: 'below', hood: 'uptown', mi: 2.6, age: '1 h', glyph: 'dresser' },
-  { id: 6, section: 'sale', sub: 'bicycles', title: 'austro daimler carbon tt, campagnolo', price: 1350, fair: 'above', hood: 'mac-groveland', mi: 7.9, age: '1 h', photo: austro, photos: 7 },
+  { id: 1, section: 'sale', sub: 'bicycles', title: 'surly straggler 54cm, barely ridden', price: 1150, hood: 'northeast', mi: 1.4, age: '12 min', photo: straggler, photos: 9 },
+  { id: 2, section: 'sale', sub: 'tools', title: 'toro power max 824 snowblower — starts first pull', price: 350, hood: 'richfield', mi: 6.2, age: '25 min', glyph: 'snow' },
+  { id: 3, section: 'sale', sub: 'bicycles', title: 'electra townie 7d step-over, blue', price: 235, hood: 'longfellow', mi: 3.8, age: '38 min', photo: townie, photos: 5 },
+  { id: 4, section: 'housing', sub: 'apartments', title: '1br in a fourplex, heat included, cats ok', price: 1295, per: 'mo', hood: 'northeast', mi: 1.9, age: '44 min', glyph: 'house', meta: '1br · 650 ft² · oct 1' },
+  { id: 5, section: 'sale', sub: 'furniture', title: 'mid-century walnut dresser, 6 drawers', price: 180, hood: 'uptown', mi: 2.6, age: '1 h', glyph: 'dresser' },
+  { id: 6, section: 'sale', sub: 'bicycles', title: 'austro daimler carbon tt, campagnolo', price: 1350, hood: 'mac-groveland', mi: 7.9, age: '1 h', photo: austro, photos: 7 },
   { id: 7, section: 'jobs', sub: 'food & beverage', title: 'line cook — eat street, nights + weekends', price: null, pay: '$22–26/hr', hood: 'whittier', mi: 1.7, age: '1 h', glyph: 'briefcase' },
-  { id: 8, section: 'sale', sub: 'bicycles', title: 'surly pack rat 56cm, rack + basket', price: 900, fair: 'typical', hood: 'powderhorn', mi: 3.1, age: '2 h', photo: packRat, photos: 11 },
+  { id: 8, section: 'sale', sub: 'bicycles', title: 'surly pack rat 56cm, rack + basket', price: 900, hood: 'powderhorn', mi: 3.1, age: '2 h', photo: packRat, photos: 11 },
   { id: 9, section: 'sale', sub: 'free stuff', title: 'free ikea kallax 4×4 — curb by 6pm', price: 0, hood: 'como', mi: 4.4, age: '2 h', glyph: 'shelf' },
-  { id: 10, section: 'sale', sub: 'bicycles', title: 'trek 5200 vintage carbon road, 58cm', price: 375, fair: 'below', hood: 'st. louis park', mi: 5.0, age: '3 h', photo: trek5200, photos: 6 },
-  { id: 11, section: 'gigs', sub: 'labor', title: 'help moving a sectional saturday am', price: 60, fair: null, hood: 'northeast', mi: 1.2, age: '3 h', glyph: 'bolt', pay: '$60 · 2 hrs' },
-  { id: 12, section: 'sale', sub: 'bicycles', title: 'surly moonlander fat bike, clown shoe wheels', price: 1950, fair: 'above', hood: 'edina', mi: 8.3, age: '4 h', photo: moonlander, photos: 13 },
-  { id: 13, section: 'housing', sub: 'rooms & shares', title: 'room in 3br house near the greenway', price: 725, per: 'mo', fair: 'below', hood: 'seward', mi: 2.9, age: '4 h', glyph: 'house', meta: 'private room · nov 1' },
-  { id: 14, section: 'sale', sub: 'bicycles', title: 'fuji nevada 29er, hydraulic discs', price: 1000, fair: 'above', hood: 'bloomington', mi: 10.6, age: '5 h', photo: fuji, photos: 4 },
+  { id: 10, section: 'sale', sub: 'bicycles', title: 'trek 5200 vintage carbon road, 58cm', price: 375, hood: 'st. louis park', mi: 5.0, age: '3 h', photo: trek5200, photos: 6 },
+  { id: 11, section: 'gigs', sub: 'labor', title: 'help moving a sectional saturday am', price: 60, hood: 'northeast', mi: 1.2, age: '3 h', glyph: 'bolt', pay: '$60 · 2 hrs' },
+  { id: 12, section: 'sale', sub: 'bicycles', title: 'surly moonlander fat bike, clown shoe wheels', price: 1950, hood: 'edina', mi: 8.3, age: '4 h', photo: moonlander, photos: 13 },
+  { id: 13, section: 'housing', sub: 'rooms & shares', title: 'room in 3br house near the greenway', price: 725, per: 'mo', hood: 'seward', mi: 2.9, age: '4 h', glyph: 'house', meta: 'private room · nov 1' },
+  { id: 14, section: 'sale', sub: 'bicycles', title: 'fuji nevada 29er, hydraulic discs', price: 1000, hood: 'bloomington', mi: 10.6, age: '5 h', photo: fuji, photos: 4 },
   { id: 15, section: 'services', sub: 'snow removal', title: 'snow removal — seasonal contracts open', price: null, pay: 'from $45/visit', hood: 'south mpls', mi: 3.5, age: '5 h', glyph: 'snow' },
-  { id: 16, section: 'sale', sub: 'bicycles', title: 'haro delsol single speed cruiser', price: 128, fair: 'below', hood: 'roseville', mi: 9.2, age: '6 h', photo: haroGreen, photos: 3, dealer: true, seller: 'roseville cycle' },
-  { id: 17, section: 'sale', sub: 'bicycles', title: '3 schwinn stingray choppers', price: 50, fair: 'below', hood: 'brooklyn park', mi: 11.4, age: '7 h', photo: choppers, photos: 2 },
+  { id: 16, section: 'sale', sub: 'bicycles', title: 'haro delsol single speed cruiser', price: 128, hood: 'roseville', mi: 9.2, age: '6 h', photo: haroGreen, photos: 3, dealer: true, seller: 'roseville cycle' },
+  { id: 17, section: 'sale', sub: 'bicycles', title: '3 schwinn stingray choppers', price: 50, hood: 'brooklyn park', mi: 11.4, age: '7 h', photo: choppers, photos: 2 },
   { id: 18, section: 'community', sub: 'events', title: 'free bike tune-up clinic at the hub co-op', price: null, pay: 'sat 10–2', hood: 'seward', mi: 2.8, age: '8 h', glyph: 'people' },
-  { id: 19, section: 'sale', sub: 'bicycles', title: 'surly karate monkey frame (medium)', price: 800, fair: 'typical', hood: 'northeast', mi: 1.6, age: '9 h', photo: karate, photos: 6 },
-  { id: 20, section: 'sale', sub: 'bicycles', title: 'haro delsol single speed, womens', price: 128, fair: 'below', hood: 'roseville', mi: 9.2, age: '9 h', photo: haroRed, photos: 3, dealer: true, seller: 'roseville cycle' },
-  { id: 21, section: 'sale', sub: 'furniture', title: 'west elm harmony sofa, 82in, dove gray', price: 300, fair: 'below', hood: 'north loop', mi: 1.1, age: '10 h', glyph: 'sofa' },
-  { id: 22, section: 'sale', sub: 'sporting', title: 'fischer cross-country skis + boots, size 43', price: 90, fair: 'typical', hood: 'linden hills', mi: 4.7, age: '11 h', glyph: 'snow' },
-  { id: 23, section: 'sale', sub: 'furniture', title: 'uplift standing desk, 60×30, walnut top', price: 450, fair: 'typical', hood: 'downtown', mi: 0.6, age: '12 h', glyph: 'desk' },
-  { id: 24, section: 'sale', sub: 'household', title: 'lodge cast iron set — 8, 10, 12 in', price: 40, fair: 'below', hood: 'bryn mawr', mi: 2.4, age: '13 h', glyph: 'tag' },
+  { id: 19, section: 'sale', sub: 'bicycles', title: 'surly karate monkey frame (medium)', price: 800, hood: 'northeast', mi: 1.6, age: '9 h', photo: karate, photos: 6 },
+  { id: 20, section: 'sale', sub: 'bicycles', title: 'haro delsol single speed, womens', price: 128, hood: 'roseville', mi: 9.2, age: '9 h', photo: haroRed, photos: 3, dealer: true, seller: 'roseville cycle' },
+  { id: 21, section: 'sale', sub: 'furniture', title: 'west elm harmony sofa, 82in, dove gray', price: 300, hood: 'north loop', mi: 1.1, age: '10 h', glyph: 'sofa' },
+  { id: 22, section: 'sale', sub: 'sporting', title: 'fischer cross-country skis + boots, size 43', price: 90, hood: 'linden hills', mi: 4.7, age: '11 h', glyph: 'snow' },
+  { id: 23, section: 'sale', sub: 'furniture', title: 'uplift standing desk, 60×30, walnut top', price: 450, hood: 'downtown', mi: 0.6, age: '12 h', glyph: 'desk' },
+  { id: 24, section: 'sale', sub: 'household', title: 'lodge cast iron set — 8, 10, 12 in', price: 40, hood: 'bryn mawr', mi: 2.4, age: '13 h', glyph: 'tag' },
 ]
 
 export function ageMinutes(age) {
@@ -73,6 +73,17 @@ export function ageMinutes(age) {
 export const priceHistogram = {
   max: 2000, avg: 264, step: 100,
   bins: [118, 86, 61, 40, 28, 22, 15, 12, 9, 8, 6, 5, 4, 4, 3, 3, 2, 2, 2, 1],
+}
+
+// Typical price range per subcategory (from the price histogram). The fair-price
+// badge on every card and the range on the detail screen both derive from this.
+export const typicalRange = {
+  bicycles: [300, 1200], furniture: [200, 600], tools: [400, 800], sporting: [60, 220],
+  household: [50, 120], apartments: [1100, 1500], 'rooms & shares': [750, 1000],
+}
+for (const l of listings) {
+  const r = typicalRange[l.sub]
+  l.fair = r && l.price ? (l.price < r[0] ? 'below' : l.price > r[1] ? 'above' : 'typical') : null
 }
 
 export const bySection = id => listings.filter(l => l.section === id)

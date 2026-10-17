@@ -136,6 +136,7 @@ All are standard M3 / Compose Material 3 components. Nothing is web-only.
 | instantly / once a day | `SingleChoiceSegmentedButtonRow` |
 | sort options | `RadioButton` rows |
 | confirmations | `Snackbar` |
-| price histogram | custom `Canvas` composable |
+| price histogram, fair-price range | custom `Canvas` composables |
+| listing detail | `LazyColumn` with a `HorizontalPager` photo gallery, `BottomAppBar` with `FilledTonalIconButton` + `Button`, `ModalBottomSheet` for reply and overflow |
 
 **Interaction:** M3 state layers (pressed 10%, keyboard focus 10%) stand in for the ripple. No hover states: the app is touch-first. There are no scale or web-only effects. **Motion:** emphasized-decelerate easing; sheets slide up over 400ms.

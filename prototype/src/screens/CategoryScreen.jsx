@@ -47,7 +47,7 @@ const priceChipLabel = (min, max) =>
   min == null && max == null ? 'price' : min == null ? `under ${money(max)}` : max == null ? `${money(min)}+` : `${money(min)}–${money(max)}`
 
 // Also renders search results: pass `query` (and optionally no sectionId = all sections).
-export default function CategoryScreen({ sectionId, initialSub = 'all', query = null, onBack, onSearch, toast, onSaveSearch }) {
+export default function CategoryScreen({ sectionId, initialSub = 'all', query = null, onBack, onSearch, onOpenListing, toast, onSaveSearch }) {
   const section = sectionId ? sections.find(s => s.id === sectionId) : null
   const all = useMemo(() => listings.filter(l => (!sectionId || l.section === sectionId) && (!query || matches(l, query))), [sectionId, query])
   // Category: subcategories in demand order. Search: the subcategories the results fall in, most first.
@@ -67,7 +67,6 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
   const subName = f.sub === 'all' ? sectionName : f.sub
   const heading = query ? `“${query}”` : subName
   const filtered = f.ownerOnly || f.photosOnly || f.min != null || f.max != null
-  const open = () => toast('listing detail is screen (d) — coming up')
 
   // Each way to widen an empty result, with how many it would bring back.
   const relaxers = [
@@ -126,7 +125,7 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
             {query ? `${rows.length} result${rows.length === 1 ? '' : 's'}` : f.sub === 'all' && !filtered ? `${fmt(section.count)} listings · ${fmt(section.newToday)} new today` : `${rows.length} match`} · {SORTS.find(s => s[0] === sort)[1]}
           </p>
           <div className={'pad ' + (view === 'grid' ? 'grid' : 'rows')}>
-            {rows.map(({ l, similar }) => <ListingCard key={l.id} listing={l} similar={similar} variant={view === 'grid' ? 'grid' : 'row'} onTap={open} />)}
+            {rows.map(({ l, similar }) => <ListingCard key={l.id} listing={l} similar={similar} variant={view === 'grid' ? 'grid' : 'row'} onTap={() => onOpenListing(l.id)} />)}
           </div>
           <p className="feed-end pad">that's everything posted in the last day.</p>
         </>

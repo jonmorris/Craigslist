@@ -3,7 +3,7 @@ import { sections, listings, city, fmt } from '../data.js'
 import { Icon, PeaceSign, LocationButton, SearchBar, ListingCard } from '../ui.jsx'
 
 // (a) Home — search hero, six section tiles, saved searches, fresh grid.
-export default function HomeScreen({ toast, onOpen, onSearch, onOpenSaved, savedSearches }) {
+export default function HomeScreen({ toast, onOpen, onSearch, onOpenSaved, onOpenListing, savedSearches }) {
   const fresh = listings.filter(l => l.photo || l.section === 'sale').slice(0, 8)
   // Brand + location row scrolls away; the search bar pins and picks up the mark.
   const barRef = useRef(null)
@@ -56,7 +56,7 @@ export default function HomeScreen({ toast, onOpen, onSearch, onOpenSaved, saved
       <section className="block">
         <div className="block-head pad"><h2>fresh near you</h2><button type="button" className="link" onClick={() => onOpen('sale')}>see all</button></div>
         <div className="grid pad">
-          {fresh.map(l => <ListingCard key={l.id} listing={l} onTap={() => toast('listing detail is screen (d)')} />)}
+          {fresh.map(l => <ListingCard key={l.id} listing={l} onTap={() => onOpenListing(l.id)} />)}
         </div>
       </section>
     </div>

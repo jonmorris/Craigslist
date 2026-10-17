@@ -5,7 +5,7 @@ import { Icon, Thumb } from '../ui.jsx'
 
 // (c) Search — M3 full-screen search view. Empty: recent, saved, trending.
 // Typing: completions, "search in" scopes with counts, and listing matches.
-export default function SearchScreen({ scopeSection, initialQuery = '', recent, saved, onSubmit, onOpenSaved, onRemoveRecent, onClearRecent, onBack, toast }) {
+export default function SearchScreen({ onOpenListing, scopeSection, initialQuery = '', recent, saved, onSubmit, onOpenSaved, onRemoveRecent, onClearRecent, onBack, toast }) {
   const [q, setQ] = useState(initialQuery)
   const [scope, setScope] = useState(scopeSection)
   const input = useRef(null)
@@ -107,7 +107,7 @@ export default function SearchScreen({ scopeSection, initialQuery = '', recent, 
             <section className="sv-block">
               <div className="block-head pad"><h2>listings</h2><button type="button" className="link" onClick={() => submit(term)}>see all</button></div>
               {hits.map(l => (
-                <button key={l.id} type="button" className="sv-main sv-row-btn sv-hit" onClick={() => toast('listing detail is screen (d)')}>
+                <button key={l.id} type="button" className="sv-main sv-row-btn sv-hit" onClick={() => onOpenListing(l.id)}>
                   <Thumb listing={l} />
                   <span className="sv-text"><strong>{priceLabel(l)}</strong><span className="sv-hit-title">{l.title}</span><span>{l.age} · {l.hood}</span></span>
                 </button>
