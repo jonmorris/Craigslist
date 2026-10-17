@@ -39,7 +39,7 @@ export function inArea(l, area) {
 
 // Full label with the city, without repeating it: "minneapolis · all areas",
 // "minneapolis · 5 mi", "northeast +1 · 5 mi", "st. paul".
-export function areaFull(area, city = 'Minneapolis') {
+export function areaFull(area, city = 'Minneapolis, MN') {
   if (area.center) return areaLabel(area)
   if (!area.places.length) return `${city} · ${areaLabel(area)}`
   return areaLabel(area)

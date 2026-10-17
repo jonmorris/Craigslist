@@ -110,7 +110,7 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
             noun: query ? `results for “${query}”` : subName,
             countFor: a => groupDealers(applyFilters(anyArea.filter(l => inArea(l, a)), f)).length,
           })}>
-            <span className="scope-text"><span className="scope-k">area</span><span className="scope-v">{areaFull(area, city.name)}</span></span>
+            <span className="scope-text"><span className="scope-k">area</span><span className="scope-v">{area.places.length || area.center || area.radius != null ? areaLabel(area) : 'Minneapolis, MN'}</span></span>
             <Icon name="chevron" />
           </button>
         </div>
@@ -251,7 +251,7 @@ function ZeroLocal({ sub, sectionName, sectionId, info, onAlert, onPick, toast, 
         <h3>nearest listings</h3>
         <div className="zero-list">
           {info.nearest.map(([place, mi, n]) => (
-            <button key={place} type="button" className="zero-row" onClick={() => toast(`would open ${sub} on craigslist ${place}`)}>
+            <button key={place} type="button" className="zero-row" onClick={() => toast(`would open ${sub} on craigslist ${place.split(",")[0]}`)}>
               <Icon name="pin" />
               <span className="sv-text"><strong>{place}</strong><span>{mi} mi away · craigslist {place.split(',')[0]}</span></span>
               <span className="zero-n">{n} listing{n === 1 ? '' : 's'}</span>
@@ -283,7 +283,7 @@ function RangeRings({ nearest }) {
       <circle cx="120" cy="80" r="7" className="ring-you" />
       <text x="120" y="104" className="ring-label">you</text>
       <circle cx="214" cy="38" r="6" className="ring-far" />
-      <text x="214" y="22" className="ring-label">{nearest[0]}</text>
+      <text x="214" y="22" className="ring-label">{nearest[0].split(",")[0]}</text>
     </svg>
   )
 }

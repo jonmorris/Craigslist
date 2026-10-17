@@ -29,7 +29,7 @@ export function LocationButton({ compact, area = 'all areas', onTap }) {
   return (
     <button className="loc" type="button" onClick={onTap} aria-label={`location: ${area}. change`}>
       {!compact && <span className="loc-label">location</span>}
-      <span className="loc-value">{area.startsWith('Minneapolis') ? <>Minneapolis <span className="loc-area">{area.slice(11)}</span></> : <span>{area}</span>}
+      <span className="loc-value">{area.includes(' · ') ? <>{area.split(' · ')[0]} <span className="loc-area">· {area.split(' · ').slice(1).join(' · ')}</span></> : <span>{area}</span>}
         <Icon name="chevron" size={18} /></span>
     </button>
   )

@@ -42,7 +42,7 @@ export default function SearchScreen({ onOpenListing, scopeSection, initialQuery
       </div>
       <div className="hscroll chips scope-row">
         <button type="button" className={'chip' + (area.places.length || area.radius != null ? ' chip-on' : '')} onClick={() => onOpenLocation(typed ? { noun: `results for “${term}”`, countFor: a => searchListings(term, scope).filter(l => inArea(l, a)).length } : null)}>
-          <Icon name="pin" size={18} />{areaFull(area, city.name)}<Icon name="chevron" size={16} />
+          <Icon name="pin" size={18} />{areaFull(area)}<Icon name="chevron" size={16} />
         </button>
         {scope && (
           <button type="button" className="chip chip-on" onClick={() => setScope(null)} aria-label={`remove ${scopeName} filter`}>
@@ -126,7 +126,7 @@ export default function SearchScreen({ onOpenListing, scopeSection, initialQuery
           ) : (
             searchListings(term, scope).length > 0 && (area.places.length || area.radius != null) ? (
               <div className="sv-none pad">
-                <p>nothing matches “{typed}” in {areaFull(area, city.name)}.</p>
+                <p>nothing matches “{typed}” in {areaFull(area)}.</p>
                 <button type="button" className="relaxer" onClick={() => onAreaChange(ALL_AREAS)}>
                   <Icon name="pin" size={20} /><span className="relaxer-label">search all areas</span><span className="relaxer-n">{searchListings(term, scope).length} listing{searchListings(term, scope).length === 1 ? '' : 's'}</span><Icon name="arrow" size={18} />
                 </button>

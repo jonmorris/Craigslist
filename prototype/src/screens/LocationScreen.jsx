@@ -70,7 +70,7 @@ export default function LocationScreen({ area, context, onApply, onClose, toast 
             </button>
 
             <div className="loc-current">
-              <span className="sv-text"><strong>Minneapolis / St. Paul</strong><span>craigslist Minneapolis · the whole metro</span></span>
+              <span className="sv-text"><strong>Minneapolis / St. Paul, MN</strong><span>craigslist Minneapolis · the whole metro</span></span>
               <button type="button" className="link" onClick={() => document.getElementById('locq')?.focus()}>change city</button>
             </div>
 
@@ -78,7 +78,7 @@ export default function LocationScreen({ area, context, onApply, onClose, toast 
               places: [], center, radius: n.radius ?? [2, 5, 10, 25].reduce((b, r) => (Math.abs(r - mi) < Math.abs(b - mi) ? r : b), 5),
             }))} />
             <p className="map-hint"><Icon name="pin" size={16} />drag the map to move your search area</p>
-            <p className="loc-summary" role="status"><strong>{areaFull(next, city.name)}</strong> · {countText}</p>
+            <p className="loc-summary" role="status"><strong>{areaFull(next)}</strong> · {countText}</p>
             {n === 0 && <p className="area-zero"><Icon name="pin" size={18} />nothing here yet. a bigger distance or nearby neighborhood should help.</p>}
 
             <AreaControls value={next} onChange={setNext} />

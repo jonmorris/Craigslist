@@ -49,10 +49,10 @@ const raw = {
 // Subcategories with nothing in the Minneapolis area right now: where the nearest
 // listings are (other craigslist cities) and related places to look.
 export const zeroLocal = {
-  aviation: { nearest: [['St. Cloud', 62, 3], ['Rochester', 80, 2], ['Duluth', 150, 4]], related: ['boats', 'rvs & camping', 'sporting goods'], thing: 'aviation gear' },
-  'housing swap': { nearest: [['St. Cloud', 62, 1], ['Madison, WI', 270, 4]], related: ['sublets & temporary', 'vacation rentals', 'rooms & shares'], thing: 'a place to swap' },
-  'tv/film/video/radio': { nearest: [['Rochester', 80, 1], ['Duluth', 150, 2]], related: ['art/media/design', 'writing/editing', 'marketing/advertising/pr'], thing: 'a job like this' },
-  marine: { nearest: [['Duluth', 150, 6], ['Brainerd', 128, 3]], related: ['automotive', 'skilled trade', 'cycle'], thing: 'marine services' },
+  aviation: { nearest: [['St. Cloud, MN', 62, 3], ['Rochester, MN', 80, 2], ['Duluth, MN', 150, 4]], related: ['boats', 'rvs & camping', 'sporting goods'], thing: 'aviation gear' },
+  'housing swap': { nearest: [['St. Cloud, MN', 62, 1], ['Madison, WI', 270, 4]], related: ['sublets & temporary', 'vacation rentals', 'rooms & shares'], thing: 'a place to swap' },
+  'tv/film/video/radio': { nearest: [['Rochester, MN', 80, 1], ['Duluth, MN', 150, 2]], related: ['art/media/design', 'writing/editing', 'marketing/advertising/pr'], thing: 'a job like this' },
+  marine: { nearest: [['Duluth, MN', 150, 6], ['Brainerd, MN', 128, 3]], related: ['automotive', 'skilled trade', 'cycle'], thing: 'marine services' },
 }
 
 export const taxonomy = Object.fromEntries(Object.entries(raw).map(([sec, subs]) =>
