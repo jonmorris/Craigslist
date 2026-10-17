@@ -91,9 +91,6 @@ export default function RealMap({ area, interactive = true, height = 300, onCent
     const zoom = Math.log2((156543.03392 * Math.cos((center[0] * Math.PI) / 180) * px) / r)
     m.setView(center, zoom, { animate: false })
     layers.current.clearLayers()
-    const primary = cssVar('--md-sys-color-primary') || '#6a2bb8'
-    if (!area.places.length && !area.center) L.circleMarker(YOU, { radius: 6, color: '#fff', weight: 3, fillColor: primary, fillOpacity: 1, interactive: false })
-      .bindTooltip('you', { permanent: true, direction: 'bottom', className: 'map-you-tip', offset: [0, 6] }).addTo(layers.current)
   }, [area, box])
 
   const R = Math.min(box.w, box.h) * CIRCLE
@@ -105,7 +102,6 @@ export default function RealMap({ area, interactive = true, height = 300, onCent
           <defs><mask id="cutout"><rect width="100%" height="100%" fill="white" /><circle cx={box.w / 2} cy={box.h / 2} r={R} fill="black" /></mask></defs>
           <rect width="100%" height="100%" className="map-tint" mask="url(#cutout)" />
           <circle cx={box.w / 2} cy={box.h / 2} r={R} className="map-cut" />
-          <circle cx={box.w / 2} cy={box.h / 2} r="4" className="map-crosshair" />
         </svg>
       )}
     </div>
