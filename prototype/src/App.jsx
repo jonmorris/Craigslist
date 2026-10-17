@@ -88,7 +88,7 @@ export default function App() {
     toast('hidden · you won\u2019t see it in lists or search', { label: 'undo', run: () => { hidden.delete(id); setHiddenVersion(v => v + 1) } })
   }
   const toggleFav = id => setFavorites(f => { const n = new Set(f); n.has(id) ? (n.delete(id), toast('removed from saved')) : (n.add(id), toast('saved · find it under saved')); return n })
-  const openSearch = (scope = null, q = '') => push({ name: 'search', scope, q })
+  const openSearch = (scope = null, q = '', focus = true) => push({ name: 'search', scope, q, focus })
   const runSearch = (query, section, sub) => {
     setRecent(r => [query, ...r.filter(x => x !== query)].slice(0, 6))
     push({ name: 'results', query, section, sub })
@@ -111,7 +111,7 @@ export default function App() {
           {SCREENS.map(s => (
             <button key={s.id} type="button" disabled={s.status !== 'built'}
               className={'option' + (s.id === current ? ' option-on' : '')}
-              onClick={() => (s.id === 'a' ? goHome() : s.id === 'b' ? openSection('sale') : s.id === 'c' ? openSearch() : openListing(12))}>
+              onClick={() => (s.id === 'a' ? goHome() : s.id === 'b' ? openSection('sale') : s.id === 'c' ? openSearch(null, '', false) : openListing(12))}>
               <span className="option-key">{s.id}</span>
               <span className="option-body">
                 <strong>{s.name}{s.status === 'next' && <em className="soon">next</em>}</strong>
@@ -144,7 +144,7 @@ export default function App() {
             onBack={back} onSearch={searchFromList} onOpenListing={openListing} toast={toast} onSaveSearch={addSaved} />}
           {route.name === 'results' && <CategoryScreen key={'r' + route.query + route.section + route.sub} sectionId={route.section} initialSub={route.sub} query={route.query} area={area} onAreaChange={setArea} onOpenLocation={openLocation}
             onBack={back} onSearch={searchFromList} onOpenListing={openListing} toast={toast} onSaveSearch={addSaved} />}
-          {route.name === 'search' && <SearchScreen key={'s' + stack.length} scopeSection={route.scope} initialQuery={route.q} recent={recent} saved={saved}
+          {route.name === 'search' && <SearchScreen key={'s' + stack.length} autoFocus={route.focus !== false} scopeSection={route.scope} initialQuery={route.q} recent={recent} saved={saved}
             onSubmit={runSearch} onOpenSaved={openSaved} onOpenListing={openListing} onBack={back} toast={toast}
             onRemoveRecent={r => setRecent(x => x.filter(y => y !== r))} onClearRecent={() => setRecent([])}
             area={area} onAreaChange={setArea} onOpenLocation={openLocation} />}

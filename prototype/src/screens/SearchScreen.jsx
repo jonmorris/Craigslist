@@ -6,11 +6,12 @@ import { ALL_AREAS, inArea, areaFull } from '../area.js'
 
 // (c) Search — M3 full-screen search view. Empty: recent, saved, trending.
 // Typing: completions, "search in" scopes with counts, and listing matches.
-export default function SearchScreen({ onOpenListing, scopeSection, initialQuery = '', recent, saved, onSubmit, onOpenSaved, onRemoveRecent, onClearRecent, onBack, toast, area = ALL_AREAS, onAreaChange, onOpenLocation }) {
+export default function SearchScreen({ onOpenListing, scopeSection, initialQuery = '', recent, saved, onSubmit, onOpenSaved, onRemoveRecent, onClearRecent, onBack, toast, area = ALL_AREAS, onAreaChange, onOpenLocation, autoFocus = true }) {
   const [q, setQ] = useState(initialQuery)
   const [scope, setScope] = useState(scopeSection)
   const input = useRef(null)
-  useEffect(() => { input.current?.focus() }, [])
+  // jumping here from the desktop panel shouldn't drop a caret into the field
+  useEffect(() => { if (autoFocus) input.current?.focus() }, [])
 
   const scopeName = scope && sections.find(s => s.id === scope).name
   const typed = q.trim()
