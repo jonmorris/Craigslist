@@ -3,7 +3,8 @@ import { sections, listings, priceHistogram, ageMinutes, city, fmt, visible } fr
 import { Icon, ListingCard, Sheet, PeaceSign } from '../ui.jsx'
 import { matches } from '../search.js'
 import { taxonomy, zeroLocal } from '../taxonomy.js'
-import { REGIONS, NEIGHBORHOODS, RADII, ALL_AREAS, inArea, areaLabel, areaFull } from '../area.js'
+import { ALL_AREAS, inArea, areaLabel, areaFull } from '../area.js'
+import AreaControls from './AreaControls.jsx'
 
 // (b) Category → list. Filters live in plain sight as chips; price uses the
 // fair-price histogram; repeat dealer posts collapse; save search = alerts on.
@@ -89,23 +90,25 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
         <header className="cat-bar">
           <button type="button" className="icon-btn" aria-label="back" onClick={onBack}><Icon name="back" /></button>
           <div className="cat-title">
-            {query
-              ? <h1>{heading}</h1>
-              : <button type="button" className="title-switch" onClick={() => setSheet('sub')} aria-label={`subcategory: ${subName}. change`}>
-                  <h1>{heading}</h1><Icon name="chevron" />
-                </button>}
-            <div className="cat-sub">
-              {query && <button type="button" className="sub-switch" onClick={() => setSheet('sub')}>in {subName}<Icon name="chevron" size={16} /></button>}
-              {!query && f.sub !== 'all' && <span>{sectionName} ·</span>}
-              <button type="button" className="sub-switch" onClick={() => setSheet('area')} aria-label={`area: ${areaLabel(area)}. change`}>
-                <Icon name="pin" size={16} /><span className="ellipsis">{areaFull(area, city.name)}</span><Icon name="chevron" size={16} />
-              </button>
-            </div>
+            <h1>{heading}</h1>
           </div>
           <button type="button" className="icon-btn" aria-label={'search ' + subName} onClick={() => onSearch(sectionId, query || '')}><Icon name="search" /></button>
           <button type="button" className="icon-btn" aria-label={view === 'grid' ? 'show as list' : 'show as grid'}
             onClick={() => setView(v => (v === 'grid' ? 'list' : 'grid'))}><Icon name={view === 'grid' ? 'list' : 'grid'} /></button>
         </header>
+
+        {/* scope row: what and where, as two full-size switchers (56dp tall, well above the 48dp minimum) */}
+        <div className="scope-switches pad">
+          <button type="button" className="scope-btn" onClick={() => setSheet('sub')}>
+            <span className="scope-text"><span className="scope-k">{query ? 'in' : section && f.sub !== 'all' ? section.name : 'category'}</span>
+              <span className="scope-v">{query ? subName : f.sub === 'all' ? `all ${sectionName}` : subName}</span></span>
+            <Icon name="chevron" />
+          </button>
+          <button type="button" className="scope-btn" onClick={() => setSheet('area')}>
+            <span className="scope-text"><span className="scope-k">area</span><span className="scope-v">{areaFull(area, city.name)}</span></span>
+            <Icon name="chevron" />
+          </button>
+        </div>
 
         {!zero && <div className="hscroll chips filter-row" aria-label="filters">
           <button type="button" className="chip" onClick={() => setSheet('sort')}>
@@ -283,36 +286,13 @@ function SubSheet({ query, section, sectionId, current, counts, total, onClose, 
 
 // Area: regions and neighborhoods (multi-select) plus distance from you, with a live count.
 function AreaSheet({ area, countFor, onClose, onApply }) {
-  const [places, setPlaces] = useState(area.places)
-  const [radius, setRadius] = useState(area.radius)
-  const toggle = p => setPlaces(ps => (ps.includes(p) ? ps.filter(x => x !== p) : [...ps, p]))
-  const next = { places, radius }
+  const [next, setNext] = useState(area)
   const n = countFor(next)
-  const chip = (p, label = p) => (
-    <button key={p} type="button" className={'chip' + (places.includes(p) ? ' chip-on' : '')} aria-pressed={places.includes(p)} onClick={() => toggle(p)}>
-      {places.includes(p) && <Icon name="check" size={18} />}{label}
-    </button>
-  )
   return (
     <Sheet title="area" onClose={onClose} footer={
       <button type="button" className="btn-primary" onClick={() => onApply(next)}>show {n} listing{n === 1 ? '' : 's'}</button>
     }>
-      <div className="presets">
-        <button type="button" className={'chip' + (!places.length ? ' chip-on' : '')} onClick={() => setPlaces([])}>
-          {!places.length && <Icon name="check" size={18} />}all areas
-        </button>
-        {Object.keys(REGIONS).map(r => chip(r, r === 'suburbs' ? 'the suburbs' : `all of ${r}`))}
-      </div>
-      <p className="area-label">neighborhoods</p>
-      <div className="presets">{NEIGHBORHOODS.map(h => chip(h))}</div>
-      <p className="area-label">distance from you</p>
-      <div className="segmented" role="radiogroup" aria-label="distance">
-        {RADII.map(r => (
-          <button key={String(r)} type="button" role="radio" aria-checked={radius === r} className={radius === r ? 'seg-on' : ''} onClick={() => setRadius(r)}>
-            {radius === r && <Icon name="check" size={18} />}{r == null ? 'any' : `${r} mi`}
-          </button>
-        ))}
-      </div>
+      <AreaControls value={next} onChange={setNext} />
     </Sheet>
   )
 }

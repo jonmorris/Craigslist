@@ -25,9 +25,9 @@ export function PeaceSign({ size = 28 }) {
   )
 }
 
-export function LocationButton({ compact, area = 'all areas' }) {
+export function LocationButton({ compact, area = 'all areas', onTap }) {
   return (
-    <button className="loc" type="button">
+    <button className="loc" type="button" onClick={onTap} aria-label={`location: ${area}. change`}>
       {!compact && <span className="loc-label">location</span>}
       <span className="loc-value">{area.startsWith('minneapolis') ? <>minneapolis <span className="loc-area">{area.slice(11)}</span></> : <span>{area}</span>}
         <Icon name="chevron" size={18} /></span>

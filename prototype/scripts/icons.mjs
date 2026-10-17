@@ -11,7 +11,7 @@ export const MAP = {
   search: 'search', bell: 'notifications', chevron: 'keyboard_arrow_down', arrow: 'arrow_forward',
   home: 'home', bookmark: 'bookmark', plus: 'add', chat: 'chat_bubble', person: 'person',
   tag: 'sell', house: 'house', briefcase: 'work', wrench: 'handyman', bolt: 'bolt', people: 'group',
-  pin: 'location_on', snow: 'ac_unit', dresser: 'dresser', shelf: 'shelves', camera: 'photo_camera',
+  pin: 'location_on', near: 'near_me', snow: 'ac_unit', dresser: 'dresser', shelf: 'shelves', camera: 'photo_camera',
   sparkle: 'brightness_auto', sun: 'light_mode', moon: 'dark_mode', sofa: 'weekend', desk: 'desk',
   back: 'arrow_back', close: 'close', sliders: 'tune', grid: 'grid_view', list: 'view_list',
   check: 'check', sort: 'swap_vert', history: 'history', fill: 'north_west', trend: 'trending_up',

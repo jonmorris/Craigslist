@@ -4,6 +4,7 @@ import CategoryScreen from './screens/CategoryScreen.jsx'
 import SearchScreen from './screens/SearchScreen.jsx'
 import DetailScreen from './screens/DetailScreen.jsx'
 import SectionScreen from './screens/SectionScreen.jsx'
+import LocationScreen from './screens/LocationScreen.jsx'
 import { seedRecent } from './search.js'
 import { ALL_AREAS, areaFull } from './area.js'
 import { savedSearches as seedSaved, hidden } from './data.js'
@@ -72,6 +73,7 @@ export default function App() {
   const openCategory = (section, sub = 'all') => push({ name: 'cat', section, sub })
   const openListing = id => push({ name: 'detail', id })
   const openSection = id => push({ name: 'section', section: id })
+  const openLocation = () => push({ name: 'location' })
   const hideListing = id => {
     hidden.add(id); setHiddenVersion(v => v + 1); back()
     toast('hidden · you won\u2019t see it in lists or search', { label: 'undo', run: () => { hidden.delete(id); setHiddenVersion(v => v + 1) } })
@@ -123,7 +125,9 @@ export default function App() {
       <div className="device">
         <div className="statusbar" aria-hidden="true"><span>9:41</span><span className="sb-icons">▲ ◢ ▮</span></div>
         <main className="screen" ref={screenRef}>
-          {route.name === 'home' && <HomeScreen toast={toast} onOpen={openCategory} onOpenSection={openSection} onSearch={() => openSearch()} onOpenSaved={openSaved} onOpenListing={openListing} savedSearches={saved} areaText={areaFull(area)} />}
+          {route.name === 'home' && <HomeScreen toast={toast} onOpen={openCategory} onOpenSection={openSection} onSearch={() => openSearch()} onOpenSaved={openSaved} onOpenListing={openListing} savedSearches={saved} areaText={areaFull(area)} onLocation={openLocation} />}
+          {route.name === 'location' && <LocationScreen area={area} toast={toast} onClose={back}
+            onApply={a => { setArea(a); back(); toast(`showing ${areaFull(a)}`) }} />}
           {route.name === 'section' && <SectionScreen key={'sec' + route.section} sectionId={route.section} onBack={back}
             onOpenList={openCategory} onSearch={scope => openSearch(scope)} onRunSearch={(q, sec) => runSearch(q, sec, 'all')}
             onOpenListing={openListing} toast={toast} />}
@@ -143,7 +147,7 @@ export default function App() {
             {toastMsg.action && <button type="button" className="snack-action" onClick={() => { toastMsg.action.run(); setToastMsg(null) }}>{toastMsg.action.label}</button>}
           </div>
         )}
-        {route.name !== 'search' && route.name !== 'detail' && <BottomNav onTap={toast} onHome={goHome} />}
+        {!['search', 'detail', 'location'].includes(route.name) && <BottomNav onTap={toast} onHome={goHome} />}
         <div className="gesture" aria-hidden="true" />
       </div>
     </div>

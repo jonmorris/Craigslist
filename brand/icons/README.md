@@ -20,6 +20,7 @@
 | `bolt` | bolt |
 | `group` | people |
 | `location_on` | pin |
+| `near_me` | near |
 | `ac_unit` | snow |
 | `dresser` | dresser |
 | `shelves` | shelf |
