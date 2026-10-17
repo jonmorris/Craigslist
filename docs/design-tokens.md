@@ -122,7 +122,7 @@ All are standard M3 / Compose Material 3 components. Nothing is web-only.
 
 | Prototype | Compose Material 3 |
 |---|---|
-| bottom navigation | `NavigationBar` + `NavigationBarItem` (5 destinations, 64×32 indicator) |
+| bottom navigation | `NavigationBar` + `NavigationBarItem` (5 destinations, 64×32 indicator). Post keeps an always-on `primaryContainer` indicator: a deliberate brand choice, since new listings are the marketplace's supply |
 | search bar | `SearchBar` (56dp) |
 | home header, list header | `TopAppBar`, with the home brand row collapsing via `TopAppBarScrollBehavior` |
 | subcategory tabs | `PrimaryScrollableTabRow` |

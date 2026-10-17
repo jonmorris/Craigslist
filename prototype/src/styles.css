@@ -262,3 +262,9 @@ button:disabled::before { display: none; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* Post: deliberate brand departure from the standard nav bar. New listings are the
+   marketplace's supply (and paid categories are revenue), so the entry point stays
+   prominent: an always-on primaryContainer indicator, same size and position as the others. */
+.nav-post { color: var(--md-sys-color-primary); font-weight: 700; }
+.nav-post .nav-pill { background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); }
