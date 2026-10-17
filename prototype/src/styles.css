@@ -159,7 +159,7 @@ button:disabled::before { display: none; }
 .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 16px; }
 .tile { aspect-ratio: 1 / .9; border-radius: var(--md-shape-md); padding: 16px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; }
 .tile-name { font: var(--md-title-medium); margin-top: auto; }
-.tile-count { font: var(--md-label-medium); opacity: .8; font-variant-numeric: tabular-nums; }
+.tile-count { font: var(--md-label-medium); font-variant-numeric: tabular-nums; }
 .saved-chip { flex: none; display: flex; align-items: center; gap: 16px; padding: 12px 16px; border-radius: var(--md-shape-md); border: 1px solid var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface); }
 .saved-text { display: flex; flex-direction: column; }
 .saved-text strong { font: var(--md-title-small); }
@@ -323,8 +323,8 @@ button:disabled::before { display: none; }
 .dots span.on { background: #fff; }
 /* floating actions over the photo: fixed scrim gradient keeps them legible on any image */
 .detail-actions { position: absolute; top: 0; left: 0; right: 0; z-index: 5; display: flex; gap: 4px; padding: 8px; background: linear-gradient(rgb(0 0 0 / .35), transparent); }
-.icon-btn.on-photo { background: rgb(0 0 0 / .32); color: #fff; width: 44px; height: 44px; margin: 2px; }
-.icon-btn.on-photo.fav-on { color: #ff8fb1; }
+.icon-btn.on-photo { background: rgb(0 0 0 / .55); color: #fff; width: 44px; height: 44px; margin: 2px; }
+.icon-btn.on-photo.fav-on { color: #ffc2d4; }
 .gallery-empty + .detail-actions { background: none; }
 .gallery-empty + .detail-actions .icon-btn.on-photo { background: var(--md-sys-color-surface); color: var(--md-sys-color-on-surface); }
 .detail-body { display: flex; flex-direction: column; padding-top: 16px; }
@@ -386,7 +386,7 @@ button:disabled::before { display: none; }
 .sell-like { display: flex; align-items: center; gap: 16px; margin-top: 28px; padding: 16px; border-radius: var(--md-shape-lg); background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); text-align: left; }
 .sell-text { flex: 1; display: flex; flex-direction: column; }
 .sell-text strong { font: var(--md-title-medium); }
-.sell-text span { font: var(--md-body-medium); opacity: .85; }
+.sell-text span { font: var(--md-body-medium); }
 .post-foot { margin: 20px 0 8px; font: var(--md-body-small); color: var(--md-sys-color-on-surface-variant); }
 .inline-link { color: var(--md-sys-color-primary); font: inherit; text-decoration: underline; }
 .inline-link::before { display: none; }
@@ -427,14 +427,14 @@ button:disabled::before { display: none; }
 .section-hero .icon-btn { color: inherit; }
 .section-hero-body { display: flex; flex-direction: column; gap: 4px; padding-top: 4px; }
 .section-hero-body h1 { font: 400 36px/44px var(--brand); margin-top: 8px; }
-.section-hero-body p { font: var(--md-body-medium); opacity: .85; font-variant-numeric: tabular-nums; }
+.section-hero-body p { font: var(--md-body-medium); font-variant-numeric: tabular-nums; }
 .browse-all { display: flex; align-items: center; gap: 16px; width: 100%; margin-top: 16px; padding: 16px; border-radius: var(--md-shape-md); border: 1px solid var(--md-sys-color-outline-variant); text-align: left; }
 .browse-all .sv-text strong { font: var(--md-title-medium); }
 .browse-all .sv-text span { font: var(--md-body-small); color: var(--md-sys-color-on-surface-variant); }
 .pop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .pop-tile { min-height: 80px; padding: 14px 16px; border-radius: var(--md-shape-md); display: flex; flex-direction: column; justify-content: space-between; gap: 8px; text-align: left; }
 .pop-tile strong { font: var(--md-title-medium); }
-.pop-tile span { font: var(--md-label-medium); opacity: .8; font-variant-numeric: tabular-nums; }
+.pop-tile span { font: var(--md-label-medium); font-variant-numeric: tabular-nums; }
 .az-list { display: flex; flex-direction: column; }
 .az-row { display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 0 16px; border-bottom: 1px solid var(--md-sys-color-outline-variant); text-align: left; }
 .az-row:first-child { border-top: 1px solid var(--md-sys-color-outline-variant); }

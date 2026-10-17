@@ -18,14 +18,14 @@ const OVERRIDES = {
     secondaryContainer: '#ebddfb', onSecondaryContainer: '#3f1673',
     surface: '#fcfafe', surfaceDim: '#ece8f1', surfaceContainerLowest: '#ffffff', surfaceContainerLow: '#f8f5fb',
     surfaceContainer: '#f3eef8', surfaceContainerHigh: '#efe9f5', surfaceContainerHighest: '#e7dff0',
-    onSurface: '#1e1a24', onSurfaceVariant: '#5f576b', outline: '#8a8296', outlineVariant: '#dcd2e6',
+    onSurface: '#1e1a24', onSurfaceVariant: '#5f576b', outline: '#817a8d', outlineVariant: '#dcd2e6',
   },
   dark: {
     primary: '#caa4ff', onPrimary: '#2a0b55', primaryContainer: '#caa4ff', onPrimaryContainer: '#2a0b55',
     secondaryContainer: '#3a2556', onSecondaryContainer: '#e8d8ff',
     surface: '#15121a', surfaceDim: '#0c0a10', surfaceContainerLowest: '#0f0d13', surfaceContainerLow: '#19161e',
     surfaceContainer: '#1f1a26', surfaceContainerHigh: '#241f2b', surfaceContainerHighest: '#2a2433',
-    onSurface: '#ede7f4', onSurfaceVariant: '#aaa1b7', outline: '#6f6779', outlineVariant: '#342d3e',
+    onSurface: '#ede7f4', onSurfaceVariant: '#aaa1b7', outline: '#7b7386', outlineVariant: '#342d3e',
   },
 }
 
@@ -64,6 +64,8 @@ const PAIRS = [
   ['onSurface', 'surface'], ['onSurfaceVariant', 'surface'], ['onSurfaceVariant', 'surfaceContainerHigh'],
   ['primary', 'surface'], ['inverseOnSurface', 'inverseSurface'],
 ]
+// WCAG 1.4.11: control boundaries (text fields, switches, radios, segmented) need 3:1
+const UI_PAIRS = [['outline', 'surface'], ['outline', 'surfaceContainerLow'], ['outline', 'surfaceContainerHigh'], ['outline', 'surfaceContainerHighest']]
 const failures = []
 
 function block(isDark) {
@@ -74,6 +76,7 @@ function block(isDark) {
   const lines = ROLES.map(r => `  --md-sys-color-${kebab(r)}: ${role[r]};`)
   const check = (label, fg, bg, min) => { const c = contrast(fg, bg); if (c < min) failures.push(`${mode} ${label}: ${c.toFixed(2)}`) }
   for (const [fg, bg] of PAIRS) check(`${fg} on ${bg}`, role[fg], role[bg], 4.5)
+  for (const [fg, bg] of UI_PAIRS) check(`${fg} on ${bg}`, role[fg], role[bg], 3)
   for (const [name, m] of Object.entries(CUSTOM)) {
     const [c, on, cont, onCont] = m[mode]
     lines.push(`  --md-ext-${name}: ${c};`, `  --md-ext-on-${name}: ${on};`,
@@ -105,4 +108,4 @@ ${dark}
 `
 writeFileSync('src/theme.css', css)
 console.log('wrote src/theme.css')
-console.log(failures.length ? 'CONTRAST BELOW 4.5:1\n  ' + failures.join('\n  ') : 'contrast: all text pairs pass 4.5:1')
+console.log(failures.length ? 'CONTRAST TOO LOW\n  ' + failures.join('\n  ') : 'contrast: text pairs pass 4.5:1, control outlines pass 3:1')

@@ -39,7 +39,7 @@ Everything in the prototype uses only these values, so they move directly into F
 | `surface-container` | `#f3eef8` | `#1f1a26` |
 | `surface-container-high` | `#efe9f5` | `#241f2b` |
 | `surface-container-highest` | `#e7dff0` | `#2a2433` |
-| `outline` | `#8a8296` | `#6f6779` |
+| `outline` | `#817a8d` | `#7b7386` |
 | `outline-variant` | `#dcd2e6` | `#342d3e` |
 | `inverse-surface` | `#352e37` | `#ebdfeb` |
 | `inverse-on-surface` | `#f9edf9` | `#352e37` |
@@ -86,6 +86,15 @@ Section tints and price signals. These are hand-picked soft pastels (light) and 
 | `on-warn-container` | `#8a3d12` | `#f3b48e` |
 
 Use: section tiles = `<section>-container` / `on-<section>-container`. "below typical" and "free" = `good`. "above typical" = `warn`.
+
+### Accessibility (WCAG 2.1 AA)
+
+- **Text:** every text role on its background is at least 4.5:1, in light and dark. Large text (24px+, or 18.66px+ bold) needs 3:1, but we hold it to 4.5:1 anyway.
+- **Control outlines:** `outline` is at least 3:1 against every surface it sits on (`surface`, `surface-container-low`, `-high` and `-highest`). That covers text fields, switches, radios and segmented buttons (WCAG 1.4.11).
+- **No opacity on text:** use `on-surface-variant` for secondary text, never a faded `on-*` color.
+- **Buttons over photos:** back, share and save sit on `rgb(0 0 0 / .55)`. That keeps white icons above 4.5:1 and the saved-state pink (`#ffc2d4`) above 3:1, even over a white photo.
+- **Selection:** chips and segments show a checkmark as well as the fill, so the selected state doesn't rely on color alone.
+- **Checks:** `npm run theme` fails if a token pair drops below its minimum. The rendered screens were also checked with axe-core plus a manual composite check, in light and dark.
 
 ## Typography
 
