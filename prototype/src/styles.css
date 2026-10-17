@@ -556,3 +556,22 @@ button:disabled::before { display: none; }
 .map-overlay .map-tint { fill: var(--md-sys-color-primary); fill-opacity: .28; }
 .map-overlay .map-cut { fill: none; stroke: var(--md-sys-color-primary); stroke-width: 2.5; }
 .real-map-wrap .leaflet-control-container { position: relative; z-index: 600; }
+
+/* Phone / installed PWA: respect Android's system bars. With viewport-fit=cover,
+   Chrome can draw the page edge-to-edge behind the navigation bar; pad our own
+   bottom bars by the inset and paint everything under them in the nav-bar color
+   so the system buttons sit on our surface, not on white. */
+@media (max-width: 899px) {
+  html, body { background: var(--md-sys-color-surface-container); }
+  .device { padding-top: env(safe-area-inset-top, 0px); }
+  .navbar { height: calc(80px + env(safe-area-inset-bottom, 0px)); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .detail-bar { padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
+  .sheet-foot { padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)); }
+  .sheet-layer .sheet:not(:has(.sheet-foot)) .sheet-body { padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
+  .snackbar { bottom: calc(92px + env(safe-area-inset-bottom, 0px)); }
+  .fab { bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+  .screen { padding-bottom: calc(160px + env(safe-area-inset-bottom, 0px)); }
+  .screen:has(> .detail) { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+  .screen:has(> .loc-page) { padding-bottom: calc(32px + env(safe-area-inset-bottom, 0px)); }
+  .screen:has(> .search) { padding-bottom: env(safe-area-inset-bottom, 0px); }
+}
