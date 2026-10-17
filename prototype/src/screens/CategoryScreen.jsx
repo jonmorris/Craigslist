@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { sections, listings, priceHistogram, ageMinutes, city, fmt, visible } from '../data.js'
 import { Icon, ListingCard, Sheet, PeaceSign } from '../ui.jsx'
 import { matches } from '../search.js'
-import { taxonomy } from '../taxonomy.js'
+import { taxonomy, zeroLocal } from '../taxonomy.js'
 import { REGIONS, NEIGHBORHOODS, RADII, ALL_AREAS, inArea, areaLabel, areaFull } from '../area.js'
 
 // (b) Category → list. Filters live in plain sight as chips; price uses the
@@ -71,6 +71,8 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
   const subName = f.sub === 'all' ? sectionName : f.sub
   const heading = query ? `“${query}”` : subName
   const filtered = f.ownerOnly || f.photosOnly || f.min != null || f.max != null
+  // nothing in this subcategory anywhere in the metro (not just filtered out)
+  const zero = !query && f.sub !== 'all' ? zeroLocal[f.sub] : null
 
   // Each way to widen an empty result, with how many it would bring back.
   const relaxers = [
@@ -105,7 +107,7 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
             onClick={() => setView(v => (v === 'grid' ? 'list' : 'grid'))}><Icon name={view === 'grid' ? 'list' : 'grid'} /></button>
         </header>
 
-        <div className="hscroll chips filter-row" aria-label="filters">
+        {!zero && <div className="hscroll chips filter-row" aria-label="filters">
           <button type="button" className="chip" onClick={() => setSheet('sort')}>
             <Icon name="sort" size={18} />{SORTS.find(s => s[0] === sort)[1]}<Icon name="chevron" size={16} />
           </button>
@@ -118,10 +120,13 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
           <button type="button" className={'chip' + (f.photosOnly ? ' chip-on' : '')} aria-pressed={f.photosOnly} onClick={() => set({ photosOnly: !f.photosOnly })}>
             {f.photosOnly && <Icon name="check" size={18} />}has photos
           </button>
-        </div>
+        </div>}
       </div>
 
-      {rows.length > 0 ? (
+      {zero ? (
+        <ZeroLocal sub={f.sub} sectionName={sectionName} sectionId={sectionId} info={zero}
+          onAlert={() => setSheet('save')} onPick={sub => set({ sub })} toast={toast} saved={saved} />
+      ) : rows.length > 0 ? (
         <>
           <p className="results-line pad">
             {query ? `${rows.length} result${rows.length === 1 ? '' : 's'}` : f.sub === 'all' && !filtered ? `${fmt(section.count)} listings · ${fmt(section.newToday)} new today` : `${rows.length} match`} · {SORTS.find(s => s[0] === sort)[1]}
@@ -154,9 +159,9 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
         </div>
       )}
 
-      <button type="button" className={'fab' + (saved ? ' fab-done' : '')} onClick={() => (saved ? toast('manage alerts in saved') : setSheet('save'))}>
+      {!zero && <button type="button" className={'fab' + (saved ? ' fab-done' : '')} onClick={() => (saved ? toast('manage alerts in saved') : setSheet('save'))}>
         <Icon name={saved ? 'check' : 'bell'} />{saved ? 'alerts on' : 'save search'}
-      </button>
+      </button>}
 
       {sheet === 'sub' && (
         <SubSheet query={query} section={section} sectionId={sectionId} current={f.sub} counts={subCounts} total={groupDealers(all).length}
@@ -193,6 +198,65 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
 
 // Subcategory switcher: the section's full taxonomy (or, for search results,
 // the subcategories the results fall in, with counts).
+// Zero local listings: nothing in this subcategory anywhere near Minneapolis.
+// Show how far you'd have to go, offer an alert, related places, and a nudge to post.
+function ZeroLocal({ sub, sectionName, sectionId, info, onAlert, onPick, toast, saved }) {
+  const subs = taxonomy[sectionId]
+  const pick = name => {
+    const t = subs.find(x => x.name === name)
+    t?.key ? onPick(t.key) : toast(`prototype: no mock listings for ${name} yet`)
+  }
+  const far = info.nearest[0]
+  return (
+    <div className="zero pad">
+      <RangeRings nearest={far} />
+      <h2>no {sub} listings in the {city.name} area</h2>
+      <p>it's a rare one here. the closest {far[2] === 1 ? 'is' : 'are'} in {far[0]}, {far[1]} mi away.</p>
+      <button type="button" className={saved ? 'btn-tonal' : 'btn-primary zero-cta'} onClick={saved ? undefined : onAlert}>
+        <Icon name={saved ? 'check' : 'bell'} />{saved ? 'we\u2019ll tell you when one\u2019s posted' : 'alert me when one\u2019s posted nearby'}
+      </button>
+
+      <section className="zero-block">
+        <h3>nearest listings</h3>
+        <div className="zero-list">
+          {info.nearest.map(([place, mi, n]) => (
+            <button key={place} type="button" className="zero-row" onClick={() => toast(`would open ${sub} on craigslist ${place}`)}>
+              <Icon name="pin" />
+              <span className="sv-text"><strong>{place}</strong><span>{mi} mi away · craigslist {place.split(',')[0]}</span></span>
+              <span className="zero-n">{n} listing{n === 1 ? '' : 's'}</span>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <section className="zero-block">
+        <h3>related in {sectionName}</h3>
+        <div className="presets">
+          {info.related.map(r => <button key={r} type="button" className="chip" onClick={() => pick(r)}>{r}</button>)}
+        </div>
+      </section>
+
+      <button type="button" className="sell-like" onClick={() => toast('posting flow comes later')}>
+        <span className="sell-text"><strong>have {info.thing}?</strong><span>be the first in {city.name} to post it, free</span></span>
+        <Icon name="arrow" />
+      </button>
+    </div>
+  )
+}
+
+// "You" at the center, empty rings for the metro, the nearest listing out past them.
+function RangeRings({ nearest }) {
+  return (
+    <svg className="rings" viewBox="0 0 240 150" role="img" aria-label={`nothing within the metro; nearest ${nearest[1]} miles away`}>
+      {[28, 52, 76].map(r => <circle key={r} cx="120" cy="80" r={r} className="ring" />)}
+      <circle cx="120" cy="80" r="7" className="ring-you" />
+      <text x="120" y="104" className="ring-label">you</text>
+      <circle cx="214" cy="38" r="6" className="ring-far" />
+      <text x="214" y="22" className="ring-label">{nearest[0]}</text>
+    </svg>
+  )
+}
+
 function SubSheet({ query, section, sectionId, current, counts, total, onClose, onPick, toast }) {
   const rows = query
     ? [...counts].sort((a, b) => b[1] - a[1]).map(([key, n]) => ({ name: key, key, count: n }))
@@ -209,7 +273,7 @@ function SubSheet({ query, section, sectionId, current, counts, total, onClose, 
           <button key={r.name} type="button" role="radio" aria-checked={current === r.key} className="radio-row"
             onClick={() => (r.key ? onPick(r.key) : toast(`prototype: no mock listings for ${r.name} yet`))}>
             <span className={'radio' + (current === r.key && r.key ? ' radio-on' : '')} /><span className="flex1">{r.name}</span>
-            <span className="az-count">{fmt(r.count)}</span>
+            <span className={'az-count' + (r.zero ? ' az-none' : '')}>{r.zero ? 'none nearby' : fmt(r.count)}</span>
           </button>
         ))}
       </div>

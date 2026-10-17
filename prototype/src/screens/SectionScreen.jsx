@@ -76,7 +76,7 @@ export default function SectionScreen({ sectionId, onBack, onOpenList, onSearch,
           {az.map(sub => (
             <button key={sub.name} type="button" role="listitem" className="az-row" onClick={() => openSub(sub)}>
               <span className="az-name">{sub.name}</span>
-              <span className="az-count">{fmt(sub.count)}</span>
+              <span className={'az-count' + (sub.zero ? ' az-none' : '')}>{sub.zero ? 'none nearby' : fmt(sub.count)}</span>
               <Icon name="arrow" size={18} />
             </button>
           ))}
