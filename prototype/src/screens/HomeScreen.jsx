@@ -3,7 +3,7 @@ import { sections, listings, city, fmt, visible } from '../data.js'
 import { Icon, PeaceSign, LocationButton, SearchBar, ListingCard } from '../ui.jsx'
 
 // (a) Home — search hero, six section tiles, saved searches, fresh grid.
-export default function HomeScreen({ toast, onOpen, onSearch, onOpenSaved, onOpenListing, savedSearches }) {
+export default function HomeScreen({ toast, onOpen, onOpenSection, onSearch, onOpenSaved, onOpenListing, savedSearches }) {
   const fresh = visible(listings).filter(l => l.photo || l.section === 'sale').slice(0, 8)
   // Brand + location row scrolls away; the search bar pins and picks up the mark.
   const barRef = useRef(null)
@@ -33,7 +33,7 @@ export default function HomeScreen({ toast, onOpen, onSearch, onOpenSaved, onOpe
 
       <section className="pad tiles" aria-label="browse">
         {sections.map(s => (
-          <button key={s.id} type="button" className={'tile tint-' + s.id} onClick={() => onOpen(s.id)}>
+          <button key={s.id} type="button" className={'tile tint-' + s.id} onClick={() => onOpenSection(s.id)}>
             <Icon name={s.icon} size={26} />
             <span className="tile-name">{s.name}</span>
             <span className="tile-count">{fmt(s.count)}</span>

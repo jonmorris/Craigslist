@@ -3,13 +3,14 @@ import HomeScreen from './screens/HomeScreen.jsx'
 import CategoryScreen from './screens/CategoryScreen.jsx'
 import SearchScreen from './screens/SearchScreen.jsx'
 import DetailScreen from './screens/DetailScreen.jsx'
+import SectionScreen from './screens/SectionScreen.jsx'
 import { seedRecent } from './search.js'
 import { savedSearches as seedSaved, hidden } from './data.js'
 import { BottomNav, Icon } from './ui.jsx'
 
 const SCREENS = [
   { id: 'a', name: 'home', status: 'built', note: 'Search, six section tiles, your saved searches, fresh listings near you.' },
-  { id: 'b', name: 'category → list', status: 'built', note: 'Subcategory tabs, filter chips in plain sight, a price sheet with the typical price, dealer reposts grouped, save search with alerts on.' },
+  { id: 'b', name: 'category → list', status: 'built', note: 'A landing page per section (popular subcategories, trending, just posted, the full taxonomy), then the list: Subcategory tabs, filter chips in plain sight, a price sheet with the typical price, dealer reposts grouped, save search with alerts on.' },
   { id: 'c', name: 'search', status: 'built', note: 'Full-screen search: recent, saved and trending; suggestions with "search in" category counts; results by category; no-results turns into an alert.' },
   { id: 'd', name: 'listing detail', status: 'built', note: 'Swipeable photos, price vs. typical, specs, approximate area, seller context and safety, one-tap message with quick replies.' },
 ]
@@ -68,6 +69,7 @@ export default function App() {
 
   const openCategory = (section, sub = 'all') => push({ name: 'cat', section, sub })
   const openListing = id => push({ name: 'detail', id })
+  const openSection = id => push({ name: 'section', section: id })
   const hideListing = id => {
     hidden.add(id); setHiddenVersion(v => v + 1); back()
     toast('hidden · you won\u2019t see it in lists or search', { label: 'undo', run: () => { hidden.delete(id); setHiddenVersion(v => v + 1) } })
@@ -84,7 +86,7 @@ export default function App() {
   // From the results bar: search icon reopens search; "search all sections" swaps scope in place.
   const searchFromList = (scope, q, widen) => (widen ? replaceTop({ name: 'results', query: q, section: null, sub: 'all' }) : openSearch(scope, q))
 
-  const current = { home: 'a', cat: 'b', search: 'c', results: 'c', detail: 'd' }[route.name]
+  const current = { home: 'a', section: 'b', cat: 'b', search: 'c', results: 'c', detail: 'd' }[route.name]
 
   return (
     <div className="stage">
@@ -96,7 +98,7 @@ export default function App() {
           {SCREENS.map(s => (
             <button key={s.id} type="button" disabled={s.status !== 'built'}
               className={'option' + (s.id === current ? ' option-on' : '')}
-              onClick={() => (s.id === 'a' ? goHome() : s.id === 'b' ? openCategory('sale') : s.id === 'c' ? openSearch() : openListing(12))}>
+              onClick={() => (s.id === 'a' ? goHome() : s.id === 'b' ? openSection('sale') : s.id === 'c' ? openSearch() : openListing(12))}>
               <span className="option-key">{s.id}</span>
               <span className="option-body">
                 <strong>{s.name}{s.status === 'next' && <em className="soon">next</em>}</strong>
@@ -119,7 +121,10 @@ export default function App() {
       <div className="device">
         <div className="statusbar" aria-hidden="true"><span>9:41</span><span className="sb-icons">▲ ◢ ▮</span></div>
         <main className="screen" ref={screenRef}>
-          {route.name === 'home' && <HomeScreen toast={toast} onOpen={openCategory} onSearch={() => openSearch()} onOpenSaved={openSaved} onOpenListing={openListing} savedSearches={saved} />}
+          {route.name === 'home' && <HomeScreen toast={toast} onOpen={openCategory} onOpenSection={openSection} onSearch={() => openSearch()} onOpenSaved={openSaved} onOpenListing={openListing} savedSearches={saved} />}
+          {route.name === 'section' && <SectionScreen key={'sec' + route.section} sectionId={route.section} onBack={back}
+            onOpenList={openCategory} onSearch={scope => openSearch(scope)} onRunSearch={(q, sec) => runSearch(q, sec, 'all')}
+            onOpenListing={openListing} toast={toast} />}
           {route.name === 'cat' && <CategoryScreen key={'c' + route.section + route.sub} sectionId={route.section} initialSub={route.sub}
             onBack={back} onSearch={searchFromList} onOpenListing={openListing} toast={toast} onSaveSearch={addSaved} />}
           {route.name === 'results' && <CategoryScreen key={'r' + route.query + route.section + route.sub} sectionId={route.section} initialSub={route.sub} query={route.query}

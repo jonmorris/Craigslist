@@ -421,3 +421,25 @@ button:disabled::before { display: none; }
 .btn-tonal { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 56px; border-radius: var(--md-shape-full); background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); font: var(--md-title-medium); }
 .snackbar { justify-content: space-between; gap: 12px; padding-right: 8px; }
 .snack-action { flex: none; height: 36px; padding: 0 12px; border-radius: var(--md-shape-full); color: var(--md-sys-color-inverse-primary); font: var(--md-label-large); }
+
+/* ---------- section landing (interstitial) ---------- */
+.section-hero { padding-bottom: 20px; }
+.section-hero .icon-btn { color: inherit; }
+.section-hero-body { display: flex; flex-direction: column; gap: 4px; padding-top: 4px; }
+.section-hero-body h1 { font: 400 36px/44px var(--brand); margin-top: 8px; }
+.section-hero-body p { font: var(--md-body-medium); opacity: .85; font-variant-numeric: tabular-nums; }
+.browse-all { display: flex; align-items: center; gap: 16px; width: 100%; margin-top: 16px; padding: 16px; border-radius: var(--md-shape-md); border: 1px solid var(--md-sys-color-outline-variant); text-align: left; }
+.browse-all .sv-text strong { font: var(--md-title-medium); }
+.browse-all .sv-text span { font: var(--md-body-small); color: var(--md-sys-color-on-surface-variant); }
+.pop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.pop-tile { min-height: 80px; padding: 14px 16px; border-radius: var(--md-shape-md); display: flex; flex-direction: column; justify-content: space-between; gap: 8px; text-align: left; }
+.pop-tile strong { font: var(--md-title-medium); }
+.pop-tile span { font: var(--md-label-medium); opacity: .8; font-variant-numeric: tabular-nums; }
+.az-list { display: flex; flex-direction: column; }
+.az-row { display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 0 16px; border-bottom: 1px solid var(--md-sys-color-outline-variant); text-align: left; }
+.az-row:first-child { border-top: 1px solid var(--md-sys-color-outline-variant); }
+.az-name { flex: 1; min-width: 0; font: var(--md-body-large); }
+.az-count { font: var(--md-label-large); color: var(--md-sys-color-on-surface-variant); font-variant-numeric: tabular-nums; }
+.az-row > .icon { color: var(--md-sys-color-on-surface-variant); }
+.btn-outlined { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; height: 40px; margin-top: 16px; border-radius: var(--md-shape-full); border: 1px solid var(--md-sys-color-outline); color: var(--md-sys-color-primary); font: var(--md-label-large); }
+.icon.flip { rotate: 180deg; }
