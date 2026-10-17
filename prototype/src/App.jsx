@@ -1,13 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react'
 import HomeScreen from './screens/HomeScreen.jsx'
 import CategoryScreen from './screens/CategoryScreen.jsx'
+import SearchScreen from './screens/SearchScreen.jsx'
+import { seedRecent } from './search.js'
 import { savedSearches as seedSaved } from './data.js'
 import { BottomNav, Icon } from './ui.jsx'
 
 const SCREENS = [
   { id: 'a', name: 'home', status: 'built', note: 'Search, six section tiles, your saved searches, fresh listings near you.' },
   { id: 'b', name: 'category → list', status: 'built', note: 'Subcategory tabs, filter chips in plain sight, a price sheet with the typical price, dealer reposts grouped, save search with alerts on.' },
-  { id: 'c', name: 'search', status: 'next', note: 'Typeahead with results by category, recent and saved searches.' },
+  { id: 'c', name: 'search', status: 'built', note: 'Full-screen search: recent, saved and trending; suggestions with "search in" category counts; results by category; no-results turns into an alert.' },
   { id: 'd', name: 'listing detail', status: 'next', note: 'Swipeable photos, key specs, trust signals, a one-tap reply sheet.' },
 ]
 
@@ -17,9 +19,12 @@ const store = {
 }
 
 export default function App() {
-  // route: null = home, or { section, sub } for a category list
-  const [route, setRoute] = useState(() => (location.hash === '#b' ? { section: 'sale', sub: 'all' } : null))
+  // Navigation stack: { name: 'home' } | { name: 'cat', section, sub } |
+  // { name: 'search', scope, q } | { name: 'results', query, section, sub }
+  const [stack, setStack] = useState(() => [{ name: 'home' }, ...(location.hash === '#b' ? [{ name: 'cat', section: 'sale', sub: 'all' }] : [])])
+  const route = stack[stack.length - 1]
   const [saved, setSaved] = useState(seedSaved)
+  const [recent, setRecent] = useState(seedRecent)
   const [theme, setTheme] = useState(() => store.get('cl-theme') || 'system')
   const [toastMsg, setToastMsg] = useState(null)
   const screenRef = useRef(null)
@@ -32,9 +37,9 @@ export default function App() {
     store.set('cl-theme', theme)
   }, [theme])
 
-  // Android back gesture / browser back returns to home.
+  // Android back gesture / browser back pops one screen.
   useEffect(() => {
-    const onPop = () => setRoute(null)
+    const onPop = () => setStack(s => (s.length > 1 ? s.slice(0, -1) : s))
     addEventListener('popstate', onPop)
     return () => removeEventListener('popstate', onPop)
   }, [])
@@ -46,14 +51,31 @@ export default function App() {
     setToastMsg(msg)
     timer.current = setTimeout(() => setToastMsg(null), 2400)
   }
-  const openCategory = (section, sub = 'all') => {
-    try { history.pushState({ cat: section }, '') } catch { /* sandboxed */ }
-    setRoute({ section, sub })
+  const push = r => {
+    try { history.pushState({ depth: stack.length }, '') } catch { /* sandboxed */ }
+    setStack(s => [...s, r])
   }
-  const goHome = () => (history.state?.cat ? history.back() : setRoute(null))
-  const addSaved = entry => setSaved(prev => [{ id: 'u' + Date.now(), fresh: 0, section: route.section, sub: route.sub === 'all' ? null : route.sub, ...entry }, ...prev])
+  const back = () => { try { history.back() } catch { setStack(s => s.slice(0, -1)) } }
+  const replaceTop = r => setStack(s => [...s.slice(0, -1), r])
+  const goHome = () => {
+    if (stack.length === 1) return
+    try { history.go(-(stack.length - 1)) } catch { /* sandboxed */ }
+    setStack([{ name: 'home' }])
+  }
 
-  const current = route ? 'b' : 'a'
+  const openCategory = (section, sub = 'all') => push({ name: 'cat', section, sub })
+  const openSearch = (scope = null, q = '') => push({ name: 'search', scope, q })
+  const runSearch = (query, section, sub) => {
+    setRecent(r => [query, ...r.filter(x => x !== query)].slice(0, 6))
+    push({ name: 'results', query, section, sub })
+  }
+  const openSaved = s => (s.query ? push({ name: 'results', query: s.query, section: s.section ?? null, sub: s.sub || 'all' })
+    : push({ name: 'cat', section: s.section, sub: s.sub || 'all' }))
+  const addSaved = entry => setSaved(prev => [{ id: 'u' + Date.now(), fresh: 0, ...entry, label: entry.label }, ...prev])
+  // From the results bar: search icon reopens search; "search all sections" swaps scope in place.
+  const searchFromList = (scope, q, widen) => (widen ? replaceTop({ name: 'results', query: q, section: null, sub: 'all' }) : openSearch(scope, q))
+
+  const current = { home: 'a', cat: 'b', search: 'c', results: 'c' }[route.name]
 
   return (
     <div className="stage">
@@ -65,7 +87,7 @@ export default function App() {
           {SCREENS.map(s => (
             <button key={s.id} type="button" disabled={s.status !== 'built'}
               className={'option' + (s.id === current ? ' option-on' : '')}
-              onClick={() => (s.id === 'a' ? setRoute(null) : s.id === 'b' ? openCategory('sale') : null)}>
+              onClick={() => (s.id === 'a' ? goHome() : s.id === 'b' ? openCategory('sale') : s.id === 'c' ? openSearch() : null)}>
               <span className="option-key">{s.id}</span>
               <span className="option-body">
                 <strong>{s.name}{s.status === 'next' && <em className="soon">next</em>}</strong>
@@ -88,12 +110,17 @@ export default function App() {
       <div className="device">
         <div className="statusbar" aria-hidden="true"><span>9:41</span><span className="sb-icons">▲ ◢ ▮</span></div>
         <main className="screen" ref={screenRef}>
-          {route
-            ? <CategoryScreen key={route.section + route.sub} sectionId={route.section} initialSub={route.sub} onBack={goHome} toast={toast} onSaveSearch={addSaved} />
-            : <HomeScreen toast={toast} onOpen={openCategory} savedSearches={saved} />}
+          {route.name === 'home' && <HomeScreen toast={toast} onOpen={openCategory} onSearch={() => openSearch()} onOpenSaved={openSaved} savedSearches={saved} />}
+          {route.name === 'cat' && <CategoryScreen key={'c' + route.section + route.sub} sectionId={route.section} initialSub={route.sub}
+            onBack={back} onSearch={searchFromList} toast={toast} onSaveSearch={addSaved} />}
+          {route.name === 'results' && <CategoryScreen key={'r' + route.query + route.section + route.sub} sectionId={route.section} initialSub={route.sub} query={route.query}
+            onBack={back} onSearch={searchFromList} toast={toast} onSaveSearch={addSaved} />}
+          {route.name === 'search' && <SearchScreen key={'s' + stack.length} scopeSection={route.scope} initialQuery={route.q} recent={recent} saved={saved}
+            onSubmit={runSearch} onOpenSaved={openSaved} onBack={back} toast={toast}
+            onRemoveRecent={r => setRecent(x => x.filter(y => y !== r))} onClearRecent={() => setRecent([])} />}
         </main>
         {toastMsg && <div className="snackbar" role="status">{toastMsg}</div>}
-        <BottomNav onTap={toast} onHome={goHome} />
+        {route.name !== 'search' && <BottomNav onTap={toast} onHome={goHome} />}
         <div className="gesture" aria-hidden="true" />
       </div>
     </div>

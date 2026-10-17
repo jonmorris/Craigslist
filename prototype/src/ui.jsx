@@ -33,6 +33,9 @@ const P = {
   list: <><rect x="4" y="5" width="5" height="5" rx="1" /><rect x="4" y="14" width="5" height="5" rx="1" /><path d="M12 6.5h8M12 9h5M12 15.5h8M12 18h5" /></>,
   check: <path d="m5 12.5 4.5 4.5L19 7.5" />,
   sort: <path d="M7 4v16m0 0-3-3m3 3 3-3M17 20V4m0 0-3 3m3-3 3 3" />,
+  history: <><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3" /><path d="M4 4.5v3.5h3.5M12 8v4.5l3 2" /></>,
+  fill: <path d="M17 17 7.5 7.5M7 15V7h8" />,
+  trend: <path d="m4 16 5-5 4 4 7-7M15 8h5v5" />,
   sun: <><circle cx="12" cy="12" r="4" /><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8" /></>,
   moon: <path d="M19.5 14.5A8 8 0 0 1 9.5 4.5a8 8 0 1 0 10 10z" />,
 }

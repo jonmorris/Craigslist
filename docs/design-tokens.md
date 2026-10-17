@@ -127,6 +127,7 @@ All are standard M3 / Compose Material 3 components. Nothing is web-only.
 | home header, list header | `TopAppBar`, with the home brand row collapsing via `TopAppBarScrollBehavior` |
 | subcategory tabs | `PrimaryScrollableTabRow` |
 | filter chips | `FilterChip` (32dp, 48dp touch target) |
+| search | `SearchBar` expanding to a full-screen search view (`ExpandedFullScreenSearchBar`), with `ListItem` rows for recent, suggestions and "search in" scopes |
 | section tiles, saved searches | `Card` / `OutlinedCard` |
 | save search | `ExtendedFloatingActionButton` (primaryContainer) |
 | sort, price, save sheets | `ModalBottomSheet` |

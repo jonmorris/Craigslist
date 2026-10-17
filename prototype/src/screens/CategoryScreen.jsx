@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react'
 import { sections, listings, priceHistogram, ageMinutes, city, fmt } from '../data.js'
 import { Icon, ListingCard, Sheet, PeaceSign } from '../ui.jsx'
+import { matches } from '../search.js'
 
 // (b) Category → list. Filters live in plain sight as chips; price uses the
 // fair-price histogram; repeat dealer posts collapse; save search = alerts on.
@@ -45,10 +46,15 @@ const money = n => '$' + fmt(n)
 const priceChipLabel = (min, max) =>
   min == null && max == null ? 'price' : min == null ? `under ${money(max)}` : max == null ? `${money(min)}+` : `${money(min)}–${money(max)}`
 
-export default function CategoryScreen({ sectionId, initialSub = 'all', onBack, toast, onSaveSearch }) {
-  const section = sections.find(s => s.id === sectionId)
-  const all = useMemo(() => listings.filter(l => l.section === sectionId), [sectionId])
-  const subs = section.subs.filter(s => all.some(l => l.sub === s))
+// Also renders search results: pass `query` (and optionally no sectionId = all sections).
+export default function CategoryScreen({ sectionId, initialSub = 'all', query = null, onBack, onSearch, toast, onSaveSearch }) {
+  const section = sectionId ? sections.find(s => s.id === sectionId) : null
+  const all = useMemo(() => listings.filter(l => (!sectionId || l.section === sectionId) && (!query || matches(l, query))), [sectionId, query])
+  // Category: subcategories in demand order. Search: the subcategories the results fall in, most first.
+  // counted after grouping dealer reposts, so tab counts match the results line
+  const subCounts = groupDealers(all).reduce((m, { l }) => m.set(l.sub, (m.get(l.sub) || 0) + 1), new Map())
+  const subs = query ? [...subCounts].sort((a, b) => b[1] - a[1]).map(([k]) => k) : section.subs.filter(s => subCounts.has(s))
+  const sectionName = section ? section.name : 'everything'
 
   const [f, setF] = useState({ sub: initialSub, ownerOnly: false, photosOnly: false, min: null, max: null })
   const [sort, setSort] = useState('newest')
@@ -58,7 +64,8 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', onBack, 
   const set = patch => { setF(prev => ({ ...prev, ...patch })); setSaved(false) }
 
   const rows = sortItems(groupDealers(applyFilters(all, f)), sort)
-  const subName = f.sub === 'all' ? section.name : f.sub
+  const subName = f.sub === 'all' ? sectionName : f.sub
+  const heading = query ? `“${query}”` : subName
   const filtered = f.ownerOnly || f.photosOnly || f.min != null || f.max != null
   const open = () => toast('listing detail is screen (d) — coming up')
 
@@ -67,7 +74,7 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', onBack, 
     (f.min != null || f.max != null) && ['clear the price filter', { min: null, max: null }],
     f.ownerOnly && ['include dealers', { ownerOnly: false }],
     f.photosOnly && ['include posts without photos', { photosOnly: false }],
-    f.sub !== 'all' && [`all of ${section.name}`, { sub: 'all' }],
+    f.sub !== 'all' && [`all of ${sectionName}`, { sub: 'all' }],
   ].filter(Boolean).map(([label, patch]) => [label, patch, groupDealers(applyFilters(all, { ...f, ...patch })).length])
 
   return (
@@ -76,10 +83,10 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', onBack, 
         <header className="cat-bar">
           <button type="button" className="icon-btn" aria-label="back" onClick={onBack}><Icon name="back" /></button>
           <div className="cat-title">
-            <h1>{subName}</h1>
-            <span>{f.sub === 'all' ? '' : section.name + ' · '}{city.name}, {city.area}</span>
+            <h1>{heading}</h1>
+            <span>{query ? `in ${subName} · ` : f.sub === 'all' ? '' : sectionName + ' · '}{city.name}, {city.area}</span>
           </div>
-          <button type="button" className="icon-btn" aria-label={'search ' + subName} onClick={() => toast('search is screen (c)')}><Icon name="search" /></button>
+          <button type="button" className="icon-btn" aria-label={'search ' + subName} onClick={() => onSearch(sectionId, query || '')}><Icon name="search" /></button>
           <button type="button" className="icon-btn" aria-label={view === 'grid' ? 'show as list' : 'show as grid'}
             onClick={() => setView(v => (v === 'grid' ? 'list' : 'grid'))}><Icon name={view === 'grid' ? 'list' : 'grid'} /></button>
         </header>
@@ -88,10 +95,10 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', onBack, 
           {['all', ...subs].map(s => (
             <button key={s} type="button" role="tab" aria-selected={f.sub === s}
               className={'subtab' + (f.sub === s ? ' subtab-on' : '')} onClick={() => set({ sub: s })}>
-              {s === 'all' ? 'all' : s}
+              {s === 'all' ? 'all' : s}{query && <span className="subtab-n">{s === 'all' ? groupDealers(all).length : subCounts.get(s)}</span>}
             </button>
           ))}
-          <button type="button" className="subtab" onClick={() => toast(`all ${section.subs.length + section.more} subcategories`)}>+{section.more} more</button>
+          {!query && <button type="button" className="subtab" onClick={() => toast(`all ${section.subs.length + section.more} subcategories`)}>+{section.more} more</button>}
         </div>
 
         <div className="hscroll chips filter-row" aria-label="filters">
@@ -116,13 +123,21 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', onBack, 
       {rows.length > 0 ? (
         <>
           <p className="results-line pad">
-            {f.sub === 'all' && !filtered ? `${fmt(section.count)} listings · ${fmt(section.newToday)} new today` : `${rows.length} match`} · {SORTS.find(s => s[0] === sort)[1]}
+            {query ? `${rows.length} result${rows.length === 1 ? '' : 's'}` : f.sub === 'all' && !filtered ? `${fmt(section.count)} listings · ${fmt(section.newToday)} new today` : `${rows.length} match`} · {SORTS.find(s => s[0] === sort)[1]}
           </p>
           <div className={'pad ' + (view === 'grid' ? 'grid' : 'rows')}>
             {rows.map(({ l, similar }) => <ListingCard key={l.id} listing={l} similar={similar} variant={view === 'grid' ? 'grid' : 'row'} onTap={open} />)}
           </div>
           <p className="feed-end pad">that's everything posted in the last day.</p>
         </>
+      ) : all.length === 0 && query ? (
+        <div className="empty-state pad">
+          <PeaceSign size={44} />
+          <h2>no “{query}” in {city.name} right now</h2>
+          <p>new things are posted all day. save this search and we'll tell you the moment one shows up.</p>
+          <button type="button" className="btn-primary empty-cta" onClick={() => setSheet('save')}><Icon name="bell" />alert me when it's posted</button>
+          {sectionId && <button type="button" className="link" onClick={() => onSearch(null, query, true)}>search all sections instead</button>}
+        </div>
       ) : (
         <div className="empty-state pad">
           <PeaceSign size={44} />
@@ -158,9 +173,9 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', onBack, 
       {sheet === 'price' && <PriceSheet all={all} f={f} onClose={() => setSheet(null)} onApply={p => { set(p); setSheet(null) }} />}
 
       {sheet === 'save' && (
-        <SaveSheet name={subName} f={f} onClose={() => setSheet(null)} onSave={entry => {
-          setSaved(true); setSheet(null); onSaveSearch(entry)
-          toast(entry.alerts ? `saved · we'll tell you when new ${subName} post` : 'saved')
+        <SaveSheet name={query || subName} f={f} onClose={() => setSheet(null)} onSave={entry => {
+          setSaved(true); setSheet(null); onSaveSearch({ ...entry, query, section: sectionId, sub: f.sub === 'all' ? null : f.sub })
+          toast(entry.alerts ? `saved · we'll tell you when new ${query ? '“' + query + '”' : subName} listings post` : 'saved')
         }} />
       )}
     </div>
