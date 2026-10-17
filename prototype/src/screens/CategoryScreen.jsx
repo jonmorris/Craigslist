@@ -327,7 +327,7 @@ function PriceSheet({ all, f, onClose, onApply }) {
     <Sheet title="price" onClose={onClose} footer={
       <button type="button" className="btn-primary" onClick={() => onApply({ min: num(min), max: num(max) })}>show {count} listing{count === 1 ? '' : 's'}</button>
     }>
-      <p className="sheet-note">what things sell for in minneapolis · typical is <strong>{money(h.avg)}</strong></p>
+      <p className="sheet-note">what things sell for in Minneapolis · typical is <strong>{money(h.avg)}</strong></p>
       <div className="histo" aria-hidden="true">
         {h.bins.map((b, i) => <span key={i} className={'bar' + (inRange(i) ? ' bar-on' : '')} style={{ height: `${Math.max(4, (b / top) * 100)}%` }} />)}
         <span className="histo-avg" style={{ left: `${(h.avg / h.max) * 100}%` }}><span>typical</span></span>

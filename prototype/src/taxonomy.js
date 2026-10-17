@@ -49,10 +49,10 @@ const raw = {
 // Subcategories with nothing in the Minneapolis area right now: where the nearest
 // listings are (other craigslist cities) and related places to look.
 export const zeroLocal = {
-  aviation: { nearest: [['st. cloud', 62, 3], ['rochester', 80, 2], ['duluth', 150, 4]], related: ['boats', 'rvs & camping', 'sporting goods'], thing: 'aviation gear' },
-  'housing swap': { nearest: [['st. cloud', 62, 1], ['madison, wi', 270, 4]], related: ['sublets & temporary', 'vacation rentals', 'rooms & shares'], thing: 'a place to swap' },
-  'tv/film/video/radio': { nearest: [['rochester', 80, 1], ['duluth', 150, 2]], related: ['art/media/design', 'writing/editing', 'marketing/advertising/pr'], thing: 'a job like this' },
-  marine: { nearest: [['duluth', 150, 6], ['brainerd', 128, 3]], related: ['automotive', 'skilled trade', 'cycle'], thing: 'marine services' },
+  aviation: { nearest: [['St. Cloud', 62, 3], ['Rochester', 80, 2], ['Duluth', 150, 4]], related: ['boats', 'rvs & camping', 'sporting goods'], thing: 'aviation gear' },
+  'housing swap': { nearest: [['St. Cloud', 62, 1], ['Madison, WI', 270, 4]], related: ['sublets & temporary', 'vacation rentals', 'rooms & shares'], thing: 'a place to swap' },
+  'tv/film/video/radio': { nearest: [['Rochester', 80, 1], ['Duluth', 150, 2]], related: ['art/media/design', 'writing/editing', 'marketing/advertising/pr'], thing: 'a job like this' },
+  marine: { nearest: [['Duluth', 150, 6], ['Brainerd', 128, 3]], related: ['automotive', 'skilled trade', 'cycle'], thing: 'marine services' },
 }
 
 export const taxonomy = Object.fromEntries(Object.entries(raw).map(([sec, subs]) =>
@@ -64,7 +64,7 @@ export const taxonomy = Object.fromEntries(Object.entries(raw).map(([sec, subs])
 // What Minneapolis is looking for in each section this week (mid-October).
 export const trendingBySection = {
   sale: ['snowblower', 'snow tires', 'fat bike', 'firewood', 'halloween costume'],
-  housing: ['1br northeast', 'nov 1 move-in', 'heat included', 'garage parking'],
+  housing: ['1br Northeast', 'nov 1 move-in', 'heat included', 'garage parking'],
   jobs: ['line cook', 'seasonal retail', 'snow plow driver', 'warehouse'],
   services: ['snow removal', 'gutter cleaning', 'furnace tune-up', 'movers'],
   gigs: ['moving help', 'leaf raking', 'halloween party', 'dog walking'],

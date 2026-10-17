@@ -65,7 +65,7 @@ button:disabled::before { display: none; }
 @media (min-width: 900px) {
   .stage { align-items: center; justify-content: center; gap: 64px; padding: 24px 32px; min-height: 100%; height: auto; }
   .panel { display: block; width: 360px; flex: none; }
-  .device { flex: none; width: 412px; height: min(892px, calc(100vh - 48px)); border: 10px solid var(--md-sys-color-inverse-surface); border-radius: 48px; box-shadow: var(--md-elev-3); }
+  .device { flex: none; align-self: flex-start; position: sticky; top: calc(24px / var(--device-zoom, 1)); width: 432px; height: 935px; zoom: var(--device-zoom, 1); border: 10px solid var(--md-sys-color-inverse-surface); border-radius: 48px; box-shadow: var(--md-elev-3); }
   .statusbar { display: flex; flex: none; justify-content: space-between; align-items: center; height: 40px; padding: 0 24px; font: var(--md-label-large); background: var(--md-sys-color-surface); }
   .sb-icons { font-size: 10px; letter-spacing: 3px; }
   .gesture { display: block; position: absolute; bottom: 8px; left: 50%; translate: -50% 0; width: 108px; height: 4px; border-radius: 2px; background: var(--md-sys-color-on-surface); opacity: .4; z-index: 21; }

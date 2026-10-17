@@ -21,7 +21,7 @@ const DETAILS = {
   12: { specs: [['condition', 'excellent'], ['frame size', '19 in'], ['type', 'fat bike'], ['make', 'surly'], ['brakes', 'mechanical disc']],
     desc: 'original moonlander with offset clown shoe wheels. barely used, lived in storage most of its life. standard threaded bottom bracket. perfect for the winter that is coming.' },
   14: { specs: [['condition', 'good'], ['wheels', '29 in'], ['type', 'mountain'], ['make', 'fuji'], ['brakes', 'hydraulic disc']],
-    desc: 'solid trail bike, recently tuned. dropper post not included. test rides welcome in bloomington.' },
+    desc: 'solid trail bike, recently tuned. dropper post not included. test rides welcome in Bloomington.' },
   16: { specs: [['condition', 'new'], ['type', 'cruiser'], ['speeds', '1'], ['make', 'haro']],
     desc: 'new old stock from our shop floor. assembled and tuned. mens and womens frames available.' },
   17: { specs: [['condition', 'fair'], ['type', 'kids / chopper'], ['make', 'schwinn'], ['quantity', '3']],
@@ -37,7 +37,7 @@ const FALLBACK = {
   housing: { specs: [['available', 'nov 1']], desc: 'message for a showing. no smoking.' },
   jobs: { specs: [['type', 'part-time'], ['schedule', 'evenings + weekends']], desc: 'busy kitchen on eat street looking for a reliable line cook. experience preferred, we will train the right person.' },
   gigs: { specs: [['when', 'saturday 9am'], ['time', 'about 2 hrs']], desc: 'need two people to help carry a sectional up to a second floor. easy cash.' },
-  services: { specs: [['area', 'south minneapolis']], desc: 'licensed and insured. seasonal contracts or per visit.' },
+  services: { specs: [['area', 'South Minneapolis']], desc: 'licensed and insured. seasonal contracts or per visit.' },
   community: { specs: [['when', 'saturday 10–2']], desc: 'bring your bike, we will help you get it ready for winter. free, donations welcome.' },
 }
 

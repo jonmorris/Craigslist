@@ -10,9 +10,9 @@ import { Icon } from '../ui.jsx'
 // where in it: neighborhoods and distance, previewed on a real map.
 // `context` (optional) = { noun, countFor } so a list shows its own count.
 const SITES = [
-  ['minneapolis / st. paul', 'mn', 0], ['st. cloud', 'mn', 62], ['rochester', 'mn', 80], ['mankato', 'mn', 78],
-  ['duluth / superior', 'mn', 150], ['brainerd', 'mn', 128], ['eau claire', 'wi', 90], ['fargo / moorhead', 'nd', 235],
-  ['madison', 'wi', 270], ['sioux falls', 'sd', 240], ['des moines', 'ia', 245],
+  ['Minneapolis / St. Paul', 'MN', 0], ['St. Cloud', 'MN', 62], ['Rochester', 'MN', 80], ['Mankato', 'MN', 78],
+  ['Duluth / Superior', 'MN', 150], ['Brainerd', 'MN', 128], ['Eau Claire', 'WI', 90], ['Fargo / Moorhead', 'ND', 235],
+  ['Madison', 'WI', 270], ['Sioux Falls', 'SD', 240], ['Des Moines', 'IA', 245],
 ]
 
 export default function LocationScreen({ area, context, onApply, onClose, toast }) {
@@ -23,14 +23,14 @@ export default function LocationScreen({ area, context, onApply, onClose, toast 
   const homeCount = a => Math.round((city.total * all.filter(l => inArea(l, a)).length) / all.length / 10) * 10
   const n = context ? context.countFor(next) : homeCount(next)
   const countText = context ? `${fmt(n)} ${context.noun}` : `about ${fmt(n)} listings`
-  const matches = q.trim() ? SITES.filter(([name]) => name.includes(q.trim().toLowerCase()) || (/^\d{5}$/.test(q.trim()) && name.startsWith('minneapolis'))) : []
+  const matches = q.trim() ? SITES.filter(([name]) => name.toLowerCase().includes(q.trim().toLowerCase()) || (/^\d{5}$/.test(q.trim()) && name.startsWith('Minneapolis'))) : []
 
   const useMyLocation = () => {
     const near = () => { setNext({ places: [], radius: 5, center: null }); toast('using your location · within 5 mi') }
     if (!navigator.geolocation) return near()
     navigator.geolocation.getCurrentPosition(pos => {
       const km = distKm([pos.coords.latitude, pos.coords.longitude], YOU)
-      if (km > 60) { setNext({ places: [], radius: 5, center: null }); toast(`you're ${Math.round(km / 1.609)} mi from minneapolis · showing 5 mi around downtown`) }
+      if (km > 60) { setNext({ places: [], radius: 5, center: null }); toast(`you're ${Math.round(km / 1.609)} mi from Minneapolis · showing 5 mi around Downtown`) }
       else near()
     }, near, { timeout: 6000 })
   }
@@ -54,7 +54,7 @@ export default function LocationScreen({ area, context, onApply, onClose, toast 
             {matches.length ? matches.map(([name, st, mi]) => (
               <button key={name} type="button" className="zero-row" onClick={() => {
                 if (mi === 0) { setQ(''); return }
-                toast(`prototype: mock listings are for minneapolis only (${name} is ${mi} mi away)`)
+                toast(`prototype: mock listings are for Minneapolis only (${name} is ${mi} mi away)`)
               }}>
                 <Icon name="pin" />
                 <span className="sv-text"><strong>{name}, {st}</strong><span>{mi === 0 ? 'your current site' : `craigslist ${name.split(' /')[0]} · ${mi} mi away`}</span></span>
@@ -70,7 +70,7 @@ export default function LocationScreen({ area, context, onApply, onClose, toast 
             </button>
 
             <div className="loc-current">
-              <span className="sv-text"><strong>minneapolis / st. paul</strong><span>craigslist minneapolis · the whole metro</span></span>
+              <span className="sv-text"><strong>Minneapolis / St. Paul</strong><span>craigslist Minneapolis · the whole metro</span></span>
               <button type="button" className="link" onClick={() => document.getElementById('locq')?.focus()}>change city</button>
             </div>
 

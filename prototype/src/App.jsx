@@ -44,6 +44,14 @@ export default function App() {
     store.set('cl-theme', theme)
   }, [theme])
 
+  // Desktop preview: keep a real phone's proportions (412×915 dp, e.g. Pixel 7 /
+  // Galaxy S24+) and scale the whole frame down to fit short windows.
+  useEffect(() => {
+    const fit = () => document.documentElement.style.setProperty('--device-zoom', Math.min(1, (innerHeight - 48) / 935).toFixed(3))
+    fit(); addEventListener('resize', fit)
+    return () => removeEventListener('resize', fit)
+  }, [])
+
   // Android back gesture / browser back pops one screen.
   useEffect(() => {
     const onPop = () => setStack(s => (s.length > 1 ? s.slice(0, -1) : s))
@@ -97,7 +105,7 @@ export default function App() {
     <div className="stage">
       <aside className="panel">
         <p className="eyebrow">craigslist redesign · prototype</p>
-        <h1>minneapolis, reimagined</h1>
+        <h1>Minneapolis, reimagined</h1>
         <p className="panel-lede">An Android prototype of the four screens in the brief, with mock Minneapolis data. Tap around in the phone, or jump to a screen here.</p>
         <div className="options">
           {SCREENS.map(s => (

@@ -2,20 +2,20 @@
 // An area is { places: [region or neighborhood names], radius: miles | null }.
 
 export const REGIONS = {
-  minneapolis: ['northeast', 'north loop', 'downtown', 'uptown', 'whittier', 'powderhorn', 'longfellow', 'seward', 'linden hills', 'bryn mawr', 'south mpls'],
-  'st. paul': ['mac-groveland', 'como'],
-  suburbs: ['richfield', 'st. louis park', 'edina', 'bloomington', 'roseville', 'brooklyn park'],
+  Minneapolis: ['Northeast', 'North Loop', 'Downtown', 'Uptown', 'Whittier', 'Powderhorn', 'Longfellow', 'Seward', 'Linden Hills', 'Bryn Mawr', 'South Mpls'],
+  'St. Paul': ['Mac-Groveland', 'Como'],
+  suburbs: ['Richfield', 'St. Louis Park', 'Edina', 'Bloomington', 'Roseville', 'Brooklyn Park'],
 }
 export const NEIGHBORHOODS = Object.values(REGIONS).flat()
 export const RADII = [null, 2, 5, 10, 25]
 
 // approximate neighborhood centers (lat, lng); listings sit at their neighborhood
 export const COORDS = {
-  northeast: [45.0016, -93.256], 'north loop': [44.988, -93.278], downtown: [44.9778, -93.265], uptown: [44.949, -93.298],
-  whittier: [44.959, -93.278], powderhorn: [44.942, -93.256], longfellow: [44.936, -93.219], seward: [44.959, -93.235],
-  'linden hills': [44.924, -93.315], 'bryn mawr': [44.97, -93.315], 'south mpls': [44.92, -93.26], 'mac-groveland': [44.931, -93.17],
-  como: [44.98, -93.15], richfield: [44.8833, -93.283], 'st. louis park': [44.948, -93.348], edina: [44.8897, -93.35],
-  bloomington: [44.8408, -93.2983], roseville: [45.0061, -93.1566], 'brooklyn park': [45.0941, -93.3563],
+  Northeast: [45.0016, -93.256], 'North Loop': [44.988, -93.278], Downtown: [44.9778, -93.265], Uptown: [44.949, -93.298],
+  Whittier: [44.959, -93.278], Powderhorn: [44.942, -93.256], Longfellow: [44.936, -93.219], Seward: [44.959, -93.235],
+  'Linden Hills': [44.924, -93.315], 'Bryn Mawr': [44.97, -93.315], 'South Mpls': [44.92, -93.26], 'Mac-Groveland': [44.931, -93.17],
+  Como: [44.98, -93.15], Richfield: [44.8833, -93.283], 'St. Louis Park': [44.948, -93.348], Edina: [44.8897, -93.35],
+  Bloomington: [44.8408, -93.2983], Roseville: [45.0061, -93.1566], 'Brooklyn Park': [45.0941, -93.3563],
 }
 export const MI = 1609.34
 export function distMeters([a1, o1], [a2, o2]) {
@@ -39,7 +39,7 @@ export function inArea(l, area) {
 
 // Full label with the city, without repeating it: "minneapolis · all areas",
 // "minneapolis · 5 mi", "northeast +1 · 5 mi", "st. paul".
-export function areaFull(area, city = 'minneapolis') {
+export function areaFull(area, city = 'Minneapolis') {
   if (area.center) return areaLabel(area)
   if (!area.places.length) return `${city} · ${areaLabel(area)}`
   return areaLabel(area)
