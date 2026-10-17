@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import { sections, listings, priceHistogram, ageMinutes, fmt } from '../data.js'
+import { sections, listings, priceHistogram, ageMinutes, city, fmt } from '../data.js'
 import { Icon, ListingCard, Sheet, PeaceSign } from '../ui.jsx'
 
 // (b) Category → list. Filters live in plain sight as chips; price uses the
@@ -59,6 +59,7 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', onBack, 
 
   const rows = sortItems(groupDealers(applyFilters(all, f)), sort)
   const subName = f.sub === 'all' ? section.name : f.sub
+  const filtered = f.ownerOnly || f.photosOnly || f.min != null || f.max != null
   const open = () => toast('listing detail is screen (d) — coming up')
 
   // Each way to widen an empty result, with how many it would bring back.
@@ -76,7 +77,7 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', onBack, 
           <button type="button" className="icon-btn" aria-label="back" onClick={onBack}><Icon name="back" /></button>
           <div className="cat-title">
             <h1>{subName}</h1>
-            <span>{f.sub === 'all' ? `${fmt(section.count)} listings · ${fmt(section.newToday)} new today` : `in ${section.name} · minneapolis`}</span>
+            <span>{f.sub === 'all' ? '' : section.name + ' · '}{city.name}, {city.area}</span>
           </div>
           <button type="button" className="icon-btn" aria-label={'search ' + subName} onClick={() => toast('search is screen (c)')}><Icon name="search" /></button>
           <button type="button" className="icon-btn" aria-label={view === 'grid' ? 'show as list' : 'show as grid'}
@@ -101,7 +102,7 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', onBack, 
             {priceChipLabel(f.min, f.max)}<Icon name="chevron" size={16} />
           </button>
           <button type="button" className="chip" onClick={() => toast('neighborhood sheet comes later')}>
-            <Icon name="pin" size={18} />all areas<Icon name="chevron" size={16} />
+            <Icon name="pin" size={18} />{city.area}<Icon name="chevron" size={16} />
           </button>
           <button type="button" className={'chip' + (f.ownerOnly ? ' chip-on' : '')} aria-pressed={f.ownerOnly} onClick={() => set({ ownerOnly: !f.ownerOnly })}>
             {f.ownerOnly && <Icon name="check" size={18} />}by owner
@@ -114,7 +115,9 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', onBack, 
 
       {rows.length > 0 ? (
         <>
-          <p className="results-line pad">{rows.length} shown · {SORTS.find(s => s[0] === sort)[1]}</p>
+          <p className="results-line pad">
+            {f.sub === 'all' && !filtered ? `${fmt(section.count)} listings · ${fmt(section.newToday)} new today` : `${rows.length} match`} · {SORTS.find(s => s[0] === sort)[1]}
+          </p>
           <div className={'pad ' + (view === 'grid' ? 'grid' : 'rows')}>
             {rows.map(({ l, similar }) => <ListingCard key={l.id} listing={l} similar={similar} variant={view === 'grid' ? 'grid' : 'row'} onTap={open} />)}
           </div>
@@ -204,7 +207,7 @@ function SaveSheet({ name, f, onClose, onSave }) {
   const [label, setLabel] = useState(name)
   const [alerts, setAlerts] = useState(true)
   const [freq, setFreq] = useState('instantly')
-  const parts = [priceChipLabel(f.min, f.max) !== 'price' && priceChipLabel(f.min, f.max), f.ownerOnly && 'by owner', f.photosOnly && 'has photos', 'all areas'].filter(Boolean)
+  const parts = [priceChipLabel(f.min, f.max) !== 'price' && priceChipLabel(f.min, f.max), f.ownerOnly && 'by owner', f.photosOnly && 'has photos', city.area].filter(Boolean)
   return (
     <Sheet title="save this search" onClose={onClose} footer={
       <button type="button" className="btn-primary" onClick={() => onSave({ label, detail: parts.join(' · '), alerts })}>save search</button>

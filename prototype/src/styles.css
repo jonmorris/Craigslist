@@ -264,3 +264,11 @@ h1, h2, h3, p { margin: 0; }
 
 .btn-primary, .segmented button { text-align: center; }
 .sub { display: inline-flex; align-items: center; height: 30px; padding: 0 11px; border-radius: 8px; background: var(--surface-2); border: 1px solid var(--line); font-size: 13px; font-weight: 600; }
+
+/* home: brand row scrolls away, search pins with the mark */
+.home-search { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; gap: 0; padding-block: 0; background: var(--surface); transition: padding .2s, box-shadow .2s; }
+.home-search .searchbar { transition: height .2s; }
+.stuck-mark { display: grid; place-items: center; width: 0; opacity: 0; overflow: hidden; transition: width .2s, opacity .2s, margin .2s; }
+.home-search-stuck { padding-block: 8px; box-shadow: 0 1px 0 var(--line); }
+.home-search-stuck .searchbar { height: 48px; }
+.home-search-stuck .stuck-mark { width: 26px; opacity: 1; margin-right: 12px; }

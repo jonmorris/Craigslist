@@ -1,13 +1,24 @@
-import React from 'react'
-import { sections, listings, fmt } from '../data.js'
+import React, { useEffect, useRef, useState } from 'react'
+import { sections, listings, city, fmt } from '../data.js'
 import { Icon, PeaceSign, LocationButton, SearchBar, ListingCard } from '../ui.jsx'
 
 // (a) Home — search hero, six section tiles, saved searches, fresh grid.
 export default function HomeScreen({ toast, onOpen, savedSearches }) {
   const fresh = listings.filter(l => l.photo || l.section === 'sale').slice(0, 8)
+  // Brand + location row scrolls away; the search bar pins and picks up the mark.
+  const barRef = useRef(null)
+  const [collapsed, setCollapsed] = useState(false)
+  useEffect(() => {
+    const el = barRef.current
+    const io = new IntersectionObserver(([e]) => setCollapsed(!e.isIntersecting),
+      { root: el.closest('.screen'), threshold: 0 })
+    io.observe(el)
+    return () => io.disconnect()
+  }, [])
+
   return (
     <div className="home">
-      <header className="appbar">
+      <header className="appbar" ref={barRef}>
         <PeaceSign size={30} />
         <LocationButton />
         <button className="icon-btn" type="button" aria-label="notifications" onClick={() => toast('notifications come later')}>
@@ -15,7 +26,10 @@ export default function HomeScreen({ toast, onOpen, savedSearches }) {
         </button>
       </header>
 
-      <div className="pad"><SearchBar onTap={() => toast('search is screen (c) — next up')} /></div>
+      <div className={'pad home-search' + (collapsed ? ' home-search-stuck' : '')}>
+        <span className="stuck-mark" aria-hidden={!collapsed}><PeaceSign size={26} /></span>
+        <SearchBar placeholder={collapsed ? `search ${city.name}` : 'search craigslist'} onTap={() => toast('search is screen (c) — next up')} />
+      </div>
 
       <section className="pad tiles" aria-label="browse">
         {sections.map(s => (
