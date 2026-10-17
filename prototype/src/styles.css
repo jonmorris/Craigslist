@@ -539,3 +539,5 @@ button:disabled::before { display: none; }
 .map-you-tip::before { display: none; }
 .loc-save { margin-right: 4px; font: var(--md-title-small); }
 .screen:has(> .loc-page) { padding-bottom: 32px; }
+.real-map { background: #f2efe9; }
+.map-image-dark { filter: invert(.92) hue-rotate(180deg) brightness(.95) contrast(.9); }

@@ -2,8 +2,12 @@ import React, { useEffect, useRef } from 'react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { REGIONS } from './area.js'
+import metroMap from './assets/metro-map.webp'
 
-// Real map (Leaflet + CARTO basemap from OpenStreetMap data), in the current
+// Map (Leaflet) over a static metro map image for now, georeferenced from known
+// towns (Monticello, Minneapolis, St Paul, Hastings, Prior Lake). Swap the image
+// overlay back to a tile layer (e.g. Google Maps SDK in the native app) later.
+// In the current
 // app's style: everything outside the search area is tinted purple, with a
 // circular cutout where you're looking. The circle follows the choice:
 // distance from you, the chosen neighborhoods, or the whole metro.
@@ -16,6 +20,8 @@ export const COORDS = {
 }
 export const YOU = COORDS.downtown
 const METRO = { center: [44.965, -93.24], r: 22000 }
+// [south-west, north-east] of the 2000×1851 map image
+const IMAGE_BOUNDS = L.latLngBounds([44.618, -93.9376], [45.5367, -92.5368])
 const MI = 1609.34
 
 const dist = (a, b) => L.latLng(a).distanceTo(L.latLng(b))
@@ -54,12 +60,13 @@ export default function RealMap({ area, interactive = true, height = 240 }) {
       zoomControl: false, attributionControl: true, dragging: interactive, scrollWheelZoom: false,
       touchZoom: interactive, doubleClickZoom: interactive, boxZoom: false, keyboard: interactive,
     })
-    L.tileLayer(`https://{s}.basemaps.cartocdn.com/${isDark() ? 'dark_all' : 'light_all'}/{z}/{x}/{y}{r}.png`, {
-      subdomains: 'abcd', maxZoom: 18,
-      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/attributions">CARTO</a>',
-    }).addTo(m)
+    L.imageOverlay(metroMap, IMAGE_BOUNDS, { className: 'map-image' + (isDark() ? ' map-image-dark' : '') }).addTo(m)
+    m.setMaxBounds(IMAGE_BOUNDS.pad(0.02))
+    m.attributionControl.addAttribution('map image for prototype use')
     m.attributionControl.setPrefix(false)
     m.setView(METRO.center, 11)
+    m.setMinZoom(9)
+    m.setMaxZoom(12) // the image gets soft past this
     layers.current = L.layerGroup().addTo(m)
     map.current = m
     return () => m.remove()
@@ -77,7 +84,7 @@ export default function RealMap({ area, interactive = true, height = 240 }) {
     if (!area.places.length) L.circleMarker(YOU, { radius: 6, color: '#fff', weight: 3, fillColor: primary, fillOpacity: 1, interactive: false })
       .bindTooltip('you', { permanent: true, direction: 'bottom', className: 'map-you-tip', offset: [0, 6] }).addTo(layers.current)
     // bounds from center + radius (getBounds needs a projected view, which a fresh map doesn't have yet)
-    m.fitBounds(L.latLng(center).toBounds(r * 2), { padding: [16, 16], animate: false })
+    m.fitBounds(L.latLng(center).toBounds(r * 2), { padding: [16, 16], animate: false, maxZoom: 12 })
   }, [area])
 
   return <div ref={el} className="real-map" style={{ height }} role="img" aria-label="map of the area you're searching" />
