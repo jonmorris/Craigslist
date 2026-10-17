@@ -12,7 +12,7 @@ import metroMap from './assets/metro-map.webp'
 // circular cutout where you're looking. The circle follows the choice:
 // distance from you, the chosen neighborhoods, or the whole metro.
 export const YOU = COORDS.downtown
-const METRO = { center: [44.965, -93.24], r: 22000 }
+const METRO = { center: [44.965, -93.24], r: 15000 } // 'all areas': the core metro, leaving room to pan
 // [south-west, north-east] of the 2000×1851 map image
 const IMAGE_BOUNDS = L.latLngBounds([44.618, -93.9376], [45.5367, -92.5368])
 
@@ -47,9 +47,9 @@ const isDark = () => document.documentElement.dataset.theme === 'dark'
 // current app). The circle's size in miles comes from the distance choice, so the
 // map zooms to make the fixed circle cover exactly that radius. Panning sets a
 // custom center when you let go.
-const CIRCLE = 0.38 // circle radius as a share of the map's shorter side
+const CIRCLE = 0.44 // circle radius as a share of the map's shorter side (bigger = more zoomed in)
 
-export default function RealMap({ area, interactive = true, height = 240, onCenterChange }) {
+export default function RealMap({ area, interactive = true, height = 300, onCenterChange }) {
   const el = useRef(null)
   const map = useRef(null)
   const layers = useRef(null)
@@ -66,7 +66,8 @@ export default function RealMap({ area, interactive = true, height = 240, onCent
     m.attributionControl.addAttribution('map image for prototype use')
     m.attributionControl.setPrefix(false)
     m.setView(METRO.center, 11)
-    m.setMaxBounds(IMAGE_BOUNDS) // keep the image under the circle
+    // let the view run a little past the image edge so large radii can still pan
+    m.setMaxBounds(IMAGE_BOUNDS.pad(0.3))
     layers.current = L.layerGroup().addTo(m)
     // user pan ends → the map's center is the new search center
     m.on('dragend', () => {
