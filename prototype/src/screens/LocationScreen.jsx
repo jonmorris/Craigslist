@@ -85,7 +85,7 @@ const SPOTS = {
   seward: [192, 120], powderhorn: [166, 138], longfellow: [204, 146], 'linden hills': [108, 150], 'mac-groveland': [252, 134],
   'south mpls': [172, 164], edina: [102, 186], richfield: [160, 194], bloomington: [150, 222],
 }
-function MetroMap({ area }) {
+export function MetroMap({ area }) {
   const on = new Set(area.places.flatMap(p => REGIONS[p] || [p]))
   const all = !area.places.length
   const r = area.radius == null ? null : area.radius * 9

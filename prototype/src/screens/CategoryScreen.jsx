@@ -3,7 +3,8 @@ import { sections, listings, priceHistogram, ageMinutes, city, fmt, visible } fr
 import { Icon, ListingCard, Sheet, PeaceSign } from '../ui.jsx'
 import { matches } from '../search.js'
 import { taxonomy, zeroLocal } from '../taxonomy.js'
-import { ALL_AREAS, inArea, areaLabel, areaFull } from '../area.js'
+import { ALL_AREAS, inArea, areaLabel, areaFull, widenOptions } from '../area.js'
+import { MetroMap } from './LocationScreen.jsx'
 import { AreaSheet } from './AreaControls.jsx'
 
 // (b) Category → list. Filters live in plain sight as chips; price uses the
@@ -74,6 +75,8 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
   const filtered = f.ownerOnly || f.photosOnly || f.min != null || f.max != null
   // nothing in this subcategory anywhere in the metro (not just filtered out)
   const zero = !query && f.sub !== 'all' ? zeroLocal[f.sub] : null
+  // empty only because of the area: the same search with any area has results
+  const areaEmpty = (area.places.length > 0 || area.radius != null) && groupDealers(applyFilters(anyArea, f)).length > 0
 
   // Each way to widen an empty result, with how many it would bring back.
   const relaxers = [
@@ -126,10 +129,14 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
         </div>}
       </div>
 
+      {zero ? null : rows.length === 0 && areaEmpty ? (
+        <AreaEmpty area={area} what={query ? `“${query}”` : subName} options={widenOptions(area, a => groupDealers(applyFilters(anyArea.filter(l => inArea(l, a)), f)).length)}
+          onWiden={a => onAreaChange(a)} onAlert={() => setSheet('save')} saved={saved} />
+      ) : null}
       {zero ? (
         <ZeroLocal sub={f.sub} sectionName={sectionName} sectionId={sectionId} info={zero}
           onAlert={() => setSheet('save')} onPick={sub => set({ sub })} toast={toast} saved={saved} />
-      ) : rows.length > 0 ? (
+      ) : rows.length === 0 && areaEmpty ? null : rows.length > 0 ? (
         <>
           <p className="results-line pad">
             {query ? `${rows.length} result${rows.length === 1 ? '' : 's'}` : f.sub === 'all' && !filtered ? `${fmt(section.count)} listings · ${fmt(section.newToday)} new today` : `${rows.length} match`} · {SORTS.find(s => s[0] === sort)[1]}
@@ -162,7 +169,7 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
         </div>
       )}
 
-      {!zero && <button type="button" className={'fab' + (saved ? ' fab-done' : '')} onClick={() => (saved ? toast('manage alerts in saved') : setSheet('save'))}>
+      {!zero && !(rows.length === 0 && areaEmpty) && <button type="button" className={'fab' + (saved ? ' fab-done' : '')} onClick={() => (saved ? toast('manage alerts in saved') : setSheet('save'))}>
         <Icon name={saved ? 'check' : 'bell'} />{saved ? 'alerts on' : 'save search'}
       </button>}
 
@@ -203,6 +210,29 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
 // the subcategories the results fall in, with counts).
 // Zero local listings: nothing in this subcategory anywhere near Minneapolis.
 // Show how far you'd have to go, offer an alert, related places, and a nudge to post.
+// Empty because of the area: show where you were looking and the specific ways
+// to widen it, each with its count, plus an alert for this exact area.
+function AreaEmpty({ area, what, options, onWiden, onAlert, saved }) {
+  return (
+    <div className="zero pad">
+      <MetroMap area={area} />
+      <h2>no {what} in {areaLabel(area)} right now</h2>
+      <p>there are some close by. widen your area:</p>
+      <div className="relaxers">
+        {options.map(o => (
+          <button key={o.label} type="button" className="relaxer" onClick={() => onWiden(o.area)}>
+            <Icon name={o.label.startsWith('within') || o.label === 'any distance' ? 'near' : 'pin'} size={20} />
+            <span className="relaxer-label">{o.label}</span><span className="relaxer-n">{o.n} listing{o.n === 1 ? '' : 's'}</span><Icon name="arrow" size={18} />
+          </button>
+        ))}
+      </div>
+      <button type="button" className={saved ? 'btn-tonal' : 'btn-outlined zero-alert'} onClick={saved ? undefined : onAlert}>
+        <Icon name={saved ? 'check' : 'bell'} size={18} />{saved ? 'we\u2019ll tell you when one\u2019s posted here' : `alert me when one\u2019s posted in ${areaLabel(area)}`}
+      </button>
+    </div>
+  )
+}
+
 function ZeroLocal({ sub, sectionName, sectionId, info, onAlert, onPick, toast, saved }) {
   const subs = taxonomy[sectionId]
   const pick = name => {

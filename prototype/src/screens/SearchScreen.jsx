@@ -118,7 +118,14 @@ export default function SearchScreen({ onOpenListing, scopeSection, initialQuery
               ))}
             </section>
           ) : (
-            <p className="sv-none pad">nothing matches “{typed}” right now. search anyway and save it, and we'll tell you when one's posted.</p>
+            searchListings(term, scope).length > 0 && (area.places.length || area.radius != null) ? (
+              <div className="sv-none pad">
+                <p>nothing matches “{typed}” in {areaFull(area, city.name)}.</p>
+                <button type="button" className="relaxer" onClick={() => onAreaChange(ALL_AREAS)}>
+                  <Icon name="pin" size={20} /><span className="relaxer-label">search all areas</span><span className="relaxer-n">{searchListings(term, scope).length} listing{searchListings(term, scope).length === 1 ? '' : 's'}</span><Icon name="arrow" size={18} />
+                </button>
+              </div>
+            ) : <p className="sv-none pad">nothing matches “{typed}” right now. search anyway and save it, and we'll tell you when one's posted.</p>
           )}
         </>
       )}
