@@ -77,35 +77,57 @@ export default function LocationScreen({ area, onApply, onClose, toast }) {
   )
 }
 
-// Schematic metro map: approximate neighborhood positions, the river, and a
-// distance ring around "you" (downtown) scaled at 9px per mile.
+// Metro map in the style of the current app: the map dims and tints purple
+// everywhere outside a circular cutout of the area you're searching. The
+// circle follows the choice: distance from you, chosen neighborhoods, or the metro.
 const SPOTS = {
-  'brooklyn park': [118, 22], roseville: [238, 40], 'north loop': [148, 82], northeast: [182, 66], downtown: [160, 96],
+  'brooklyn park': [118, 22], roseville: [238, 40], 'north loop': [146, 82], northeast: [182, 66], downtown: [190, 100],
   como: [232, 74], 'bryn mawr': [116, 98], 'st. louis park': [80, 116], whittier: [150, 120], uptown: [126, 128],
   seward: [192, 120], powderhorn: [166, 138], longfellow: [204, 146], 'linden hills': [108, 150], 'mac-groveland': [252, 134],
   'south mpls': [172, 164], edina: [102, 186], richfield: [160, 194], bloomington: [150, 222],
 }
+const YOU = [160, 96]
+const PX_PER_MI = 9
+
+function cutout(area) {
+  const picked = area.places.flatMap(p => REGIONS[p] || [p]).map(n => SPOTS[n]).filter(Boolean)
+  const center = picked.length
+    ? [picked.reduce((t, [x]) => t + x, 0) / picked.length, picked.reduce((t, [, y]) => t + y, 0) / picked.length]
+    : area.radius != null ? YOU : [165, 120]
+  const fit = picked.length ? Math.max(30, ...picked.map(([x, y]) => Math.hypot(x - center[0], y - center[1]) + 24)) : 150
+  const r = area.radius != null ? Math.min(fit, area.radius * PX_PER_MI) : fit
+  return { cx: center[0], cy: center[1], r, picked: new Set(area.places.flatMap(p => REGIONS[p] || [p])) }
+}
+
 export function MetroMap({ area }) {
-  const on = new Set(area.places.flatMap(p => REGIONS[p] || [p]))
-  const all = !area.places.length
-  const r = area.radius == null ? null : area.radius * 9
+  const { cx, cy, r, picked } = cutout(area)
+  const id = 'cut' + Math.round(cx) + Math.round(cy) + Math.round(r)
   return (
-    <svg className="metro" viewBox="0 0 320 240" role="img" aria-label="map of selected neighborhoods">
-      <rect width="320" height="240" rx="12" className="map-bg" />
+    <svg className="metro" viewBox="0 0 320 240" role="img" aria-label="map of the area you're searching">
+      <defs>
+        <mask id={id}><rect width="320" height="240" fill="white" /><circle cx={cx} cy={cy} r={r} fill="black" /></mask>
+      </defs>
+      <rect width="320" height="240" className="map-bg" />
+      {/* lakes: bde maka ska, lake of the isles, harriet, nokomis, como */}
+      <ellipse cx="112" cy="132" rx="7" ry="10" className="map-water" />
+      <ellipse cx="118" cy="112" rx="4" ry="7" className="map-water" />
+      <ellipse cx="114" cy="152" rx="6" ry="7" className="map-water" />
+      <ellipse cx="196" cy="172" rx="7" ry="6" className="map-water" />
+      <ellipse cx="236" cy="62" rx="5" ry="4" className="map-water" />
       <path d="M120 0 C150 40 140 70 168 92 S200 120 214 150 S250 200 300 240" className="map-river" />
-      <text x="296" y="20" className="metro-city" textAnchor="end">st. paul</text>
-      <text x="16" y="20" className="metro-city">minneapolis</text>
-      {r && <circle cx="160" cy="96" r={r} className="metro-ring" />}
-      {Object.entries(SPOTS).map(([name, [x, y]]) => {
-        const hit = all || on.has(name)
-        return (
-          <g key={name} className={hit ? 'spot on' : 'spot'}>
-            <circle cx={x} cy={y} r={hit ? 5 : 3.5} />
-            <text x={x} y={y - 8} textAnchor="middle">{name}</text>
-          </g>
-        )
-      })}
-      <circle cx="160" cy="96" r="6" className="metro-you" />
+      {/* 494/694 ring, interstates, a few arterials */}
+      <rect x="40" y="14" width="250" height="200" rx="70" className="map-ring" />
+      <path d="M0 112 L118 104 L160 96 L226 98 L320 102 M164 0 L160 96 L168 240 M250 0 L254 98 L246 240 M60 60 L160 96 M160 96 L290 190" className="map-hwy" />
+      <path d="M0 150 L320 140 M0 70 L320 62 M100 0 L96 240 M210 0 L216 240" className="map-road" />
+      {/* everything outside the cutout is tinted */}
+      <rect width="320" height="240" className="map-tint" mask={`url(#${id})`} />
+      <circle cx={cx} cy={cy} r={r} className="map-cut" />
+      {Object.entries(SPOTS).map(([name, [x, y]]) => (
+        <text key={name} x={x} y={y} textAnchor="middle" className={'map-label' + (picked.has(name) ? ' on' : '')}>{name}</text>
+      ))}
+      <text x="18" y="232" className="map-city">minneapolis</text>
+      <text x="304" y="232" textAnchor="end" className="map-city">st. paul</text>
+      <circle cx={YOU[0]} cy={YOU[1]} r="5" className="metro-you" />
     </svg>
   )
 }

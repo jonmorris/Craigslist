@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { REGIONS, NEIGHBORHOODS, RADII } from '../area.js'
 import { Icon, Sheet } from '../ui.jsx'
+import { MetroMap } from './LocationScreen.jsx'
 
 // Shared area controls (regions, neighborhoods, distance), used by the list's area
 // sheet and the Home location picker. Controlled: value = { places, radius }.
@@ -43,6 +44,7 @@ export function AreaSheet({ area, countFor, onClose, onApply }) {
     <Sheet title="area" onClose={onClose} footer={
       <button type="button" className="btn-primary" onClick={() => onApply(next)}>{n === 0 ? 'show this area anyway' : `show ${n} listing${n === 1 ? '' : 's'}`}</button>
     }>
+      <MetroMap area={next} />
       <AreaControls value={next} onChange={setNext} />
       {n === 0 && <p className="area-zero" role="status"><Icon name="pin" size={18} />nothing here yet. a bigger distance or nearby neighborhood should help.</p>}
     </Sheet>
