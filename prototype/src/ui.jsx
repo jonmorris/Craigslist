@@ -145,7 +145,7 @@ export function BottomNav({ onTap, onHome }) {
   return (
     <nav className="navbar" aria-label="main">
       {NAV.map(([icon, label], i) => (
-        <button key={label} type="button" className={'nav-item' + (i === 0 ? ' active' : '') + (label === 'post' ? ' nav-post' : '')}
+        <button key={label} type="button" className={'nav-item' + (i === 0 ? ' active' : '')}
           onClick={() => (i === 0 ? onHome() : onTap(`${label} isn't built yet`))}>
           <span className="nav-pill"><Icon name={icon} /></span>
           <span className="nav-label">{label}</span>

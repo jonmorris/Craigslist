@@ -189,14 +189,14 @@ function PriceSheet({ all, f, onClose, onApply }) {
       </div>
       <div className="histo-axis"><span>$0</span><span>$500</span><span>$1k</span><span>$1.5k</span><span>$2k+</span></div>
       <div className="price-inputs">
-        <label htmlFor="pmin"><span>min</span><input id="pmin" inputMode="numeric" placeholder="$0" value={min} onChange={e => setMin(e.target.value.replace(/\D/g, ''))} /></label>
+        <label className="tf" htmlFor="pmin"><input id="pmin" inputMode="numeric" placeholder="$0" value={min} onChange={e => setMin(e.target.value.replace(/\D/g, ''))} /><span className="tf-label">min</span></label>
         <span className="dash">–</span>
-        <label htmlFor="pmax"><span>max</span><input id="pmax" inputMode="numeric" placeholder="any" value={max} onChange={e => setMax(e.target.value.replace(/\D/g, ''))} /></label>
+        <label className="tf" htmlFor="pmax"><input id="pmax" inputMode="numeric" placeholder="any" value={max} onChange={e => setMax(e.target.value.replace(/\D/g, ''))} /><span className="tf-label">max</span></label>
       </div>
       <div className="presets">
         {PRESETS.map(([label, lo, hi]) => (
           <button key={label} type="button" className={'chip' + (num(min) === lo && num(max) === hi ? ' chip-on' : '')}
-            onClick={() => { setMin(lo ?? ''); setMax(hi ?? '') }}>{label}</button>
+            onClick={() => { setMin(lo ?? ''); setMax(hi ?? '') }}>{num(min) === lo && num(max) === hi && <Icon name="check" size={18} />}{label}</button>
         ))}
       </div>
     </Sheet>
@@ -212,8 +212,8 @@ function SaveSheet({ name, f, onClose, onSave }) {
     <Sheet title="save this search" onClose={onClose} footer={
       <button type="button" className="btn-primary" onClick={() => onSave({ label, detail: parts.join(' · '), alerts })}>save search</button>
     }>
-      <label className="field" htmlFor="sname"><span>name</span>
-        <input id="sname" value={label} onChange={e => setLabel(e.target.value)} />
+      <label className="tf" htmlFor="sname">
+        <input id="sname" value={label} onChange={e => setLabel(e.target.value)} /><span className="tf-label">name</span>
       </label>
       <div className="save-summary">{[name, ...parts].map(p => <span key={p} className="sub">{p}</span>)}</div>
       <button type="button" className="switch-row" role="switch" aria-checked={alerts} onClick={() => setAlerts(a => !a)}>
@@ -224,7 +224,7 @@ function SaveSheet({ name, f, onClose, onSave }) {
       {alerts && (
         <div className="segmented" role="radiogroup" aria-label="how often">
           {['instantly', 'once a day'].map(o => (
-            <button key={o} type="button" role="radio" aria-checked={freq === o} className={freq === o ? 'seg-on' : ''} onClick={() => setFreq(o)}>{o}</button>
+            <button key={o} type="button" role="radio" aria-checked={freq === o} className={freq === o ? 'seg-on' : ''} onClick={() => setFreq(o)}>{freq === o && <Icon name="check" size={18} />}{o}</button>
           ))}
         </div>
       )}
