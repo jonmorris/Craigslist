@@ -73,7 +73,8 @@ export default function App() {
   const openCategory = (section, sub = 'all') => push({ name: 'cat', section, sub })
   const openListing = id => push({ name: 'detail', id })
   const openSection = id => push({ name: 'section', section: id })
-  const openLocation = () => push({ name: 'location' })
+  // one location picker everywhere; lists pass a context so it shows their own count
+  const openLocation = (context = null) => push({ name: 'location', context })
   const hideListing = id => {
     hidden.add(id); setHiddenVersion(v => v + 1); back()
     toast('hidden · you won\u2019t see it in lists or search', { label: 'undo', run: () => { hidden.delete(id); setHiddenVersion(v => v + 1) } })
@@ -125,20 +126,20 @@ export default function App() {
       <div className="device">
         <div className="statusbar" aria-hidden="true"><span>9:41</span><span className="sb-icons">▲ ◢ ▮</span></div>
         <main className="screen" ref={screenRef}>
-          {route.name === 'home' && <HomeScreen toast={toast} onOpen={openCategory} onOpenSection={openSection} onSearch={() => openSearch()} onOpenSaved={openSaved} onOpenListing={openListing} savedSearches={saved} areaText={areaFull(area)} onLocation={openLocation} />}
-          {route.name === 'location' && <LocationScreen area={area} toast={toast} onClose={back}
-            onApply={a => { setArea(a); back(); toast(`showing ${areaFull(a)}`) }} />}
+          {route.name === 'home' && <HomeScreen toast={toast} onOpen={openCategory} onOpenSection={openSection} onSearch={() => openSearch()} onOpenSaved={openSaved} onOpenListing={openListing} savedSearches={saved} areaText={areaFull(area)} onLocation={() => openLocation()} />}
+          {route.name === 'location' && <LocationScreen area={area} context={route.context} toast={toast} onClose={back}
+            onApply={a => { setArea(a); back(); toast(`location saved · ${areaFull(a)}`) }} />}
           {route.name === 'section' && <SectionScreen key={'sec' + route.section} sectionId={route.section} onBack={back}
             onOpenList={openCategory} onSearch={scope => openSearch(scope)} onRunSearch={(q, sec) => runSearch(q, sec, 'all')}
             onOpenListing={openListing} toast={toast} />}
-          {route.name === 'cat' && <CategoryScreen key={'c' + route.section + route.sub} sectionId={route.section} initialSub={route.sub} area={area} onAreaChange={setArea}
+          {route.name === 'cat' && <CategoryScreen key={'c' + route.section + route.sub} sectionId={route.section} initialSub={route.sub} area={area} onAreaChange={setArea} onOpenLocation={openLocation}
             onBack={back} onSearch={searchFromList} onOpenListing={openListing} toast={toast} onSaveSearch={addSaved} />}
-          {route.name === 'results' && <CategoryScreen key={'r' + route.query + route.section + route.sub} sectionId={route.section} initialSub={route.sub} query={route.query} area={area} onAreaChange={setArea}
+          {route.name === 'results' && <CategoryScreen key={'r' + route.query + route.section + route.sub} sectionId={route.section} initialSub={route.sub} query={route.query} area={area} onAreaChange={setArea} onOpenLocation={openLocation}
             onBack={back} onSearch={searchFromList} onOpenListing={openListing} toast={toast} onSaveSearch={addSaved} />}
           {route.name === 'search' && <SearchScreen key={'s' + stack.length} scopeSection={route.scope} initialQuery={route.q} recent={recent} saved={saved}
             onSubmit={runSearch} onOpenSaved={openSaved} onOpenListing={openListing} onBack={back} toast={toast}
             onRemoveRecent={r => setRecent(x => x.filter(y => y !== r))} onClearRecent={() => setRecent([])}
-            area={area} onAreaChange={setArea} />}
+            area={area} onAreaChange={setArea} onOpenLocation={openLocation} />}
           {route.name === 'detail' && <DetailScreen key={'d' + route.id} id={route.id} favorites={favorites} onToggleFav={toggleFav} onHide={hideListing}
             onBack={back} onOpenListing={openListing} onOpenCategory={openCategory} toast={toast} />}
         </main>

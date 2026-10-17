@@ -4,8 +4,7 @@ import { Icon, ListingCard, Sheet, PeaceSign } from '../ui.jsx'
 import { matches } from '../search.js'
 import { taxonomy, zeroLocal } from '../taxonomy.js'
 import { ALL_AREAS, inArea, areaLabel, areaFull, widenOptions } from '../area.js'
-import { MetroMap } from './LocationScreen.jsx'
-import { AreaSheet } from './AreaControls.jsx'
+import RealMap from '../RealMap.jsx'
 
 // (b) Category → list. Filters live in plain sight as chips; price uses the
 // fair-price histogram; repeat dealer posts collapse; save search = alerts on.
@@ -51,7 +50,7 @@ const priceChipLabel = (min, max) =>
   min == null && max == null ? 'price' : min == null ? `under ${money(max)}` : max == null ? `${money(min)}+` : `${money(min)}–${money(max)}`
 
 // Also renders search results: pass `query` (and optionally no sectionId = all sections).
-export default function CategoryScreen({ sectionId, initialSub = 'all', query = null, area = ALL_AREAS, onAreaChange, onBack, onSearch, onOpenListing, toast, onSaveSearch }) {
+export default function CategoryScreen({ sectionId, initialSub = 'all', query = null, area = ALL_AREAS, onAreaChange, onOpenLocation, onBack, onSearch, onOpenListing, toast, onSaveSearch }) {
   const section = sectionId ? sections.find(s => s.id === sectionId) : null
   // not memoized: hiding or un-hiding a listing must show up immediately
   const anyArea = visible(listings).filter(l => (!sectionId || l.section === sectionId) && (!query || matches(l, query)))
@@ -107,7 +106,10 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
               <span className="scope-v">{query ? subName : f.sub === 'all' ? `all ${sectionName}` : subName}</span></span>
             <Icon name="chevron" />
           </button>
-          <button type="button" className="scope-btn" onClick={() => setSheet('area')}>
+          <button type="button" className="scope-btn" onClick={() => onOpenLocation({
+            noun: query ? `results for “${query}”` : subName,
+            countFor: a => groupDealers(applyFilters(anyArea.filter(l => inArea(l, a)), f)).length,
+          })}>
             <span className="scope-text"><span className="scope-k">area</span><span className="scope-v">{areaFull(area, city.name)}</span></span>
             <Icon name="chevron" />
           </button>
@@ -177,10 +179,6 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
         <SubSheet query={query} section={section} sectionId={sectionId} current={f.sub} counts={subCounts} total={groupDealers(all).length}
           onClose={() => setSheet(null)} onPick={sub => { set({ sub }); setSheet(null) }} toast={toast} />
       )}
-      {sheet === 'area' && (
-        <AreaSheet area={area} countFor={a => groupDealers(applyFilters(anyArea.filter(l => inArea(l, a)), f)).length}
-          onClose={() => setSheet(null)} onApply={a => { onAreaChange(a); setSheet(null); setSaved(false) }} />
-      )}
       {sheet === 'sort' && (
         <Sheet title="sort by" onClose={() => setSheet(null)}>
           <div className="radio-list">
@@ -215,7 +213,7 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
 function AreaEmpty({ area, what, options, onWiden, onAlert, saved }) {
   return (
     <div className="zero pad">
-      <MetroMap area={area} />
+      <RealMap area={area} interactive={false} height={200} />
       <h2>no {what} in {areaLabel(area)} right now</h2>
       <p>there are some close by. widen your area:</p>
       <div className="relaxers">

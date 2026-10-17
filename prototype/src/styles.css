@@ -531,3 +531,11 @@ button:disabled::before { display: none; }
 .map-label { font: 500 8.5px/1 var(--plain); fill: var(--md-sys-color-on-surface-variant); paint-order: stroke; stroke: var(--md-sys-color-surface-container-lowest); stroke-width: 3px; stroke-linejoin: round; }
 .map-label.on { fill: var(--md-sys-color-on-surface); font-weight: 700; }
 .map-city { font: 700 10px/1 var(--plain); fill: var(--md-sys-color-on-surface); letter-spacing: .04em; text-transform: uppercase; }
+
+/* real map */
+.real-map { width: 100%; border-radius: var(--md-shape-md); overflow: hidden; border: 1px solid var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface-container-high); z-index: 0; }
+.real-map .leaflet-control-attribution { font: 400 9px/1.4 var(--plain); background: rgb(255 255 255 / .75); }
+.map-you-tip { background: var(--md-sys-color-inverse-surface); color: var(--md-sys-color-inverse-on-surface); border: 0; border-radius: var(--md-shape-xs); font: var(--md-label-small); padding: 1px 6px; box-shadow: none; }
+.map-you-tip::before { display: none; }
+.loc-save { margin-right: 4px; font: var(--md-title-small); }
+.screen:has(> .loc-page) { padding-bottom: 32px; }

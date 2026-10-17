@@ -3,12 +3,10 @@ import { sections, city, priceLabel } from '../data.js'
 import { suggest, scopes, searchListings, TRENDING } from '../search.js'
 import { Icon, Thumb } from '../ui.jsx'
 import { ALL_AREAS, inArea, areaFull } from '../area.js'
-import { AreaSheet } from './AreaControls.jsx'
 
 // (c) Search — M3 full-screen search view. Empty: recent, saved, trending.
 // Typing: completions, "search in" scopes with counts, and listing matches.
-export default function SearchScreen({ onOpenListing, scopeSection, initialQuery = '', recent, saved, onSubmit, onOpenSaved, onRemoveRecent, onClearRecent, onBack, toast, area = ALL_AREAS, onAreaChange }) {
-  const [areaOpen, setAreaOpen] = useState(false)
+export default function SearchScreen({ onOpenListing, scopeSection, initialQuery = '', recent, saved, onSubmit, onOpenSaved, onRemoveRecent, onClearRecent, onBack, toast, area = ALL_AREAS, onAreaChange, onOpenLocation }) {
   const [q, setQ] = useState(initialQuery)
   const [scope, setScope] = useState(scopeSection)
   const input = useRef(null)
@@ -35,7 +33,7 @@ export default function SearchScreen({ onOpenListing, scopeSection, initialQuery
         {q && <button type="button" className="icon-btn" aria-label="clear" onClick={() => { setQ(''); input.current?.focus() }}><Icon name="close" /></button>}
       </div>
       <div className="hscroll chips scope-row">
-        <button type="button" className={'chip' + (area.places.length || area.radius != null ? ' chip-on' : '')} onClick={() => setAreaOpen(true)}>
+        <button type="button" className={'chip' + (area.places.length || area.radius != null ? ' chip-on' : '')} onClick={() => onOpenLocation(typed ? { noun: `results for “${term}”`, countFor: a => searchListings(term, scope).filter(l => inArea(l, a)).length } : null)}>
           <Icon name="pin" size={18} />{areaFull(area, city.name)}<Icon name="chevron" size={16} />
         </button>
         {scope && (
@@ -128,10 +126,6 @@ export default function SearchScreen({ onOpenListing, scopeSection, initialQuery
             ) : <p className="sv-none pad">nothing matches “{typed}” right now. search anyway and save it, and we'll tell you when one's posted.</p>
           )}
         </>
-      )}
-      {areaOpen && (
-        <AreaSheet area={area} countFor={a => (typed ? searchListings(term, scope) : searchListings('', scope)).filter(l => inArea(l, a)).length}
-          onClose={() => setAreaOpen(false)} onApply={a => { onAreaChange(a); setAreaOpen(false) }} />
       )}
     </div>
   )
