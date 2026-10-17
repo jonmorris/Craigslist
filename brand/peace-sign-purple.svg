@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100.0 100.0" width="100" height="100" role="img" aria-label="craigslist peace sign"><title>craigslist peace sign</title><g transform="translate(0 0) scale(1)">
+    <clipPath id="m-clip"><circle cx="50" cy="50" r="50"/></clipPath>
+    <g fill="none" stroke="#6a2bb8" stroke-width="12" clip-path="url(#m-clip)">
+      <circle cx="50" cy="50" r="44"/>
+      <path d="M50 0V100M50 50L12.89 87.11M50 50L87.11 87.11" stroke-linecap="butt"/>
+    </g>
+  </g></svg>

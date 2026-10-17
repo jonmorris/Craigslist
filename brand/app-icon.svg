@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108.0 108.0" width="108" height="108" role="img" aria-label="craigslist app icon"><title>craigslist app icon</title><rect width="108" height="108" fill="#6a2bb8"/><g transform="translate(27 27) scale(0.54)">
+    <clipPath id="ic-clip"><circle cx="50" cy="50" r="50"/></clipPath>
+    <g fill="none" stroke="#ffffff" stroke-width="12" clip-path="url(#ic-clip)">
+      <circle cx="50" cy="50" r="44"/>
+      <path d="M50 0V100M50 50L12.89 87.11M50 50L87.11 87.11" stroke-linecap="butt"/>
+    </g>
+  </g></svg>

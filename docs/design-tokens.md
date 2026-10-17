@@ -5,22 +5,22 @@ Everything in the prototype uses only these values, so they move directly into F
 ## Color
 
 - **Seed:** `#9945C8`, the purple sampled from the current app's buttons and peace sign.
-- **Scheme:** `SchemeFidelity`. It keeps the brand purple's saturation; with it, `primaryContainer` *is* the brand purple.
+- **Scheme:** generated with `SchemeFidelity`, then a hand-tuned brand layer is pinned on top: primary, the surfaces, text and outline colors, and all custom colors. The generator supplies the remaining roles (tertiary, error, inverse, scrim). Every text/background pair passes WCAG 4.5:1; the script checks this.
 - **No dynamic color (Material You).** The brand purple stays fixed instead of following the wallpaper. This is a deliberate choice for a branded marketplace.
 
-**In Figma:** open the Material Theme Builder plugin and set the source color to `#9945C8`. If your version offers scheme variants, pick "Fidelity"; otherwise paste the values below. Add the custom colors listed further down.
+**In Figma:** create color styles from the tables below (Material Theme Builder can generate the base from `#9945C8`; then overwrite the pinned roles with these values).
 
 ### Scheme roles
 | Role | Light | Dark |
 |---|---|---|
-| `primary` | `#7e28ad` | `#e7b4ff` |
-| `on-primary` | `#ffffff` | `#500076` |
-| `primary-container` | `#9945c8` | `#9945c8` |
-| `on-primary-container` | `#fceaff` | `#fceaff` |
+| `primary` | `#6a2bb8` | `#caa4ff` |
+| `on-primary` | `#ffffff` | `#2a0b55` |
+| `primary-container` | `#6a2bb8` | `#caa4ff` |
+| `on-primary-container` | `#ffffff` | `#2a0b55` |
 | `secondary` | `#745087` | `#e2b7f6` |
 | `on-secondary` | `#ffffff` | `#432256` |
-| `secondary-container` | `#ebbffe` | `#5e3b70` |
-| `on-secondary-container` | `#6e4a80` | `#d3a9e7` |
+| `secondary-container` | `#ebddfb` | `#3a2556` |
+| `on-secondary-container` | `#3f1673` | `#e8d8ff` |
 | `tertiary` | `#725c00` | `#e4c45c` |
 | `on-tertiary` | `#ffffff` | `#3c2f00` |
 | `tertiary-container` | `#c7a944` | `#c7a944` |
@@ -29,18 +29,18 @@ Everything in the prototype uses only these values, so they move directly into F
 | `on-error` | `#ffffff` | `#690005` |
 | `error-container` | `#ffdad6` | `#93000a` |
 | `on-error-container` | `#93000a` | `#ffdad6` |
-| `surface` | `#fff7fc` | `#171119` |
-| `on-surface` | `#1f1a22` | `#ebdfeb` |
-| `on-surface-variant` | `#4e4352` | `#d1c2d3` |
-| `surface-dim` | `#e2d6e2` | `#171119` |
+| `surface` | `#fcfafe` | `#15121a` |
+| `on-surface` | `#1e1a24` | `#ede7f4` |
+| `on-surface-variant` | `#5f576b` | `#aaa1b7` |
+| `surface-dim` | `#ece8f1` | `#0c0a10` |
 | `surface-bright` | `#fff7fc` | `#3e3740` |
-| `surface-container-lowest` | `#ffffff` | `#120c14` |
-| `surface-container-low` | `#fcf0fc` | `#1f1a22` |
-| `surface-container` | `#f6eaf6` | `#241d26` |
-| `surface-container-high` | `#f1e5f0` | `#2e2830` |
-| `surface-container-highest` | `#ebdfeb` | `#39323b` |
-| `outline` | `#7f7383` | `#9a8c9d` |
-| `outline-variant` | `#d1c2d3` | `#4e4352` |
+| `surface-container-lowest` | `#ffffff` | `#0f0d13` |
+| `surface-container-low` | `#f8f5fb` | `#19161e` |
+| `surface-container` | `#f3eef8` | `#1f1a26` |
+| `surface-container-high` | `#efe9f5` | `#241f2b` |
+| `surface-container-highest` | `#e7dff0` | `#2a2433` |
+| `outline` | `#8a8296` | `#6f6779` |
+| `outline-variant` | `#dcd2e6` | `#342d3e` |
 | `inverse-surface` | `#352e37` | `#ebdfeb` |
 | `inverse-on-surface` | `#f9edf9` | `#352e37` |
 | `inverse-primary` | `#e7b4ff` | `#8934b8` |
@@ -48,42 +48,42 @@ Everything in the prototype uses only these values, so they move directly into F
 | `shadow` | `#000000` | `#000000` |
 
 ### Custom colors
-Section tints and price signals: M3 tonal palettes, harmonized toward the seed, with saturation capped so containers stay calm. Tones: color 40/80 · on-color 100/20 · container 90/30 · on-container 30/90 (light/dark).
+Section tints and price signals. These are hand-picked soft pastels (light) and deep tints (dark), each with an M3 color / on-color / container / on-container set.
 
 | Token | Light | Dark |
 |---|---|---|
-| `sale` | `#745186` | `#e2b7f5` |
-| `on-sale` | `#ffffff` | `#432255` |
-| `sale-container` | `#f5d9ff` | `#5b396d` |
-| `on-sale-container` | `#5b396d` | `#f5d9ff` |
-| `housing` | `#326668` | `#9bd0d1` |
-| `on-housing` | `#ffffff` | `#003738` |
-| `housing-container` | `#b7eced` | `#164e50` |
-| `on-housing-container` | `#164e50` | `#b7eced` |
-| `jobs` | `#805526` | `#f4bb83` |
-| `on-jobs` | `#ffffff` | `#492900` |
-| `jobs-container` | `#ffdcbd` | `#653e10` |
-| `on-jobs-container` | `#653e10` | `#ffdcbd` |
-| `services` | `#585b88` | `#c0c3f6` |
-| `on-services` | `#ffffff` | `#292c56` |
-| `services-container` | `#e0e0ff` | `#40436e` |
-| `on-services-container` | `#40436e` | `#e0e0ff` |
-| `gigs` | `#884e51` | `#feb3b6` |
-| `on-gigs` | `#ffffff` | `#512125` |
-| `gigs-container` | `#ffdada` | `#6c373b` |
-| `on-gigs-container` | `#6c373b` | `#ffdada` |
-| `community` | `#43664a` | `#a9d0ad` |
-| `on-community` | `#ffffff` | `#14371e` |
-| `community-container` | `#c4edc8` | `#2b4e33` |
-| `on-community-container` | `#2b4e33` | `#c4edc8` |
-| `good` | `#296b3d` | `#92d69f` |
-| `on-good` | `#ffffff` | `#003918` |
-| `good-container` | `#adf3b9` | `#085228` |
-| `on-good-container` | `#085228` | `#adf3b9` |
-| `warn` | `#904c23` | `#ffb68f` |
-| `on-warn` | `#ffffff` | `#542100` |
-| `warn-container` | `#ffdbca` | `#73350d` |
-| `on-warn-container` | `#73350d` | `#ffdbca` |
+| `sale` | `#5a2296` | `#d9bdff` |
+| `on-sale` | `#ffffff` | `#2a0b55` |
+| `sale-container` | `#efe4fb` | `#2b1f3d` |
+| `on-sale-container` | `#5a2296` | `#d9bdff` |
+| `housing` | `#14615a` | `#86d8cc` |
+| `on-housing` | `#ffffff` | `#00332e` |
+| `housing-container` | `#dbf0ec` | `#142e2c` |
+| `on-housing-container` | `#14615a` | `#86d8cc` |
+| `jobs` | `#744a04` | `#f2c877` |
+| `on-jobs` | `#ffffff` | `#3d2800` |
+| `jobs-container` | `#fbedd0` | `#352914` |
+| `on-jobs-container` | `#744a04` | `#f2c877` |
+| `services` | `#234c93` | `#9dbef6` |
+| `on-services` | `#ffffff` | `#0a2a5c` |
+| `services-container` | `#e0e9fb` | `#182640` |
+| `on-services-container` | `#234c93` | `#9dbef6` |
+| `gigs` | `#8c2f1e` | `#f5a796` |
+| `on-gigs` | `#ffffff` | `#4f1409` |
+| `gigs-container` | `#fbe2dc` | `#3b1e19` |
+| `on-gigs-container` | `#8c2f1e` | `#f5a796` |
+| `community` | `#2f6219` | `#a9d98f` |
+| `on-community` | `#ffffff` | `#123400` |
+| `community-container` | `#e2f0da` | `#1c2e17` |
+| `on-community-container` | `#2f6219` | `#a9d98f` |
+| `good` | `#1c7a43` | `#74d59b` |
+| `on-good` | `#ffffff` | `#003919` |
+| `good-container` | `#dcf2e3` | `#173b26` |
+| `on-good-container` | `#14602f` | `#8ee0ae` |
+| `warn` | `#a14a17` | `#f3b48e` |
+| `on-warn` | `#ffffff` | `#4a1d00` |
+| `warn-container` | `#fbe6d8` | `#42261a` |
+| `on-warn-container` | `#8a3d12` | `#f3b48e` |
 
 Use: section tiles = `<section>-container` / `on-<section>-container`. "below typical" and "free" = `good`. "above typical" = `warn`.
 
