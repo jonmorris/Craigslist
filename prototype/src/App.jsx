@@ -137,7 +137,8 @@ export default function App() {
             onBack={back} onSearch={searchFromList} onOpenListing={openListing} toast={toast} onSaveSearch={addSaved} />}
           {route.name === 'search' && <SearchScreen key={'s' + stack.length} scopeSection={route.scope} initialQuery={route.q} recent={recent} saved={saved}
             onSubmit={runSearch} onOpenSaved={openSaved} onOpenListing={openListing} onBack={back} toast={toast}
-            onRemoveRecent={r => setRecent(x => x.filter(y => y !== r))} onClearRecent={() => setRecent([])} />}
+            onRemoveRecent={r => setRecent(x => x.filter(y => y !== r))} onClearRecent={() => setRecent([])}
+            area={area} onAreaChange={setArea} />}
           {route.name === 'detail' && <DetailScreen key={'d' + route.id} id={route.id} favorites={favorites} onToggleFav={toggleFav} onHide={hideListing}
             onBack={back} onOpenListing={openListing} onOpenCategory={openCategory} toast={toast} />}
         </main>

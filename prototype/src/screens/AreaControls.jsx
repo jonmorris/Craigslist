@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { REGIONS, NEIGHBORHOODS, RADII } from '../area.js'
-import { Icon } from '../ui.jsx'
+import { Icon, Sheet } from '../ui.jsx'
 
 // Shared area controls (regions, neighborhoods, distance), used by the list's area
 // sheet and the Home location picker. Controlled: value = { places, radius }.
@@ -34,3 +34,17 @@ export default function AreaControls({ value, onChange }) {
     </>
   )
 }
+
+// Area: regions and neighborhoods (multi-select) plus distance from you, with a live count.
+export function AreaSheet({ area, countFor, onClose, onApply }) {
+  const [next, setNext] = useState(area)
+  const n = countFor(next)
+  return (
+    <Sheet title="area" onClose={onClose} footer={
+      <button type="button" className="btn-primary" onClick={() => onApply(next)}>show {n} listing{n === 1 ? '' : 's'}</button>
+    }>
+      <AreaControls value={next} onChange={setNext} />
+    </Sheet>
+  )
+}
+

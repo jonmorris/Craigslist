@@ -4,7 +4,7 @@ import { Icon, ListingCard, Sheet, PeaceSign } from '../ui.jsx'
 import { matches } from '../search.js'
 import { taxonomy, zeroLocal } from '../taxonomy.js'
 import { ALL_AREAS, inArea, areaLabel, areaFull } from '../area.js'
-import AreaControls from './AreaControls.jsx'
+import { AreaSheet } from './AreaControls.jsx'
 
 // (b) Category → list. Filters live in plain sight as chips; price uses the
 // fair-price histogram; repeat dealer posts collapse; save search = alerts on.
@@ -280,19 +280,6 @@ function SubSheet({ query, section, sectionId, current, counts, total, onClose, 
           </button>
         ))}
       </div>
-    </Sheet>
-  )
-}
-
-// Area: regions and neighborhoods (multi-select) plus distance from you, with a live count.
-function AreaSheet({ area, countFor, onClose, onApply }) {
-  const [next, setNext] = useState(area)
-  const n = countFor(next)
-  return (
-    <Sheet title="area" onClose={onClose} footer={
-      <button type="button" className="btn-primary" onClick={() => onApply(next)}>show {n} listing{n === 1 ? '' : 's'}</button>
-    }>
-      <AreaControls value={next} onChange={setNext} />
     </Sheet>
   )
 }

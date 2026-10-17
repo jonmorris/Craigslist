@@ -2,10 +2,13 @@ import React, { useEffect, useRef, useState } from 'react'
 import { sections, city, priceLabel } from '../data.js'
 import { suggest, scopes, searchListings, TRENDING } from '../search.js'
 import { Icon, Thumb } from '../ui.jsx'
+import { ALL_AREAS, inArea, areaFull } from '../area.js'
+import { AreaSheet } from './AreaControls.jsx'
 
 // (c) Search — M3 full-screen search view. Empty: recent, saved, trending.
 // Typing: completions, "search in" scopes with counts, and listing matches.
-export default function SearchScreen({ onOpenListing, scopeSection, initialQuery = '', recent, saved, onSubmit, onOpenSaved, onRemoveRecent, onClearRecent, onBack, toast }) {
+export default function SearchScreen({ onOpenListing, scopeSection, initialQuery = '', recent, saved, onSubmit, onOpenSaved, onRemoveRecent, onClearRecent, onBack, toast, area = ALL_AREAS, onAreaChange }) {
+  const [areaOpen, setAreaOpen] = useState(false)
   const [q, setQ] = useState(initialQuery)
   const [scope, setScope] = useState(scopeSection)
   const input = useRef(null)
@@ -17,8 +20,9 @@ export default function SearchScreen({ onOpenListing, scopeSection, initialQuery
   const completions = suggest(typed)
   // While a word is half-typed ("bik"), scope and preview with the top completion ("bike").
   const term = completions[0]?.startsWith(typed.toLowerCase()) ? completions[0] : typed
-  const scoped = typed ? scopes(term, scope) : []
-  const hits = typed ? searchListings(term, scope).slice(0, 3) : []
+  // suggestions, scope counts and previews all respect the chosen area
+  const scoped = typed ? scopes(term, scope, area) : []
+  const hits = typed ? searchListings(term, scope).filter(l => inArea(l, area)).slice(0, 3) : []
 
   return (
     <div className="search">
@@ -31,8 +35,8 @@ export default function SearchScreen({ onOpenListing, scopeSection, initialQuery
         {q && <button type="button" className="icon-btn" aria-label="clear" onClick={() => { setQ(''); input.current?.focus() }}><Icon name="close" /></button>}
       </div>
       <div className="hscroll chips scope-row">
-        <button type="button" className="chip" onClick={() => toast('neighborhood sheet comes later')}>
-          <Icon name="pin" size={18} />{city.name} · {city.area}<Icon name="chevron" size={16} />
+        <button type="button" className={'chip' + (area.places.length || area.radius != null ? ' chip-on' : '')} onClick={() => setAreaOpen(true)}>
+          <Icon name="pin" size={18} />{areaFull(area, city.name)}<Icon name="chevron" size={16} />
         </button>
         {scope && (
           <button type="button" className="chip chip-on" onClick={() => setScope(null)} aria-label={`remove ${scopeName} filter`}>
@@ -117,6 +121,10 @@ export default function SearchScreen({ onOpenListing, scopeSection, initialQuery
             <p className="sv-none pad">nothing matches “{typed}” right now. search anyway and save it, and we'll tell you when one's posted.</p>
           )}
         </>
+      )}
+      {areaOpen && (
+        <AreaSheet area={area} countFor={a => (typed ? searchListings(term, scope) : searchListings('', scope)).filter(l => inArea(l, a)).length}
+          onClose={() => setAreaOpen(false)} onApply={a => { onAreaChange(a); setAreaOpen(false) }} />
       )}
     </div>
   )
