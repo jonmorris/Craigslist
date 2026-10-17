@@ -13,6 +13,13 @@ export default function SearchScreen({ onOpenListing, scopeSection, initialQuery
   // jumping here from the desktop panel shouldn't drop a caret into the field
   useEffect(() => { if (autoFocus) input.current?.focus() }, [])
 
+  // Like the native app: dragging the suggestions dismisses the keyboard.
+  const touchY = useRef(null)
+  const onTouchStart = e => { touchY.current = e.target.closest('.search-head') ? null : e.touches[0].clientY }
+  const onTouchMove = e => {
+    if (touchY.current != null && Math.abs(e.touches[0].clientY - touchY.current) > 8 && document.activeElement === input.current) input.current.blur()
+  }
+
   const scopeName = scope && sections.find(s => s.id === scope).name
   const typed = q.trim()
   const submit = (text, section = scope, sub = 'all') => { if (text.trim()) onSubmit(text.trim(), section, sub) }
@@ -24,7 +31,7 @@ export default function SearchScreen({ onOpenListing, scopeSection, initialQuery
   const hits = typed ? searchListings(term, scope).filter(l => inArea(l, area)).slice(0, 3) : []
 
   return (
-    <div className="search">
+    <div className="search" onTouchStart={onTouchStart} onTouchMove={onTouchMove}>
       <div className="search-head">
         <button type="button" className="icon-btn" aria-label="back" onClick={onBack}><Icon name="back" /></button>
         <form className="search-form" role="search" onSubmit={e => { e.preventDefault(); submit(q) }}>
