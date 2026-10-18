@@ -42,7 +42,6 @@ export default function App() {
   const [toastMsg, setToastMsg] = useState(null) // { msg, action?: { label, run } }
   const [hiddenVersion, setHiddenVersion] = useState(0)
   const screenRef = useRef(null)
-  const listRef = useRef(null)
   const timer = useRef()
 
   useEffect(() => {
@@ -72,13 +71,6 @@ export default function App() {
     store.set(SAVE_KEY, JSON.stringify({ saved, recent, favorites: [...favorites], hidden: [...hidden], area, view }))
   }, [saved, recent, favorites, hiddenVersion, area, view])
 
-  // Expanded windows (a Galaxy Z Fold in landscape, tablets): opening a listing from a list
-  // keeps the list on the left and shows the listing on the right.
-  const wide = useWide()
-  const below = stack[stack.length - 2]
-  const split = wide && route.name === 'detail' && !!below && ['cat', 'results'].includes(below.name)
-  useLayoutEffect(() => { if (split) listRef.current?.scrollTo({ top: below.scroll || 0 }) }, [split])
-
   // New screen → top; back to a screen → where you left it.
   const routeKey = [stack.length, route.name, route.id, route.query, route.section, route.sub].join('|')
   useLayoutEffect(() => { screenRef.current?.scrollTo({ top: route.scroll || 0 }) }, [routeKey])
@@ -95,7 +87,6 @@ export default function App() {
   }
   // screens stash their own state (filters, sort) on their stack entry
   const remember = mem => setStack(s => s.map((r, i) => (i === s.length - 1 ? { ...r, mem } : r)))
-  const rememberAt = (at, mem) => setStack(s => s.map((r, i) => (i === at ? { ...r, mem } : r)))
   const back = () => { try { history.back() } catch { setStack(s => s.slice(0, -1)) } }
   const replaceTop = r => setStack(s => [...s.slice(0, -1), r])
   const goHome = () => {
@@ -150,7 +141,7 @@ export default function App() {
 
   const current = { home: 'a', section: 'b', cat: 'b', search: 'c', results: 'c', detail: 'd' }[route.name]
 
-  // one screen for a stack entry; split view renders two (the list and the listing)
+  // the screen for a stack entry
   const screenFor = (r, o = {}) => (
     <>
           {r.name === 'home' && <HomeScreen favorites={favorites} onToggleFav={toggleFav} toast={toast} onOpen={openCategory} onOpenSection={openSection} onSearch={() => openSearch()} onOpenSaved={openSaved} onOpenListing={o.openListing || openListing} savedSearches={saved} areaText={areaFull(area)} onLocation={() => openLocation()} onManageSaved={() => openSavedTab('searches')} />}
@@ -164,10 +155,10 @@ export default function App() {
         onOpenListing={o.openListing || openListing} toast={toast} />}
       {r.name === 'cat' && <CategoryScreen key={'c' + r.section + r.sub} sectionId={r.section} initialSub={r.sub} area={area} onAreaChange={setArea} onOpenLocation={openLocation}
         onBack={back} onSearch={searchFromList} onOpenListing={o.openListing || openListing} toast={toast} onSaveSearch={addSaved}
-        memory={r.mem} onRemember={o.remember || remember} openId={o.openId} view={view} onViewChange={setView} favorites={favorites} onToggleFav={toggleFav} />}
+        memory={r.mem} onRemember={o.remember || remember} view={view} onViewChange={setView} favorites={favorites} onToggleFav={toggleFav} />}
       {r.name === 'results' && <CategoryScreen key={'r' + r.query + r.section + r.sub} sectionId={r.section} initialSub={r.sub} query={r.query} area={area} onAreaChange={setArea} onOpenLocation={openLocation}
         onBack={back} onSearch={searchFromList} onOpenListing={o.openListing || openListing} toast={toast} onSaveSearch={addSaved}
-        memory={r.mem} onRemember={o.remember || remember} openId={o.openId} view={view} onViewChange={setView} favorites={favorites} onToggleFav={toggleFav} />}
+        memory={r.mem} onRemember={o.remember || remember} view={view} onViewChange={setView} favorites={favorites} onToggleFav={toggleFav} />}
       {r.name === 'search' && <SearchScreen key={'s' + stack.length} autoFocus={r.focus !== false} scopeSection={r.scope} initialQuery={r.q} recent={recent} saved={saved}
         onSubmit={runSearch} onOpenSaved={openSaved} onOpenListing={o.openListing || openListing} onBack={back} toast={toast}
         onRemoveRecent={r => setRecent(x => x.filter(y => y !== r))} onClearRecent={() => setRecent([])}
@@ -210,16 +201,7 @@ export default function App() {
 
       <div className="device">
         <div className="statusbar" aria-hidden="true"><span>9:41</span><span className="sb-icons">▲ ◢ ▮</span></div>
-        {split ? (
-          <div className="split">
-            <div className="pane pane-list">
-              <main className="screen" ref={listRef}>{screenFor(below, { remember: mem => rememberAt(stack.length - 2, mem), openListing: (id, ids) => replaceTop({ name: 'detail', id, ids }), openId: route.id })}</main>
-            </div>
-            <div className="pane pane-detail">
-              <main className="screen" ref={screenRef}>{screenFor(route, { openListing: (id, ids) => replaceTop({ name: 'detail', id, ids }) })}</main>
-            </div>
-          </div>
-        ) : <main className="screen" ref={screenRef}>{screenFor(route)}</main>}
+        <main className="screen" ref={screenRef}>{screenFor(route)}</main>
         {toastMsg && (
           <div className="snackbar" role="status">
             <span className="snack-text">{toastMsg.msg}</span>
@@ -233,14 +215,3 @@ export default function App() {
   )
 }
 
-// true when the window is wide enough for two panes (and we're not in the phone-frame preview)
-function useWide() {
-  const q = '(min-width: 800px)'
-  const [wide, setWide] = useState(() => matchMedia(q).matches && !document.documentElement.classList.contains('framed'))
-  useEffect(() => {
-    const m = matchMedia(q), on = () => setWide(m.matches && !document.documentElement.classList.contains('framed'))
-    m.addEventListener('change', on)
-    return () => m.removeEventListener('change', on)
-  }, [])
-  return wide
-}

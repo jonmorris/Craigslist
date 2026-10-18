@@ -694,9 +694,9 @@ button:disabled::before { display: none; }
    compact < 600: the phone layout above.
    medium 600–839 (e.g. a Galaxy Z Fold opened, portrait): navigation rail, wider grids,
    content capped and centered, sheets 640 wide.
-   expanded 800+ (the Fold in landscape, tablets): list and listing side by side.
+   wide panes (800+, e.g. the Fold in landscape): the listing page puts photos left and details right.
    Chrome (rail, sheets, snackbar) follows the window; content follows its own pane
-   width through container queries, so a pane in split view lays out like a phone. */
+   width through container queries. */
 .screen { container: screen / inline-size; }
 
 @media (min-width: 600px) {
@@ -739,7 +739,7 @@ button:disabled::before { display: none; }
 }
 @container screen (min-width: 840px) { .tiles { grid-template-columns: repeat(6, 1fr); } }
 /* wide pane: listing in two columns, photos and the essentials on the left */
-@container screen (min-width: 900px) {
+@container screen (min-width: 800px) {
   .detail { max-width: 1120px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 32px; align-items: start; padding: 16px 24px 0; }
   .detail > .gallery { position: sticky; top: 16px; border-radius: var(--md-shape-lg); overflow: hidden; }
   .detail > .detail-actions { left: 24px; right: auto; width: calc(50% - 40px); top: 16px; border-radius: var(--md-shape-lg) var(--md-shape-lg) 0 0; }
@@ -747,12 +747,3 @@ button:disabled::before { display: none; }
   .gallery-track { aspect-ratio: 4 / 3.4; }
 }
 
-/* split view (expanded windows): the list stays on the left, the listing opens on the right */
-.split { flex: 1; min-height: 0; display: flex; }
-.split > .pane { position: relative; min-width: 0; display: flex; flex-direction: column; overflow: hidden; }
-.split > .pane-list { flex: 0 0 clamp(340px, 40%, 520px); border-right: 1px solid var(--md-sys-color-outline-variant); }
-.split > .pane-detail { flex: 1; }
-.split .screen { flex: 1; }
-:root:not(.framed) .split .pane-list .screen { padding-bottom: 32px; }
-.split .pane-list .fab { display: none; }
-.pane-list .card-wrap.is-open > .card, .pane-list .card.is-open { outline: 2px solid var(--md-sys-color-primary); outline-offset: 4px; }

@@ -77,7 +77,7 @@ const VIEWS = [['grid', 'grid', 'grid'], ['large', 'single', 'large photos'], ['
 
 // `memory` / `onRemember` keep filters and sort with the route, so coming back from a listing
 // restores them (a top complaint about the current app). Layout is an app-wide preference.
-export default function CategoryScreen({ sectionId, initialSub = 'all', query = null, area = ALL_AREAS, onAreaChange, onOpenLocation, onBack, onSearch, onOpenListing, toast, onSaveSearch, memory = {}, onRemember, view = 'grid', onViewChange, favorites = new Set(), onToggleFav, openId = null }) {
+export default function CategoryScreen({ sectionId, initialSub = 'all', query = null, area = ALL_AREAS, onAreaChange, onOpenLocation, onBack, onSearch, onOpenListing, toast, onSaveSearch, memory = {}, onRemember, view = 'grid', onViewChange, favorites = new Set(), onToggleFav }) {
   const section = sectionId ? sections.find(s => s.id === sectionId) : null
   // not memoized: hiding or un-hiding a listing must show up immediately
   const anyArea = visible(listings).filter(l => (!sectionId || l.section === sectionId) && (!query || matches(l, query)))
@@ -203,7 +203,7 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
           </p>
           {view === 'map' ? <ResultsMap rows={rows} area={area} favorites={favorites} onToggleFav={onToggleFav} onOpen={id => onOpenListing(id, rows.map(r => r.l.id))} /> : <>
             <div className={'pad ' + (view === 'grid' ? 'grid' : view === 'text' ? 'rows rows-text' : 'rows')}>
-              {rows.map(({ l, similar }) => <ListingCard key={l.id} listing={l} similar={similar} variant={view} open={l.id === openId} fav={favorites.has(l.id)} onFav={onToggleFav} onTap={() => onOpenListing(l.id, rows.map(r => r.l.id))} />)}
+              {rows.map(({ l, similar }) => <ListingCard key={l.id} listing={l} similar={similar} variant={view} fav={favorites.has(l.id)} onFav={onToggleFav} onTap={() => onOpenListing(l.id, rows.map(r => r.l.id))} />)}
             </div>
             <p className="feed-end pad">that's everything posted in the last day.</p>
           </>}
