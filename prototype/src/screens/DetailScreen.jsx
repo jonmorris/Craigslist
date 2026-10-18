@@ -66,8 +66,6 @@ export default function DetailScreen({ id, ids, enter, onPage, favorites, onTogg
           {l.photos > 0 && <span className="chip chip-static"><Icon name="camera" size={18} />{l.photos} photos</span>}
         </div>
 
-        <FairPrice l={l} />
-
         <section className="detail-block">
           <h2>details</h2>
           <div className="specs" role="list">
@@ -91,6 +89,9 @@ export default function DetailScreen({ id, ids, enter, onPage, favorites, onTogg
             </div>
           </div>
         </section>
+
+        {/* moved below the listing itself for now: the listing first, market context after */}
+        <FairPrice l={l} />
 
         <section className="detail-block">
           <h2>{seller.kind === 'dealer' ? 'seller' : 'posted by'}</h2>
@@ -199,7 +200,9 @@ function FairPrice({ l }) {
   const pct = v => `${Math.min(100, (v / hi) * 100)}%`
   const verdict = l.fair === 'typical' ? 'within' : l.fair
   return (
-    <section className={'fair-card fair-card-' + verdict}>
+    <section className="detail-block">
+      <h2>price check</h2>
+      <div className={'fair-card fair-card-' + verdict}>
       <div className="fair-head"><Icon name="tag" size={20} /><strong>{verdict === 'within' ? 'typical price' : verdict + ' typical'}</strong></div>
       <div className="range" aria-hidden="true">
         <span className="range-band" style={{ left: pct(r[0]), width: `calc(${pct(r[1])} - ${pct(r[0])})` }} />
@@ -207,6 +210,7 @@ function FairPrice({ l }) {
       </div>
       <div className="range-axis"><span>{money(lo)}</span><span style={{ left: pct(r[0]) }}>{money(r[0])}</span><span style={{ left: pct(r[1]) }}>{money(r[1])}</span></div>
       <p>{l.sub} in {city.name} usually go for <strong>{money(r[0])}–{money(r[1])}{l.per ? '/' + l.per : ''}</strong>. this one is {priceLabel(l)}.</p>
+      </div>
     </section>
   )
 }

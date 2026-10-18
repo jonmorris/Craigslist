@@ -347,7 +347,7 @@ button:disabled::before { display: none; }
 .detail-meta { display: flex; align-items: center; gap: 6px; margin-top: 6px; font: var(--md-body-medium); color: var(--md-sys-color-on-surface-variant); }
 .detail-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
 .chip-static::after { display: none; }
-.fair-card { margin-top: 20px; padding: 16px; border-radius: var(--md-shape-md); background: var(--md-sys-color-surface-container); display: flex; flex-direction: column; gap: 10px; }
+.fair-card { padding: 16px; border-radius: var(--md-shape-md); background: var(--md-sys-color-surface-container); display: flex; flex-direction: column; gap: 10px; }
 .fair-head { display: flex; align-items: center; gap: 8px; font: var(--md-title-small); }
 .fair-card-below .fair-head { color: var(--md-ext-good); }
 .fair-card-above .fair-head { color: var(--md-ext-warn); }
