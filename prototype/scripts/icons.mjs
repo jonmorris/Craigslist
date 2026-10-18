@@ -13,7 +13,7 @@ export const MAP = {
   tag: 'sell', house: 'house', briefcase: 'work', wrench: 'handyman', bolt: 'bolt', people: 'group',
   pin: 'location_on', near: 'near_me', snow: 'ac_unit', dresser: 'dresser', shelf: 'shelves', camera: 'photo_camera',
   sparkle: 'brightness_auto', sun: 'light_mode', moon: 'dark_mode', sofa: 'weekend', desk: 'desk',
-  back: 'arrow_back', close: 'close', sliders: 'tune', grid: 'grid_view', list: 'view_list', single: 'view_agenda',
+  back: 'arrow_back', close: 'close', sliders: 'tune', grid: 'grid_view', list: 'view_list', single: 'view_agenda', text: 'view_headline',
   check: 'check', sort: 'swap_vert', history: 'history', fill: 'north_west', trend: 'trending_up',
   share: 'share', heart: 'favorite', 'heart-fill': 'favorite-fill', more: 'more_vert',
   shield: 'verified_user', link: 'link', hide: 'visibility_off', flag: 'flag',

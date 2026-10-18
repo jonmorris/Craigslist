@@ -50,8 +50,8 @@ const priceChipLabel = (min, max) =>
   min == null && max == null ? 'price' : min == null ? `under ${money(max)}` : max == null ? `${money(min)}+` : `${money(min)}–${money(max)}`
 
 // Also renders search results: pass `query` (and optionally no sectionId = all sections).
-const VIEWS = { grid: ['grid', 'grid'], large: ['single', 'one column'], row: ['list', 'list'] }
-const nextView = v => ({ grid: 'large', large: 'row', row: 'grid' })[v]
+// layout menu: [key, icon, label]; the bar button always shows the current layout's icon
+const VIEWS = [['grid', 'grid', 'grid'], ['large', 'single', 'large photos'], ['row', 'list', 'list'], ['text', 'text', 'no images']]
 
 export default function CategoryScreen({ sectionId, initialSub = 'all', query = null, area = ALL_AREAS, onAreaChange, onOpenLocation, onBack, onSearch, onOpenListing, toast, onSaveSearch }) {
   const section = sectionId ? sections.find(s => s.id === sectionId) : null
@@ -66,7 +66,8 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
 
   const [f, setF] = useState({ sub: initialSub, ownerOnly: false, photosOnly: false, min: null, max: null })
   const [sort, setSort] = useState('newest')
-  const [view, setView] = useState('grid') // grid | large | row
+  const [view, setView] = useState('grid') // grid | large | row | text
+  const [menu, setMenu] = useState(false)
   const [sheet, setSheet] = useState(null)
   const [saved, setSaved] = useState(false)
   const set = patch => { setF(prev => ({ ...prev, ...patch })); setSaved(false) }
@@ -98,9 +99,20 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
             <h1>{heading}</h1>
           </div>
           <button type="button" className="icon-btn" aria-label={'search ' + subName} onClick={() => onSearch(sectionId, query || '')}><Icon name="search" /></button>
-          {/* cycles grid → one column of big photos → compact list; the icon shows what's next */}
-          <button type="button" className="icon-btn" aria-label={`show as ${VIEWS[nextView(view)][1]}`}
-            onClick={() => setView(nextView)}><Icon name={VIEWS[nextView(view)][0]} /></button>
+          <button type="button" className="icon-btn" aria-haspopup="menu" aria-expanded={menu}
+            aria-label={`layout: ${VIEWS.find(v => v[0] === view)[2]}. change`} onClick={() => setMenu(m => !m)}>
+            <Icon name={VIEWS.find(v => v[0] === view)[1]} /></button>
+          {menu && <>
+            <button type="button" className="menu-scrim" aria-label="close menu" onClick={() => setMenu(false)} />
+            <div className="menu" role="menu" aria-label="layout" onKeyDown={e => e.key === 'Escape' && setMenu(false)}>
+              {VIEWS.map(([key, icon, label]) => (
+                <button key={key} type="button" role="menuitemradio" aria-checked={view === key}
+                  className={'menu-item' + (view === key ? ' menu-item-on' : '')} onClick={() => { setView(key); setMenu(false) }}>
+                  <Icon name={icon} size={24} /><span className="flex1">{label}</span>{view === key && <Icon name="check" size={20} />}
+                </button>
+              ))}
+            </div>
+          </>}
         </header>
 
         {/* scope row: what and where, as two full-size switchers (56dp tall, well above the 48dp minimum) */}
@@ -147,7 +159,7 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
           <p className="results-line pad">
             {query ? `${rows.length} result${rows.length === 1 ? '' : 's'}` : f.sub === 'all' && !filtered ? `${fmt(section.count)} listings · ${fmt(section.newToday)} new today` : `${rows.length} match`} · {SORTS.find(s => s[0] === sort)[1]}
           </p>
-          <div className={'pad ' + (view === 'grid' ? 'grid' : 'rows')}>
+          <div className={'pad ' + (view === 'grid' ? 'grid' : view === 'text' ? 'rows rows-text' : 'rows')}>
             {rows.map(({ l, similar }) => <ListingCard key={l.id} listing={l} similar={similar} variant={view} onTap={() => onOpenListing(l.id)} />)}
           </div>
           <p className="feed-end pad">that's everything posted in the last day.</p>

@@ -36,6 +36,7 @@
 | `grid_view` | grid |
 | `view_list` | list |
 | `view_agenda` | single |
+| `view_headline` | text |
 | `check` | check |
 | `swap_vert` | sort |
 | `history` | history |
