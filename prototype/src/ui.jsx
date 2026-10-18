@@ -69,8 +69,10 @@ export function Thumb({ listing, big }) {
   )
 }
 
-export function ListingCard({ listing, variant = 'grid', onTap, similar = 0 }) {
-  return (
+// `onFav` adds a save heart on the card itself, so people can collect a few listings
+// from a list without opening each one.
+export function ListingCard({ listing, variant = 'grid', onTap, similar = 0, fav, onFav }) {
+  const card = (
     <button type="button" className={'card card-' + variant} onClick={onTap}>
       {variant !== 'text' && <Thumb listing={listing} big={variant === 'large'} />}
       <div className="card-body">
@@ -83,6 +85,17 @@ export function ListingCard({ listing, variant = 'grid', onTap, similar = 0 }) {
         {listing.dealer && <span className="card-seller">dealer · {listing.seller}{similar > 0 && ` · +${similar} similar`}</span>}
       </div>
     </button>
+  )
+  if (!onFav) return card
+  const onPhoto = (variant === 'grid' || variant === 'large')
+  return (
+    <div className={'card-wrap card-wrap-' + variant}>
+      {card}
+      <button type="button" className={'icon-btn card-fav' + (onPhoto ? ' on-photo' : '') + (fav ? ' fav-on' : '')}
+        aria-pressed={!!fav} aria-label={fav ? `remove ${listing.title} from saved` : `save ${listing.title}`} onClick={() => onFav(listing.id)}>
+        <Icon name={fav ? 'heart-fill' : 'heart'} size={22} />
+      </button>
+    </div>
   )
 }
 

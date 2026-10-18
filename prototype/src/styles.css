@@ -679,3 +679,13 @@ button:disabled::before { display: none; }
 .bracket-end:focus-visible { outline: none; }
 .bracket-end:focus-visible::after { outline: 3px solid var(--md-sys-color-secondary); outline-offset: 2px; }
 .histo-hint { position: absolute; left: 50%; top: 50%; translate: -50% -50%; padding: 4px 12px; border-radius: var(--md-shape-full); background: var(--md-sys-color-inverse-surface); color: var(--md-sys-color-inverse-on-surface); font: var(--md-label-medium); white-space: nowrap; pointer-events: none; }
+
+/* save heart on list cards */
+.card-wrap { position: relative; min-width: 0; }
+.card-wrap > .card { width: 100%; }
+.card-fav { position: absolute; z-index: 2; }
+.card-wrap-grid .card-fav, .card-wrap-large .card-fav { top: 4px; right: 4px; }
+.card-wrap-row .card-fav, .card-wrap-text .card-fav { top: -6px; right: -8px; color: var(--md-sys-color-on-surface-variant); }
+.card-wrap-row .card-fav.fav-on, .card-wrap-text .card-fav.fav-on { color: var(--md-sys-color-primary); }
+.card-wrap-row .card-price-row, .card-wrap-text .card-price-row { padding-right: 36px; }
+.card-wrap-text .card-fav { top: 6px; }

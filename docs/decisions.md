@@ -44,6 +44,7 @@ Update this log with every change to the prototype (see `CLAUDE.md`).
 | L10 | Save search toggles are **off** by default and labeled "(optional)" ([21](audit-screens/21-save-search.jpg)) | Save search turns alerts on by default (instantly or once a day) | Alerts are the point of saving a search | audit |
 | L11 | Map view, behind ☰ ([14](audit-screens/14-list-overflow-menu.jpg)) | Map view with count bubbles for listings close together (tap to zoom in) and price markers for single ones, Zillow-style. The area is outlined, and tapping opens a preview | Readable at metro scale, and price is the first thing people scan | review |
 | L12 | — | Kept: newest first is the default sort, with no promoted or ranked feed | No algorithm and no ads is one of the most-praised things about Craigslist | users |
+| L13 | Saving a listing means opening it first | A save heart on every card (list, search results, home, section pages, map preview, saved). Tapping it saves without leaving the list; the snackbar has "view". Over the photo in grid and large photos, at the right in list and no images | People shortlist a few options and follow up later. Saving from the list keeps the browsing flow going, so they don't have to find a listing again. Being tested on the phone | review |
 
 ## Filters and sort
 

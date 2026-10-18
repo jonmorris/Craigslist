@@ -169,21 +169,21 @@ export default function App() {
       <div className="device">
         <div className="statusbar" aria-hidden="true"><span>9:41</span><span className="sb-icons">▲ ◢ ▮</span></div>
         <main className="screen" ref={screenRef}>
-          {route.name === 'home' && <HomeScreen toast={toast} onOpen={openCategory} onOpenSection={openSection} onSearch={() => openSearch()} onOpenSaved={openSaved} onOpenListing={openListing} savedSearches={saved} areaText={areaFull(area)} onLocation={() => openLocation()} onManageSaved={() => openSavedTab('searches')} />}
+          {route.name === 'home' && <HomeScreen favorites={favorites} onToggleFav={toggleFav} toast={toast} onOpen={openCategory} onOpenSection={openSection} onSearch={() => openSearch()} onOpenSaved={openSaved} onOpenListing={openListing} savedSearches={saved} areaText={areaFull(area)} onLocation={() => openLocation()} onManageSaved={() => openSavedTab('searches')} />}
           {route.name === 'saved' && <SavedScreen tab={route.tab} onTab={tab => replaceTop({ ...route, tab })} favorites={favorites} onToggleFav={toggleFav}
             saved={saved} onOpenSaved={openSaved} onToggleAlerts={toggleAlerts} onDeleteSaved={deleteSaved} hiddenIds={[...hidden]} onUnhide={unhide}
             onOpenListing={openListing} onBrowse={goHome} />}
           {route.name === 'location' && <LocationScreen area={area} context={route.context} toast={toast} onClose={back}
             onApply={a => { setArea(a); back(); toast(`location saved · ${areaFull(a)}`) }} />}
-          {route.name === 'section' && <SectionScreen key={'sec' + route.section} sectionId={route.section} onBack={back}
+          {route.name === 'section' && <SectionScreen favorites={favorites} onToggleFav={toggleFav} key={'sec' + route.section} sectionId={route.section} onBack={back}
             onOpenList={openCategory} onSearch={scope => openSearch(scope)} onRunSearch={(q, sec) => runSearch(q, sec, 'all')}
             onOpenListing={openListing} toast={toast} />}
           {route.name === 'cat' && <CategoryScreen key={'c' + route.section + route.sub} sectionId={route.section} initialSub={route.sub} area={area} onAreaChange={setArea} onOpenLocation={openLocation}
             onBack={back} onSearch={searchFromList} onOpenListing={openListing} toast={toast} onSaveSearch={addSaved}
-            memory={route.mem} onRemember={remember} view={view} onViewChange={setView} />}
+            memory={route.mem} onRemember={remember} view={view} onViewChange={setView} favorites={favorites} onToggleFav={toggleFav} />}
           {route.name === 'results' && <CategoryScreen key={'r' + route.query + route.section + route.sub} sectionId={route.section} initialSub={route.sub} query={route.query} area={area} onAreaChange={setArea} onOpenLocation={openLocation}
             onBack={back} onSearch={searchFromList} onOpenListing={openListing} toast={toast} onSaveSearch={addSaved}
-            memory={route.mem} onRemember={remember} view={view} onViewChange={setView} />}
+            memory={route.mem} onRemember={remember} view={view} onViewChange={setView} favorites={favorites} onToggleFav={toggleFav} />}
           {route.name === 'search' && <SearchScreen key={'s' + stack.length} autoFocus={route.focus !== false} scopeSection={route.scope} initialQuery={route.q} recent={recent} saved={saved}
             onSubmit={runSearch} onOpenSaved={openSaved} onOpenListing={openListing} onBack={back} toast={toast}
             onRemoveRecent={r => setRecent(x => x.filter(y => y !== r))} onClearRecent={() => setRecent([])}

@@ -3,7 +3,7 @@ import { sections, listings, city, fmt, visible } from '../data.js'
 import { Icon, PeaceSign, LocationButton, SearchBar, ListingCard } from '../ui.jsx'
 
 // (a) Home — search hero, six section tiles, saved searches, fresh grid.
-export default function HomeScreen({ onManageSaved, toast, onOpen, onOpenSection, onSearch, onOpenSaved, onOpenListing, savedSearches, areaText, onLocation }) {
+export default function HomeScreen({ favorites = new Set(), onToggleFav, onManageSaved, toast, onOpen, onOpenSection, onSearch, onOpenSaved, onOpenListing, savedSearches, areaText, onLocation }) {
   const fresh = visible(listings).filter(l => l.photo || l.section === 'sale').slice(0, 8)
   // Brand + location row scrolls away; the search bar pins and picks up the mark.
   const barRef = useRef(null)
@@ -56,7 +56,7 @@ export default function HomeScreen({ onManageSaved, toast, onOpen, onOpenSection
       <section className="block">
         <div className="block-head pad"><h2>fresh near you</h2><button type="button" className="link" onClick={() => onOpen('sale')}>see all</button></div>
         <div className="grid pad">
-          {fresh.map(l => <ListingCard key={l.id} listing={l} onTap={() => onOpenListing(l.id, fresh.map(x => x.id))} />)}
+          {fresh.map(l => <ListingCard key={l.id} listing={l} fav={favorites.has(l.id)} onFav={onToggleFav} onTap={() => onOpenListing(l.id, fresh.map(x => x.id))} />)}
         </div>
       </section>
     </div>

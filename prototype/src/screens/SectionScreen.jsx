@@ -6,7 +6,7 @@ import { Icon, ListingCard } from '../ui.jsx'
 // Section landing (interstitial between Home and the list): pick where to go
 // inside a section before seeing listings. Popular subcategories first, the full
 // real taxonomy A–Z below, plus what's trending and what's fresh.
-export default function SectionScreen({ sectionId, onBack, onOpenList, onSearch, onRunSearch, onOpenListing, toast }) {
+export default function SectionScreen({ favorites = new Set(), onToggleFav, sectionId, onBack, onOpenList, onSearch, onRunSearch, onOpenListing, toast }) {
   const s = sections.find(x => x.id === sectionId)
   const subs = taxonomy[sectionId]
   const popular = [...subs].sort((a, b) => b.count - a.count).slice(0, 6)
@@ -65,7 +65,7 @@ export default function SectionScreen({ sectionId, onBack, onOpenList, onSearch,
           <div className="block-head pad"><h2>just posted</h2>
             <button type="button" className="link" onClick={() => onOpenList(sectionId, 'all')}>see all</button></div>
           <div className="grid pad">
-            {fresh.map(l => <ListingCard key={l.id} listing={l} onTap={() => onOpenListing(l.id, fresh.map(x => x.id))} />)}
+            {fresh.map(l => <ListingCard key={l.id} listing={l} fav={favorites.has(l.id)} onFav={onToggleFav} onTap={() => onOpenListing(l.id, fresh.map(x => x.id))} />)}
           </div>
         </section>
       )}

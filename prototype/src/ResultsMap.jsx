@@ -38,7 +38,7 @@ function cluster(m, points) {
   return groups.map(g => ({ items: g.items, at: m.layerPointToLatLng(g.px) }))
 }
 
-export default function ResultsMap({ rows, area, onOpen }) {
+export default function ResultsMap({ rows, area, onOpen, favorites = new Set(), onToggleFav }) {
   const el = useRef(null)
   const map = useRef(null)
   const pins = useRef(null)
@@ -114,7 +114,7 @@ export default function ResultsMap({ rows, area, onOpen }) {
         <div className={'map-preview' + (picks.length > 1 ? ' map-preview-many' : '')}>
           {picks.length > 1 && <p className="map-preview-n">{picks.length} listings here · swipe</p>}
           <div className={picks.length > 1 ? 'map-preview-track' : undefined}>
-            {picks.map(r => <ListingCard key={r.l.id} listing={r.l} similar={r.similar} variant="row" onTap={() => onOpen(r.l.id)} />)}
+            {picks.map(r => <ListingCard key={r.l.id} listing={r.l} similar={r.similar} variant="row" fav={favorites.has(r.l.id)} onFav={onToggleFav} onTap={() => onOpen(r.l.id)} />)}
           </div>
         </div>
       ) : <p className="map-tip">{points.length} listing{points.length === 1 ? '' : 's'} · tap {view >= 0 && pins.current?.getLayers().some(x => x.options?.title?.endsWith('listings here')) ? 'a number to zoom in' : 'a price to preview'}</p>}
