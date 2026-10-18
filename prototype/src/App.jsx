@@ -6,9 +6,12 @@ import DetailScreen from './screens/DetailScreen.jsx'
 import SectionScreen from './screens/SectionScreen.jsx'
 import LocationScreen from './screens/LocationScreen.jsx'
 import SavedScreen from './screens/SavedScreen.jsx'
+import PostScreen from './screens/PostScreen.jsx'
+import AccountScreen from './screens/AccountScreen.jsx'
+import { publish, unpublish } from './posts.js'
 import { seedRecent } from './search.js'
 import { ALL_AREAS, areaFull } from './area.js'
-import { savedSearches as seedSaved, hidden } from './data.js'
+import { savedSearches as seedSaved, hidden, listings } from './data.js'
 import { BottomNav, Icon } from './ui.jsx'
 
 const SCREENS = [
@@ -27,6 +30,8 @@ const store = {
 const SAVE_KEY = 'cl-state-v1'
 const kept = (() => { try { return JSON.parse(store.get(SAVE_KEY)) || {} } catch { return {} } })()
 for (const id of kept.hidden || []) hidden.add(id)
+// your own posts become real listings again on reopen
+for (const r of kept.posts || []) publish(r)
 
 export default function App() {
   // Navigation stack: { name: 'home' } | { name: 'cat', section, sub } |
@@ -38,6 +43,7 @@ export default function App() {
   const [favorites, setFavorites] = useState(() => new Set(kept.favorites || []))
   const [area, setArea] = useState(kept.area || ALL_AREAS)
   const [view, setView] = useState(kept.view || 'grid')
+  const [posts, setPosts] = useState(kept.posts || []) // your post records (the form data)
   const [theme, setTheme] = useState(() => store.get('cl-theme') || 'system')
   const [toastMsg, setToastMsg] = useState(null) // { msg, action?: { label, run } }
   const [hiddenVersion, setHiddenVersion] = useState(0)
@@ -68,8 +74,8 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    store.set(SAVE_KEY, JSON.stringify({ saved, recent, favorites: [...favorites], hidden: [...hidden], area, view }))
-  }, [saved, recent, favorites, hiddenVersion, area, view])
+    store.set(SAVE_KEY, JSON.stringify({ saved, recent, favorites: [...favorites], hidden: [...hidden], area, view, posts }))
+  }, [saved, recent, favorites, hiddenVersion, area, view, posts])
 
   // New screen → top; back to a screen → where you left it.
   const routeKey = [stack.length, route.name, route.id, route.query, route.section, route.sub].join('|')
@@ -106,6 +112,29 @@ export default function App() {
     hidden.add(id); setHiddenVersion(v => v + 1); back()
     toast(msg, { label: 'undo', run: () => { hidden.delete(id); setHiddenVersion(v => v + 1) } })
   }
+  // ---- your posts: post, edit, mark sold, relist, delete ----
+  const openAccount = () => (route.name === 'account' ? null : push({ name: 'account' }))
+  const openPost = (draftId = null) => push({ name: 'post', draftId })
+  const putPost = r => { publish(r); setPosts(ps => (ps.some(x => x.id === r.id) ? ps.map(x => (x.id === r.id ? r : x)) : [r, ...ps])); setHiddenVersion(v => v + 1) }
+  const recFor = id => posts.find(r => r.id === id)
+  const publishPost = rec => {
+    const isNew = rec.id == null
+    const r = { views: 0, saves: 0, messages: 0, ...rec, postedAt: rec.postedAt ?? Date.now(), status: rec.status ?? 'active' }
+    putPost(r)
+    if (isNew) {
+      // land on the live post: the way back to it is the way you just came
+      replaceTop({ name: 'detail', id: r.id })
+      toast(`posted · it's live in ${r.sub}`, { label: 'your posts', run: openAccount })
+    } else { back(); toast('changes saved') }
+  }
+  const markSold = id => { const r = recFor(id); putPost({ ...r, status: 'sold' }); toast('marked sold · hidden from search', { label: 'undo', run: () => putPost(r) }) }
+  const relist = id => { putPost({ ...recFor(id), status: 'active' }); toast('relisted · it\u2019s back in search') }
+  const deletePost = id => {
+    const r = recFor(id)
+    unpublish(id); setPosts(ps => ps.filter(x => x.id !== id)); setHiddenVersion(v => v + 1); back()
+    toast('post deleted', { label: 'undo', run: () => putPost(r) })
+  }
+
   const openSavedTab = (tab = 'listings') => (route.name === 'saved' ? replaceTop({ ...route, tab }) : push({ name: 'saved', tab }))
   const toggleFav = id => {
     const had = favorites.has(id)
@@ -144,7 +173,7 @@ export default function App() {
   // the screen for a stack entry
   const screenFor = (r, o = {}) => (
     <>
-          {r.name === 'home' && <HomeScreen favorites={favorites} onToggleFav={toggleFav} toast={toast} onOpen={openCategory} onOpenSection={openSection} onSearch={() => openSearch()} onOpenSaved={openSaved} onOpenListing={o.openListing || openListing} savedSearches={saved} areaText={areaFull(area)} onLocation={() => openLocation()} onManageSaved={() => openSavedTab('searches')} />}
+          {r.name === 'home' && <HomeScreen myPosts={posts.map(p => listings.find(l => l.id === p.id)).filter(Boolean)} onOpenAccount={openAccount} favorites={favorites} onToggleFav={toggleFav} toast={toast} onOpen={openCategory} onOpenSection={openSection} onSearch={() => openSearch()} onOpenSaved={openSaved} onOpenListing={o.openListing || openListing} savedSearches={saved} areaText={areaFull(area)} onLocation={() => openLocation()} onManageSaved={() => openSavedTab('searches')} />}
       {r.name === 'saved' && <SavedScreen tab={r.tab} onTab={tab => replaceTop({ ...r, tab })} favorites={favorites} onToggleFav={toggleFav}
         saved={saved} onOpenSaved={openSaved} onToggleAlerts={toggleAlerts} onDeleteSaved={deleteSaved} hiddenIds={[...hidden]} onUnhide={unhide}
         onOpenListing={o.openListing || openListing} onBrowse={goHome} />}
@@ -163,7 +192,11 @@ export default function App() {
         onSubmit={runSearch} onOpenSaved={openSaved} onOpenListing={o.openListing || openListing} onBack={back} toast={toast}
         onRemoveRecent={r => setRecent(x => x.filter(y => y !== r))} onClearRecent={() => setRecent([])}
         area={area} onAreaChange={setArea} onOpenLocation={openLocation} />}
-      {r.name === 'detail' && <DetailScreen key={'d' + r.id} id={r.id} ids={r.ids?.filter(x => !hidden.has(x))} enter={r.enter} onPage={pageListing} favorites={favorites} onToggleFav={toggleFav} onHide={hideListing}
+      {r.name === 'post' && <PostScreen key={'p' + (r.draftId ?? 'new')} draft={r.draftId != null ? recFor(r.draftId) : null} onCancel={back} onPublish={publishPost} />}
+      {r.name === 'account' && <AccountScreen posts={posts} onNewPost={() => openPost()} onOpenPost={id => openListing(id, posts.map(p => p.id))} onEditPost={openPost}
+        theme={theme} onTheme={setTheme} onReset={() => { store.set(SAVE_KEY, '{}'); location.reload() }} />}
+      {/* a just-deleted post: render nothing while back() pops the route */}
+      {r.name === 'detail' && listings.some(l => l.id === r.id) && <DetailScreen onNewPost={() => openPost()} onEditPost={openPost} onMarkSold={markSold} onRelist={relist} onDeletePost={deletePost} key={'d' + r.id} id={r.id} ids={r.ids?.filter(x => !hidden.has(x))} enter={r.enter} onPage={pageListing} favorites={favorites} onToggleFav={toggleFav} onHide={hideListing}
         onBack={back} onOpenListing={o.openListing || openListing} onOpenCategory={openCategory} toast={toast} />}
     </>
   )
@@ -209,7 +242,8 @@ export default function App() {
           </div>
         )}
         {/* phones hide the bottom bar on full-screen views; on larger screens the rail stays on every screen */}
-        <BottomNav onTap={toast} onHome={goHome} onSaved={() => openSavedTab()} active={route.name === 'saved' ? 'saved' : 'home'} hideOnPhone={['search', 'detail', 'location'].includes(route.name)} />
+        <BottomNav onTap={toast} onHome={goHome} onSaved={() => openSavedTab()} onPost={() => openPost()} onAccount={openAccount}
+          active={route.name === 'saved' ? 'saved' : route.name === 'account' ? 'account' : route.name === 'post' ? 'post' : 'home'} hideOnPhone={['search', 'detail', 'location', 'post'].includes(route.name)} />
         <div className="gesture" aria-hidden="true" />
       </div>
     </div>

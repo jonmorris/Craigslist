@@ -108,6 +108,22 @@ Update this log with every change to the prototype (see `CLAUDE.md`).
 | V2 | Hidden posts are gone for good | A hidden tab with "unhide" | Hiding should be reversible | review |
 | V3 | Filters reset between visits; no way to keep "my size" or "owners only" | **Considered, not built:** separate filter preferences (global like owners only, or per category like frame size). Saved searches cover it instead: save "apartments · Northeast · under $1,400 · cats ok" once and jump back in | One feature instead of two similar ones. Most real cases (apartment hunting in an area at a price) are a saved search already. Revisit if people keep re-applying the same size across many searches | review |
 
+## Posting and your posts
+
+What the current app does here needs a hands-on check (Jon is trying it). From the research summary: posting and managing ads happen in the app and on the site's account page, where posts are listed with renew, edit and delete; posting needs an account, and some posts need phone verification. Facebook Marketplace, for comparison, makes your own listings hard to find (survey feedback and Jon's own experience).
+
+| # | Today | Redesign | Why | Source |
+|---|---|---|---|---|
+| P1 | Post sits behind the account / menu; the app is built for browsers, not listers | **Post** is the highlighted nav item and opens a four-step flow: category → photos and details → where and contact → preview. Real fields, validated as you go; the preview lists anything missing with a jump back | Posting is the other half of the marketplace and should be one tap | review |
+| P2 | — | The price field shows the typical range for the category ("bicycles in Minneapolis usually go for $300–$1,200") | Same market data buyers see, used to help sellers price fairly | audit |
+| P3 | Category attributes are typed on the site's posting form | Bike posts collect the same fields buyers filter by (type, frame size, wheel size, frame material, brakes, make, condition), so a post shows up in those filters | One vocabulary for listers and browsers | review |
+| P4 | Contact options: relay email, optional phone | Reply by craigslist chat (default) or the anonymous email relay; showing a phone number is off by default, with a scam warning | Keeps the anonymity people value; phone numbers get harvested | users |
+| P5 | Neighborhood / location typed | Pick a neighborhood; buyers see an approximate area, never the address | Privacy first, and it feeds the neighborhood filters | audit |
+| P6 | Your posts live on the account page; hard to get back to on Facebook Marketplace | Three ways back: **account** tab is the seller home (your posts first: active / sold, views · saves · messages, edit); **home** shows a "your posts" strip once you have one; and after posting you land on your live post | "I couldn't find my listing again" is the complaint to beat | users, review |
+| P7 | Your own post looks like anyone's | Your own listing shows an owner card (live / sold, views, saves, messages) and an owner bar: edit, mark sold, more (share, renew, delete). No "message seller", no save, no report | The page should do what the person looking at it needs | review |
+| P8 | Mark sold / delete | Mark sold hides it from search but keeps it under account › sold, with undo and relist. Delete asks first, then offers undo | Sold and deleted are different: sold keeps your record | review |
+| P9 | Renew after 48 hours | Renew is shown in the owner menu, disabled with "available 48 hours after posting" | Kept: it's how Craigslist bumps a post, and the rule should be visible | review |
+
 ## Visual design, brand and platform
 
 | # | Today | Redesign | Why | Source |
@@ -153,3 +169,6 @@ The prototype is a web app standing in for a native Android app (Jetpack Compose
 | Phone-frame overview (`?frame`), "reset prototype data", service worker and offline cache, `noindex` | — | **Prototype-only:** presentation and hosting tools, not part of the app |
 | No hover states; pressed and focus only | Same (touch-first; ripple + focus indicator) | — |
 | Fonts from Google Fonts (Young Serif, Figtree) | Bundled font resources / downloadable fonts | — |
+| Photo picker sheet in the post flow | Android Photo Picker (`PickMultipleVisualMedia`) | **Prototype-only:** picks from the prototype's sample photos |
+| "fill example" in the post flow | — | **Prototype-only:** a demo shortcut |
+| Your posts saved on the phone | Server-side posts tied to the account; DataStore for drafts | **Prototype-only:** posts live in localStorage on this device |

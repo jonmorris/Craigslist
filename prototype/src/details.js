@@ -43,9 +43,11 @@ const FALLBACK = {
 
 // Seller context, deterministic per listing.
 export function sellerFor(l) {
+  if (l.mine) return { kind: 'you', since: 2026, other: 0, verified: true }
   if (l.dealer) return { kind: 'dealer', name: l.seller, since: 2014, other: 14, verified: true }
   const years = [2019, 2016, 2021, 2012, 2018]
   return { kind: 'owner', since: years[l.id % years.length], other: (l.id * 7) % 5, verified: l.id % 3 !== 0 }
 }
 
 export const detailFor = l => DETAILS[l.id] || FALLBACK[l.section] || FALLBACK.sale
+export const setDetail = (id, d) => { DETAILS[id] = d }

@@ -7,7 +7,7 @@ import { Icon, NoPhoto, FairBadge, Sheet, Thumb } from '../ui.jsx'
 // specs, distance), trust at the moment of contact, one-tap reply.
 const money = n => '$' + fmt(n)
 
-export default function DetailScreen({ id, ids, enter, onPage, favorites, onToggleFav, onHide, onBack, onOpenListing, onOpenCategory, toast }) {
+export default function DetailScreen({ id, ids, enter, onPage, favorites, onToggleFav, onHide, onBack, onOpenListing, onOpenCategory, toast, onNewPost, onEditPost, onMarkSold, onRelist, onDeletePost }) {
   const l = listings.find(x => x.id === id)
   const d = detailFor(l)
   const seller = sellerFor(l)
@@ -50,10 +50,10 @@ export default function DetailScreen({ id, ids, enter, onPage, favorites, onTogg
           </span>
         )}
         <span className="flex1" />
-        {/* save sits top-right, where the bookmark is on every listing card */}
-        <button type="button" className={'icon-btn on-photo' + (fav ? ' fav-on' : '')} aria-label={fav ? 'remove from saved' : 'save'} aria-pressed={fav} onClick={() => onToggleFav(l.id)}>
+        {/* save sits top-right, where the bookmark is on every listing card (not on your own post) */}
+        {!l.mine && <button type="button" className={'icon-btn on-photo' + (fav ? ' fav-on' : '')} aria-label={fav ? 'remove from saved' : 'save'} aria-pressed={fav} onClick={() => onToggleFav(l.id)}>
           <Icon name={fav ? 'bookmark-fill' : 'bookmark'} />
-        </button>
+        </button>}
       </div>
 
       <div className="pad detail-body">
@@ -62,12 +62,22 @@ export default function DetailScreen({ id, ids, enter, onPage, favorites, onTogg
           <FairBadge fair={l.fair} />
         </div>
         <h1 className="detail-title">{l.title}</h1>
-        <p className="detail-meta"><Icon name="pin" size={16} />{l.hood} · {l.mi} mi away · posted {l.age} ago</p>
+        <p className="detail-meta"><Icon name="pin" size={16} />{l.hood} · {l.mi} mi away · posted {l.age === 'just now' ? 'just now' : l.age + ' ago'}</p>
         <div className="detail-chips">
           <button type="button" className="chip" onClick={() => onOpenCategory(l.section, l.sub)}><Icon name={section.icon} size={18} />{l.sub}</button>
           <span className="chip chip-static">{seller.kind === 'dealer' ? 'dealer' : 'by owner'}</span>
           {l.photos > 0 && <span className="chip chip-static"><Icon name="camera" size={18} />{l.photos} photos</span>}
         </div>
+
+        {l.mine && (
+          <div className={'owner-card owner-' + l.status}>
+            <p className="owner-head"><Icon name="person" size={20} /><strong>your post · {l.status === 'sold' ? 'marked sold' : 'live'}</strong></p>
+            <div className="owner-stats">
+              <span><strong>{l.views}</strong>views</span><span><strong>{l.saves}</strong>saves</span><span><strong>{l.messages}</strong>messages</span>
+            </div>
+            <p className="owner-note">{l.status === 'sold' ? 'hidden from search. relist it if the sale falls through.' : 'only you see this. buyers see the listing below.'}</p>
+          </div>
+        )}
 
         <section className="detail-block">
           <h2>details</h2>
@@ -96,7 +106,7 @@ export default function DetailScreen({ id, ids, enter, onPage, favorites, onTogg
         {/* moved below the listing itself for now: the listing first, market context after */}
         <FairPrice l={l} />
 
-        <section className="detail-block">
+        {!l.mine && <section className="detail-block">
           <h2>{seller.kind === 'dealer' ? 'seller' : 'posted by'}</h2>
           <div className="seller-card">
             <div className="seller-row">
@@ -115,7 +125,7 @@ export default function DetailScreen({ id, ids, enter, onPage, favorites, onTogg
               <Icon name="flag" size={20} /><span>something off? report this listing</span><Icon name="arrow" size={18} />
             </button>
           </div>
-        </section>
+        </section>}
 
         {similar.length > 0 && (
           <section className="detail-block">
@@ -133,8 +143,8 @@ export default function DetailScreen({ id, ids, enter, onPage, favorites, onTogg
           </section>
         )}
 
-        {l.section === 'sale' && (
-          <button type="button" className="sell-like" onClick={() => toast('posting flow comes later')}>
+        {l.section === 'sale' && !l.mine && (
+          <button type="button" className="sell-like" onClick={onNewPost}>
             <span className="sell-text"><strong>have {l.sub === 'bicycles' ? 'a bike' : 'one'} to sell?</strong><span>post it free in about two minutes</span></span>
             <Icon name="arrow" />
           </button>
@@ -144,6 +154,17 @@ export default function DetailScreen({ id, ids, enter, onPage, favorites, onTogg
       </div>
     </div>
 
+      {l.mine ? (
+        <div className="detail-bar">
+          <button type="button" className="btn-tonal-icon" aria-label="more options" onClick={() => setSheet('owner')}><Icon name="more" /></button>
+          {l.status === 'sold'
+            ? <button type="button" className="btn-primary" onClick={() => onRelist(l.id)}><Icon name="history" />relist</button>
+            : <>
+              <button type="button" className="btn-tonal owner-edit" onClick={() => onEditPost(l.id)}><Icon name="edit" />edit</button>
+              <button type="button" className="btn-primary" onClick={() => onMarkSold(l.id)}><Icon name="check" />mark sold</button>
+            </>}
+        </div>
+      ) : (
       <div className="detail-bar">
         <button type="button" className="btn-tonal-icon" aria-label="hide this listing" onClick={() => setSheet('hide')}>
           <Icon name="hide" />
@@ -153,6 +174,26 @@ export default function DetailScreen({ id, ids, enter, onPage, favorites, onTogg
           ? <button type="button" className="btn-primary btn-sent" onClick={() => toast('chat comes later')}><Icon name="check" />message sent · open chat</button>
           : <button type="button" className="btn-primary" onClick={() => setSheet('reply')}><Icon name="chat" />message {seller.kind === 'dealer' ? 'dealer' : 'seller'}</button>}
       </div>
+      )}
+      {sheet === 'owner' && (
+        <Sheet title="your post" onClose={() => setSheet(null)}>
+          <div className="menu-list">
+            <button type="button" className="menu-row" onClick={() => { setSheet(null); share() }}><Icon name="share" />share it</button>
+            <button type="button" className="menu-row" disabled aria-describedby="renew-note"><Icon name="history" /><span className="sv-text"><strong>renew</strong><span id="renew-note">moves it back to the top. available 48 hours after posting</span></span></button>
+            <button type="button" className="menu-row menu-danger" onClick={() => setSheet('delete')}><Icon name="delete" />delete post</button>
+          </div>
+        </Sheet>
+      )}
+      {sheet === 'delete' && (
+        <Sheet title="delete this post?" onClose={() => setSheet(null)} footer={
+          <div className="facet-foot">
+            <button type="button" className="btn-text" onClick={() => setSheet(null)}>keep it</button>
+            <button type="button" className="btn-primary btn-danger" onClick={() => { setSheet(null); onDeletePost(l.id) }}><Icon name="delete" />delete</button>
+          </div>
+        }>
+          <p className="sheet-note">it comes down right away and buyers can't reply to it. if it sold, "mark sold" keeps it in your account instead.</p>
+        </Sheet>
+      )}
 
       {sheet === 'reply' && <ReplySheet l={l} onClose={() => setSheet(null)} onSend={() => { setSent(true); setSheet(null); toast(`sent · replies show up in chat`) }} />}
       {sheet === 'share' && (

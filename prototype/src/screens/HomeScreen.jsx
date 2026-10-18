@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { sections, listings, city, fmt, visible } from '../data.js'
-import { Icon, PeaceSign, LocationButton, SearchBar, ListingCard } from '../ui.jsx'
+import { sections, listings, city, fmt, visible, priceLabel } from '../data.js'
+import { Icon, PeaceSign, LocationButton, SearchBar, ListingCard, Thumb } from '../ui.jsx'
 
 // (a) Home — search hero, six section tiles, saved searches, fresh grid.
-export default function HomeScreen({ favorites = new Set(), onToggleFav, onManageSaved, toast, onOpen, onOpenSection, onSearch, onOpenSaved, onOpenListing, savedSearches, areaText, onLocation }) {
+export default function HomeScreen({ myPosts = [], onOpenAccount, favorites = new Set(), onToggleFav, onManageSaved, toast, onOpen, onOpenSection, onSearch, onOpenSaved, onOpenListing, savedSearches, areaText, onLocation }) {
   const fresh = visible(listings).filter(l => l.photo || l.section === 'sale').slice(0, 8)
   // Brand + location row scrolls away; the search bar pins and picks up the mark.
   const barRef = useRef(null)
@@ -40,6 +40,21 @@ export default function HomeScreen({ favorites = new Set(), onToggleFav, onManag
           </button>
         ))}
       </section>
+
+      {/* sellers find their posts right on home, not buried in a menu */}
+      {myPosts.length > 0 && (
+        <section className="block">
+          <div className="block-head pad"><h2>your posts</h2><button type="button" className="link" onClick={onOpenAccount}>manage</button></div>
+          <div className="hscroll">
+            {myPosts.map(l => (
+              <button key={l.id} type="button" className="saved-chip my-post-chip" onClick={() => onOpenListing(l.id)}>
+                <Thumb listing={l} />
+                <span className="saved-text"><strong>{priceLabel(l)} · {l.status === 'sold' ? 'sold' : 'live'}</strong><span>{l.views} views · {l.messages} messages</span></span>
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="block">
         <div className="block-head pad"><h2>your searches</h2><button type="button" className="link" onClick={onManageSaved}>manage</button></div>

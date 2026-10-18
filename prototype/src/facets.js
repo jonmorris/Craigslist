@@ -48,6 +48,9 @@ export const FACETS = {
 // any other for-sale subcategory gets condition
 export const facetsFor = (section, sub) => FACETS[sub] || (section === 'sale' && sub !== 'all' && sub !== 'free stuff' ? [CONDITION] : [])
 
+// your own posts register their fields so filters find them
+export const setAttrs = (id, a) => { BIKES[id] = a }
+
 export function facetValue(l, key) {
   if (key === 'condition') return detailFor(l).specs.find(s => s[0] === 'condition')?.[1]
   return (BIKES[l.id] || HOUSING[l.id] || {})[key]

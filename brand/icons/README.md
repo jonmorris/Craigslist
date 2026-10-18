@@ -57,5 +57,6 @@
 | `chevron_right` | chev-right |
 | `map` | map |
 | `remove` | minus |
+| `edit` | edit |
 
 Category icons (sell, house, work, handyman, bolt, group) are the candidates for custom brand icons later.

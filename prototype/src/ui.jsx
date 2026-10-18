@@ -119,13 +119,13 @@ const NAV = [
   ['home', 'home'], ['bookmark', 'saved'], ['plus', 'post'], ['chat', 'chat'], ['person', 'account'],
 ]
 
-export function BottomNav({ onTap, onHome, onSaved, active = 'home', hideOnPhone = false }) {
+export function BottomNav({ onTap, onHome, onSaved, onPost, onAccount, active = 'home', hideOnPhone = false }) {
   return (
     <nav className={'navbar' + (hideOnPhone ? ' nav-phone-hidden' : '')} aria-label="main">
       {NAV.map(([icon, label]) => (
         <button key={label} type="button" className={'nav-item' + (label === active ? ' active' : '') + (label === 'post' ? ' nav-post' : '')}
           aria-current={label === active ? 'page' : undefined}
-          onClick={() => (label === 'home' ? onHome() : label === 'saved' ? onSaved() : onTap(`${label} isn't built yet`))}>
+          onClick={() => (label === 'home' ? onHome() : label === 'saved' ? onSaved() : label === 'post' ? onPost() : label === 'account' ? onAccount() : onTap(`${label} isn't built yet`))}>
           <span className="nav-pill"><Icon name={icon} /></span>
           <span className="nav-label">{label}</span>
         </button>

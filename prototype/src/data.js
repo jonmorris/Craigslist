@@ -65,9 +65,15 @@ export const listings = [
 ]
 
 export function ageMinutes(age) {
+  if (age === 'just now') return 0
   const [n, unit] = age.split(' ')
-  return unit === 'min' ? +n : +n * 60
+  return unit === 'min' ? +n : unit === 'd' ? +n * 1440 : +n * 60
 }
+// "12 min", "3 h", "2 d" from a timestamp (your own posts)
+export const ageFrom = t => { const m = Math.max(0, Math.round((Date.now() - t) / 60000)); return m < 1 ? 'just now' : m < 60 ? `${m} min` : m < 1440 ? `${Math.round(m / 60)} h` : `${Math.round(m / 1440)} d` }
+
+// Stand-in photo library for the post flow's picker (a native app uses Android's photo picker)
+export const photoLibrary = [straggler, packRat, karate, moonlander, trek5200, austro, townie, fuji, haroGreen, haroRed, choppers]
 
 // Price spread for the fair-price histogram (for sale, all of minneapolis).
 export const priceHistogram = {
@@ -81,6 +87,7 @@ export const typicalRange = {
   bicycles: [300, 1200], furniture: [200, 600], tools: [400, 800], sporting: [60, 220],
   household: [50, 120], apartments: [1100, 1500], 'rooms & shares': [750, 1000],
 }
+export const fairFor = l => { const r = typicalRange[l.sub]; return r && l.price ? (l.price < r[0] ? 'below' : l.price > r[1] ? 'above' : 'typical') : null }
 for (const l of listings) {
   const r = typicalRange[l.sub]
   l.fair = r && l.price ? (l.price < r[0] ? 'below' : l.price > r[1] ? 'above' : 'typical') : null
@@ -88,7 +95,8 @@ for (const l of listings) {
 
 // Listings the viewer hid from the detail screen; every list skips them.
 export const hidden = new Set()
-export const visible = list => list.filter(l => !hidden.has(l.id))
+// browse and search skip hidden posts and your own sold ones
+export const visible = list => list.filter(l => !hidden.has(l.id) && l.status !== 'sold')
 
 export const bySection = id => visible(listings).filter(l => l.section === id)
 
