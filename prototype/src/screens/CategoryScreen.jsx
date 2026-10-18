@@ -246,7 +246,7 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
         </Sheet>
       )}
 
-      {sheet === 'facets' && <FilterSheet title={f.sub === 'all' ? 'filters' : `${f.sub} filters`} facets={facets} f={f} query={query}
+      {sheet === 'facets' && <FilterSheet title="filters" facets={facets} f={f} query={query}
         countFor={ff => run(all, ff).length} onClose={() => setSheet(null)} onApply={patch => { set(patch); setSheet(null) }} />}
 
       {sheet === 'price' && <PriceSheet all={all} f={f} run={run} onClose={() => setSheet(null)} onApply={p => { set(p); setSheet(null) }} />}
