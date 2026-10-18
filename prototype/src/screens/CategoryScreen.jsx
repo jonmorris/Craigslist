@@ -35,7 +35,7 @@ function applyFilters(all, f, query) {
 const FLAGS = [['photosOnly', 'has image'], ['today', 'posted today'], ['titles', 'search titles only'], ['delivery', 'delivery available'], ['crypto', 'cryptocurrency ok']]
 const LANGS = ['english', 'español', 'français', 'deutsch', '中文', 'tiếng việt', 'soomaali', 'hmoob']
 const SHEET_KEYS = ['attrs', 'ownerOnly', 'dealerOnly', 'photosOnly', 'today', 'titles', 'delivery', 'crypto', 'lang', 'bundle']
-const extraCount = f => attrCount(f.attrs) + (f.dealerOnly ? 1 : 0) + ['today', 'titles', 'delivery', 'crypto', 'lang'].filter(k => f[k]).length + (f.bundle === false ? 1 : 0)
+const extraCount = f => attrCount(f.attrs) + ['today', 'titles', 'delivery', 'crypto', 'lang'].filter(k => f[k]).length + (f.bundle === false ? 1 : 0)
 
 // filter, then bundle dealer reposts unless "bundle duplicates" is off
 const runFilters = (list, f, query) => {
@@ -174,8 +174,9 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
           <button type="button" className={'chip' + (f.min != null || f.max != null ? ' chip-on' : '')} onClick={() => setSheet('price')}>
             {priceChipLabel(f.min, f.max)}<Icon name="chevron" size={16} />
           </button>
-          <button type="button" className={'chip' + (f.ownerOnly ? ' chip-on' : '')} aria-pressed={f.ownerOnly} onClick={() => set({ ownerOnly: !f.ownerOnly, dealerOnly: false })}>
-            {f.ownerOnly && <Icon name="check" size={18} />}by owner
+          {/* sold by is a three-way choice (all / owner / dealer), so it opens a picker like sort */}
+          <button type="button" className={'chip' + (f.ownerOnly || f.dealerOnly ? ' chip-on' : '')} onClick={() => setSheet('soldby')}>
+            {f.ownerOnly ? 'by owner' : f.dealerOnly ? 'by dealer' : 'sold by'}<Icon name="chevron" size={16} />
           </button>
           <button type="button" className={'chip' + (f.photosOnly ? ' chip-on' : '')} aria-pressed={f.photosOnly} onClick={() => set({ photosOnly: !f.photosOnly })}>
             {f.photosOnly && <Icon name="check" size={18} />}has photos
@@ -232,6 +233,20 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
       {sheet === 'sub' && (
         <SubSheet query={query} section={section} sectionId={sectionId} current={f.sub} counts={subCounts} total={groupDealers(all).length}
           onClose={() => setSheet(null)} onPick={sub => { set({ sub }); setSheet(null) }} toast={toast} />
+      )}
+      {sheet === 'soldby' && (
+        <Sheet title="sold by" onClose={() => setSheet(null)}>
+          <div className="radio-list">
+            {[['all', 'all sellers', { ownerOnly: false, dealerOnly: false }], ['owner', 'owner', { ownerOnly: true, dealerOnly: false }], ['dealer', 'dealer', { ownerOnly: false, dealerOnly: true }]].map(([id, label, patch]) => {
+              const on = (f.ownerOnly ? 'owner' : f.dealerOnly ? 'dealer' : 'all') === id
+              return (
+                <button key={id} type="button" role="radio" aria-checked={on} className="radio-row" onClick={() => { set(patch); setSheet(null) }}>
+                  <span className={'radio' + (on ? ' radio-on' : '')} />{label}
+                </button>
+              )
+            })}
+          </div>
+        </Sheet>
       )}
       {sheet === 'sort' && (
         <Sheet title="sort by" onClose={() => setSheet(null)}>
@@ -472,7 +487,7 @@ function SaveSheet({ name, f, area, onClose, onSave }) {
   const [label, setLabel] = useState(name)
   const [alerts, setAlerts] = useState(true)
   const [freq, setFreq] = useState('instantly')
-  const parts = [priceChipLabel(f.min, f.max) !== 'price' && priceChipLabel(f.min, f.max), ...attrSummary(f.attrs), f.ownerOnly && 'by owner', f.dealerOnly && 'dealers', ...FLAGS.filter(([k]) => k !== 'photosOnly' && f[k]).map(([, l]) => l), f.lang, f.photosOnly && 'has photos', areaLabel(area)].filter(Boolean)
+  const parts = [priceChipLabel(f.min, f.max) !== 'price' && priceChipLabel(f.min, f.max), ...attrSummary(f.attrs), f.ownerOnly && 'by owner', f.dealerOnly && 'by dealer', ...FLAGS.filter(([k]) => k !== 'photosOnly' && f[k]).map(([, l]) => l), f.lang, f.photosOnly && 'has photos', areaLabel(area)].filter(Boolean)
   return (
     <Sheet title="save this search" onClose={onClose} footer={
       <button type="button" className="btn-primary" onClick={() => onSave({ label, detail: parts.join(' · '), alerts })}>save search</button>
