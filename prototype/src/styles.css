@@ -630,3 +630,12 @@ button:disabled::before { display: none; }
 @keyframes enter-next { from { transform: translateX(32%); opacity: 0; } }
 @keyframes enter-prev { from { transform: translateX(-32%); opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .enter-next, .enter-prev { animation: none; } }
+
+/* category filters sheet */
+.facet + .facet { margin-top: 20px; }
+.facet .area-label { margin: 0 0 10px; }
+.facet-find { margin-bottom: 12px; }
+.facet-hint { font: var(--md-body-small); color: var(--md-sys-color-on-surface-variant); margin-top: 8px; }
+.facet-foot { display: flex; gap: 8px; align-items: center; }
+.facet-foot .btn-primary { flex: 1; }
+.facet-foot .btn-text:disabled, .btn-primary:disabled { opacity: .38; }

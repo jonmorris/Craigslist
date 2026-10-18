@@ -5,6 +5,7 @@ import { matches } from '../search.js'
 import { taxonomy, zeroLocal } from '../taxonomy.js'
 import { ALL_AREAS, inArea, areaLabel, areaFull, widenOptions } from '../area.js'
 import RealMap from '../RealMap.jsx'
+import { facetsFor, matchesAttrs, attrCount, attrSummary } from '../facets.js'
 
 // (b) Category → list. Filters live in plain sight as chips; price uses the
 // fair-price histogram; repeat dealer posts collapse; save search = alerts on.
@@ -19,7 +20,8 @@ function applyFilters(all, f) {
     (!f.ownerOnly || !l.dealer) &&
     (!f.photosOnly || l.photo) &&
     (f.min == null || (l.price ?? 0) >= f.min) &&
-    (f.max == null || (l.price ?? 0) <= f.max))
+    (f.max == null || (l.price ?? 0) <= f.max) &&
+    matchesAttrs(l, f.attrs))
 }
 
 // One card per dealer; the rest show as "+N similar".
@@ -73,12 +75,15 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
   const [sheet, setSheet] = useState(null)
   const [saved, setSaved] = useState(!!memory.saved)
   useEffect(() => { onRemember?.({ f, sort, saved }) }, [f, sort, saved])
-  const set = patch => { setF(prev => ({ ...prev, ...patch })); setSaved(false) }
+  // switching subcategory drops the old one's category filters
+  const set = patch => { setF(prev => ({ ...prev, ...(patch.sub && patch.sub !== prev.sub ? { attrs: {} } : {}), ...patch })); setSaved(false) }
+  const facets = facetsFor(sectionId || all.find(l => l.sub === f.sub)?.section, f.sub)
+  const nAttrs = attrCount(f.attrs)
 
   const rows = sortItems(groupDealers(applyFilters(all, f)), sort)
   const subName = f.sub === 'all' ? sectionName : f.sub
   const heading = query ? `“${query}”` : subName
-  const filtered = f.ownerOnly || f.photosOnly || f.min != null || f.max != null
+  const filtered = f.ownerOnly || f.photosOnly || f.min != null || f.max != null || nAttrs > 0
   // nothing in this subcategory anywhere in the metro (not just filtered out)
   const zero = !query && f.sub !== 'all' ? zeroLocal[f.sub] : null
   // empty only because of the area: the same search with any area has results
@@ -89,6 +94,7 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
     (f.min != null || f.max != null) && ['clear the price filter', { min: null, max: null }],
     f.ownerOnly && ['include dealers', { ownerOnly: false }],
     f.photosOnly && ['include posts without photos', { photosOnly: false }],
+    nAttrs > 0 && [`clear ${attrSummary(f.attrs).join(', ')}`, { attrs: {} }],
     f.sub !== 'all' && [`all of ${sectionName}`, { sub: 'all' }],
   ].filter(Boolean).map(([label, patch]) => [label, patch, groupDealers(applyFilters(all, { ...f, ...patch })).length])
   if (area.places.length || area.radius != null) relaxers.unshift(['search all areas', 'area', groupDealers(applyFilters(anyArea, f)).length])
@@ -135,6 +141,11 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
         </div>
 
         {!zero && <div className="hscroll chips filter-row" aria-label="filters">
+          {facets.length > 0 && (
+            <button type="button" className={'chip' + (nAttrs ? ' chip-on' : '')} onClick={() => setSheet('facets')}>
+              <Icon name="sliders" size={18} />{nAttrs ? `${f.sub} filters · ${nAttrs}` : `${f.sub} filters`}
+            </button>
+          )}
           <button type="button" className="chip" onClick={() => setSheet('sort')}>
             <Icon name="sort" size={18} />{SORTS.find(s => s[0] === sort)[1]}<Icon name="chevron" size={16} />
           </button>
@@ -210,6 +221,9 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
           </div>
         </Sheet>
       )}
+
+      {sheet === 'facets' && <FacetSheet title={`${f.sub} filters`} facets={facets} attrs={f.attrs || {}}
+        countFor={attrs => groupDealers(applyFilters(all, { ...f, attrs })).length} onClose={() => setSheet(null)} onApply={attrs => { set({ attrs }); setSheet(null) }} />}
 
       {sheet === 'price' && <PriceSheet all={all} f={f} onClose={() => setSheet(null)} onApply={p => { set(p); setSheet(null) }} />}
 
@@ -367,11 +381,53 @@ function PriceSheet({ all, f, onClose, onApply }) {
   )
 }
 
+// Category filters sheet: chip groups per facet, a live count on the button.
+function FacetSheet({ title, facets, attrs, countFor, onClose, onApply }) {
+  const [picked, setPicked] = useState(attrs)
+  const [find, setFind] = useState('')
+  const toggle = (key, v) => setPicked(p => {
+    const cur = p[key] || []
+    return { ...p, [key]: cur.includes(v) ? cur.filter(x => x !== v) : [...cur, v] }
+  })
+  const n = countFor(picked)
+  return (
+    <Sheet title={title} onClose={onClose} footer={
+      <div className="facet-foot">
+        <button type="button" className="btn-text" onClick={() => setPicked({})} disabled={!attrCount(picked)}>clear</button>
+        <button type="button" className="btn-primary" onClick={() => onApply(picked)} disabled={n === 0}>{n === 0 ? 'no matches' : `show ${n} listing${n === 1 ? '' : 's'}`}</button>
+      </div>
+    }>
+      {facets.map(fc => {
+        const opts = fc.search && find.trim() ? fc.options.filter(o => o.includes(find.trim().toLowerCase())) : fc.options
+        return (
+          <section key={fc.key} className="facet">
+            <h3 className="area-label">{fc.label}</h3>
+            {fc.search && (
+              <label className="loc-search facet-find" htmlFor={'find-' + fc.key}>
+                <Icon name="search" size={20} />
+                <input id={'find-' + fc.key} type="search" autoComplete="off" placeholder={`find a ${fc.label}`} value={find} onChange={e => setFind(e.target.value)} />
+              </label>
+            )}
+            <div className="presets">
+              {opts.map(o => {
+                const on = (picked[fc.key] || []).includes(o)
+                return <button key={o} type="button" className={'chip' + (on ? ' chip-on' : '')} aria-pressed={on} onClick={() => toggle(fc.key, o)}>{on && <Icon name="check" size={18} />}{o}</button>
+              })}
+              {opts.length === 0 && <p className="sv-none">no {fc.label} matches “{find.trim()}”.</p>}
+            </div>
+            {fc.hint && <p className="facet-hint">{fc.hint}</p>}
+          </section>
+        )
+      })}
+    </Sheet>
+  )
+}
+
 function SaveSheet({ name, f, area, onClose, onSave }) {
   const [label, setLabel] = useState(name)
   const [alerts, setAlerts] = useState(true)
   const [freq, setFreq] = useState('instantly')
-  const parts = [priceChipLabel(f.min, f.max) !== 'price' && priceChipLabel(f.min, f.max), f.ownerOnly && 'by owner', f.photosOnly && 'has photos', areaLabel(area)].filter(Boolean)
+  const parts = [priceChipLabel(f.min, f.max) !== 'price' && priceChipLabel(f.min, f.max), ...attrSummary(f.attrs), f.ownerOnly && 'by owner', f.photosOnly && 'has photos', areaLabel(area)].filter(Boolean)
   return (
     <Sheet title="save this search" onClose={onClose} footer={
       <button type="button" className="btn-primary" onClick={() => onSave({ label, detail: parts.join(' · '), alerts })}>save search</button>
