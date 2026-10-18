@@ -50,7 +50,10 @@ export default function DetailScreen({ id, ids, enter, onPage, favorites, onTogg
           </span>
         )}
         <span className="flex1" />
-        <button type="button" className="icon-btn on-photo" aria-label="share" onClick={share}><Icon name="share" /></button>
+        {/* save sits top-right, where the bookmark is on every listing card */}
+        <button type="button" className={'icon-btn on-photo' + (fav ? ' fav-on' : '')} aria-label={fav ? 'remove from saved' : 'save'} aria-pressed={fav} onClick={() => onToggleFav(l.id)}>
+          <Icon name={fav ? 'bookmark-fill' : 'bookmark'} />
+        </button>
       </div>
 
       <div className="pad detail-body">
@@ -145,9 +148,7 @@ export default function DetailScreen({ id, ids, enter, onPage, favorites, onTogg
         <button type="button" className="btn-tonal-icon" aria-label="hide this listing" onClick={() => setSheet('hide')}>
           <Icon name="hide" />
         </button>
-        <button type="button" className="btn-tonal-icon" aria-label={fav ? 'remove from saved' : 'save'} aria-pressed={fav} onClick={() => onToggleFav(l.id)}>
-          <Icon name={fav ? 'bookmark-fill' : 'bookmark'} />
-        </button>
+        <button type="button" className="btn-tonal-icon" aria-label="share" onClick={share}><Icon name="share" /></button>
         {sent
           ? <button type="button" className="btn-primary btn-sent" onClick={() => toast('chat comes later')}><Icon name="check" />message sent · open chat</button>
           : <button type="button" className="btn-primary" onClick={() => setSheet('reply')}><Icon name="chat" />message {seller.kind === 'dealer' ? 'dealer' : 'seller'}</button>}

@@ -343,6 +343,7 @@ button:disabled::before { display: none; }
 .icon-btn.on-photo.fav-on { background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); } /* saved: filled bookmark on the brand color, distinct from the dark unsaved circle */
 .gallery-empty + .detail-actions { background: none; }
 .gallery-empty + .detail-actions .icon-btn.on-photo { background: var(--md-sys-color-surface); color: var(--md-sys-color-on-surface); }
+.gallery-empty + .detail-actions .icon-btn.on-photo.fav-on { background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); }
 .detail-body { display: flex; flex-direction: column; padding-top: 16px; }
 .detail-price-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .detail-price { font: 700 28px/36px var(--plain); font-variant-numeric: tabular-nums; }
@@ -740,6 +741,7 @@ button:disabled::before { display: none; }
   /* a pinned top bar on larger screens instead of buttons floating over the photo */
   .detail > .detail-actions { position: sticky; top: 0; grid-row: 1; padding: 8px 16px; background: var(--md-sys-color-surface); }
   .detail-actions .icon-btn.on-photo { background: none; color: var(--md-sys-color-on-surface); }
+  .detail-actions .icon-btn.on-photo.fav-on { background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); }
   .detail-actions .pager { background: var(--md-sys-color-surface-container-high); color: var(--md-sys-color-on-surface); }
   .detail-actions .pager .icon-btn { color: inherit; }
   .detail > .gallery { grid-row: 2; }
