@@ -213,6 +213,7 @@ function FairPrice({ l }) {
       </div>
       <div className="range-axis"><span>{money(lo)}</span><span style={{ left: pct(r[0]) }}>{money(r[0])}</span><span style={{ left: pct(r[1]) }}>{money(r[1])}</span></div>
       <p>{l.sub} in {city.name} usually go for <strong>{money(r[0])}–{money(r[1])}{l.per ? '/' + l.per : ''}</strong>. this one is {priceLabel(l)}.</p>
+      {l.price < r[0] * 0.4 && <p className="fair-nudge"><Icon name="shield" size={18} />well under the usual price. it may be a great deal, or a scam: see it in person before you pay anything.</p>}
       </div>
     </section>
   )

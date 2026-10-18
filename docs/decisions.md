@@ -97,6 +97,7 @@ Update this log with every change to the prototype (see `CLAUDE.md`).
 | D9 | The listing ID is shown on the page | Removed (it's in the shared link) | It means nothing to buyers | audit |
 | D10 | Kept: approximate location circle, never an exact pin | Same, on the detail map and the results map | Privacy first | audit |
 | D11 | — | Similar listings, and a "have one to sell?" prompt | Keeps browsing going and feeds the supply side | brief |
+| D12 | — | "Below typical" is a **neutral** gray badge, not green good news. The typical-range bar is neutral too. A price under 40% of the typical low adds a nudge in the price check: "well under the usual price. it may be a great deal, or a scam: see it in person before you pay anything." Above typical keeps its warning color | A price far below the going rate is a classic scam signal (scams are the top complaint), so we shouldn't celebrate it. Resolves open question O1 | users, review |
 
 ## Saved
 
@@ -122,8 +123,7 @@ Update this log with every change to the prototype (see `CLAUDE.md`).
 
 | # | Question | Notes |
 |---|---|---|
-| O1 | Should "below typical" stay green? | A price far below typical is a classic scam signal. Consider a neutral style with a safety nudge |
 | O2 | Section landing pages add a tap before the list | Keep them, or let the home tiles go straight to the list? |
-| O3 | Seller verification and ratings | A product decision beyond the brief; name it in the deck or leave it out |
+| O3 | Seller verification and two-way ratings (eBay / Uber style: buyer and seller leave positive or negative feedback after a deal) | Considering, probably not this version. **For:** answers the top complaint (scams, no buyer protection) and rewards good sellers. **Against:** heavy, long-time users may pick up negative reviews, and if ratings push them off the platform, supply drops; it also needs accounts, which cuts against anonymous, no-login use. Lighter options to weigh first: phone-verified badge (shown today), "on craigslist since", response rate |
 | O4 | Rollout to loyal users who like that Craigslist never changes | How would a redesign this big ship? |
 | O5 | Chat and post flows | Stubs in the prototype |
