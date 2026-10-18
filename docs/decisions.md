@@ -131,3 +131,25 @@ Update this log with every change to the prototype (see `CLAUDE.md`).
 | O3 | Seller verification and two-way ratings (eBay / Uber style: buyer and seller leave positive or negative feedback after a deal) | Considering, probably not this version. **For:** answers the top complaint (scams, no buyer protection) and rewards good sellers. **Against:** heavy, long-time users may pick up negative reviews, and if ratings push them off the platform, supply drops; it also needs accounts, which cuts against anonymous, no-login use. Lighter options to weigh first: phone-verified badge (shown today), "on craigslist since", response rate |
 | O4 | Rollout to loyal users who like that Craigslist never changes | How would a redesign this big ship? |
 | O5 | Chat and post flows | Stubs in the prototype |
+
+## Native feasibility
+
+The prototype is a web app standing in for a native Android app (Jetpack Compose, Material 3). Each piece below maps to native, or is flagged as prototype-only.
+
+| Prototype | Native equivalent | Flag |
+|---|---|---|
+| Bottom bar on phones, navigation rail at 600+ | `NavigationSuiteScaffold` (switches by window size class) | — |
+| List and listing side by side at 800+ | `ListDetailPaneScaffold` | M3's default two-pane breakpoint is 840 (expanded). We use 800 so a Galaxy Z Fold in landscape gets two panes. A custom breakpoint is supported natively, but it's a deviation from M3 |
+| Content adapts to its pane (container queries) | `BoxWithConstraints` / pane width in the adaptive scaffold | — |
+| Portrait and landscape everywhere | Standard. Android 16 ignores orientation and resizability locks on large screens (600dp+) for apps targeting API 36 | Competitors like Uber still lock portrait, and Duolingo letterboxes on tablets; being adaptive from day one is the point |
+| Bottom sheets, chips, segmented buttons, menus, snackbars with undo, search view, tabs | M3 Compose components | — |
+| Share over the photo opens the system share sheet | `Intent.ACTION_SEND` / Android Sharesheet | — |
+| Back gesture pops one screen; lists restore filters and scroll | Navigation back stack, predictive back, `rememberSaveable`, `LazyGridState` | — |
+| Favorites, hidden posts, saved searches, area, layout survive restarts (localStorage) | DataStore / Room | — |
+| Draggable price bracket on the histogram | Custom `Canvas` drawing with `pointerInput` | — |
+| Map with count bubbles and price markers | Google Maps SDK + Maps Compose clustering | **Prototype-only:** the map is a static image overlay; it blurs past zoom 14 and has no real tiles |
+| Keyboard pushes content up; scrolling dismisses it | Edge-to-edge with IME insets (`imePadding`), `adjustResize` | — |
+| Fullscreen display mode in the installed web app | Edge-to-edge drawing with system-bar insets | **Prototype-only:** a workaround for Chrome's white nav bar with 3-button navigation. Native draws behind the bars instead of hiding them |
+| Phone-frame overview (`?frame`), "reset prototype data", service worker and offline cache, `noindex` | — | **Prototype-only:** presentation and hosting tools, not part of the app |
+| No hover states; pressed and focus only | Same (touch-first; ripple + focus indicator) | — |
+| Fonts from Google Fonts (Young Serif, Figtree) | Bundled font resources / downloadable fonts | — |

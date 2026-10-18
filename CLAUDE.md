@@ -12,3 +12,7 @@ Whenever a change alters what the user sees or does compared with today's app (o
 - Link screenshots in `docs/audit-screens/` when they show today's behavior. Save new screenshots the user shares there, numbered in order.
 - Things kept on purpose get a "Kept:" row.
 - Move resolved items out of "Still open".
+
+## Native-feasible only
+
+This prototype stands in for a native Android app (Jetpack Compose, Material 3). Only design things a native app can do. If something is web-only or prototype-only, either avoid it or flag it in the "Native feasibility" section of `docs/decisions.md` in the same commit, with the native equivalent or the reason it's prototype-only.
