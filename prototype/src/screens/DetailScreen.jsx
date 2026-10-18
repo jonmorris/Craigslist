@@ -7,7 +7,7 @@ import { Icon, NoPhoto, FairBadge, Sheet, Thumb } from '../ui.jsx'
 // specs, distance), trust at the moment of contact, one-tap reply.
 const money = n => '$' + fmt(n)
 
-export default function DetailScreen({ id, favorites, onToggleFav, onHide, onBack, onOpenListing, onOpenCategory, toast }) {
+export default function DetailScreen({ id, ids, enter, onPage, favorites, onToggleFav, onHide, onBack, onOpenListing, onOpenCategory, toast }) {
   const l = listings.find(x => x.id === id)
   const d = detailFor(l)
   const seller = sellerFor(l)
@@ -23,12 +23,32 @@ export default function DetailScreen({ id, favorites, onToggleFav, onHide, onBac
     setSheet('share')
   }
 
+  // Prev/next through the list this came from (the current app's prev/next, as a swipe).
+  // Swipes that start on the photo gallery page photos instead.
+  const pos = ids ? ids.indexOf(l.id) : -1
+  const go = d => { const n = ids[pos + d]; if (n != null) onPage(n, d > 0 ? 'next' : 'prev') }
+  const touch = useRef(null)
+  const swipeStart = e => { touch.current = e.target.closest('.gallery, .hscroll, .sheet-layer') ? null : [e.touches[0].clientX, e.touches[0].clientY] }
+  const swipeEnd = e => {
+    if (!touch.current || pos < 0) return
+    const t = e.changedTouches[0], dx = t.clientX - touch.current[0], dy = t.clientY - touch.current[1]
+    if (Math.abs(dx) > 70 && Math.abs(dx) > 2 * Math.abs(dy)) go(dx < 0 ? 1 : -1)
+  }
+
   return (
     <>
-    <div className="detail">
+    <div className={'detail' + (enter ? ' enter-' + enter : '')} onTouchStart={swipeStart} onTouchEnd={swipeEnd}>
       <Gallery l={l} />
       <div className="detail-actions">
         <button type="button" className="icon-btn on-photo" aria-label="back" onClick={onBack}><Icon name="back" /></button>
+        <span className="flex1" />
+        {pos >= 0 && ids.length > 1 && (
+          <span className="pager">
+            <button type="button" className="icon-btn" aria-label="previous listing" disabled={pos === 0} onClick={() => go(-1)}><Icon name="chev-left" /></button>
+            <span className="pager-n" aria-live="polite">{pos + 1} of {ids.length}</span>
+            <button type="button" className="icon-btn" aria-label="next listing" disabled={pos === ids.length - 1} onClick={() => go(1)}><Icon name="chev-right" /></button>
+          </span>
+        )}
         <span className="flex1" />
         <button type="button" className="icon-btn on-photo" aria-label="share" onClick={share}><Icon name="share" /></button>
       </div>

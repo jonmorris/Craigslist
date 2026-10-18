@@ -65,7 +65,7 @@ export default function SectionScreen({ sectionId, onBack, onOpenList, onSearch,
           <div className="block-head pad"><h2>just posted</h2>
             <button type="button" className="link" onClick={() => onOpenList(sectionId, 'all')}>see all</button></div>
           <div className="grid pad">
-            {fresh.map(l => <ListingCard key={l.id} listing={l} onTap={() => onOpenListing(l.id)} />)}
+            {fresh.map(l => <ListingCard key={l.id} listing={l} onTap={() => onOpenListing(l.id, fresh.map(x => x.id))} />)}
           </div>
         </section>
       )}

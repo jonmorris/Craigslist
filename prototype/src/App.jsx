@@ -95,7 +95,9 @@ export default function App() {
   }
 
   const openCategory = (section, sub = 'all') => push({ name: 'cat', section, sub })
-  const openListing = id => push({ name: 'detail', id })
+  // `ids` = the list it was opened from, so detail can swipe to the next/previous one
+  const openListing = (id, ids = null) => push({ name: 'detail', id, ids })
+  const pageListing = (id, dir) => replaceTop({ ...route, id, enter: dir })
   const openSection = id => push({ name: 'section', section: id })
   // one location picker everywhere; lists pass a context so it shows their own count
   const openLocation = (context = null) => push({ name: 'location', context })
@@ -186,7 +188,7 @@ export default function App() {
             onSubmit={runSearch} onOpenSaved={openSaved} onOpenListing={openListing} onBack={back} toast={toast}
             onRemoveRecent={r => setRecent(x => x.filter(y => y !== r))} onClearRecent={() => setRecent([])}
             area={area} onAreaChange={setArea} onOpenLocation={openLocation} />}
-          {route.name === 'detail' && <DetailScreen key={'d' + route.id} id={route.id} favorites={favorites} onToggleFav={toggleFav} onHide={hideListing}
+          {route.name === 'detail' && <DetailScreen key={'d' + route.id} id={route.id} ids={route.ids?.filter(x => !hidden.has(x))} enter={route.enter} onPage={pageListing} favorites={favorites} onToggleFav={toggleFav} onHide={hideListing}
             onBack={back} onOpenListing={openListing} onOpenCategory={openCategory} toast={toast} />}
         </main>
         {toastMsg && (

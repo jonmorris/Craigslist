@@ -619,3 +619,14 @@ button:disabled::before { display: none; }
 .saved-empty h2 { font: var(--md-title-large); font-family: var(--brand); }
 .saved-empty p { font: var(--md-body-medium); color: var(--md-sys-color-on-surface-variant); max-width: 300px; margin-bottom: 16px; }
 .saved-empty .btn-tonal { width: auto; height: 40px; padding: 0 24px; font: var(--md-label-large); }
+
+/* prev/next through the list a listing was opened from */
+.pager { display: flex; align-items: center; height: 44px; margin: 2px 0; border-radius: var(--md-shape-full); background: rgb(0 0 0 / .55); color: #fff; }
+.pager .icon-btn { color: #fff; width: 44px; height: 44px; }
+.pager .icon-btn:disabled { opacity: .38; }
+.pager-n { font: var(--md-label-large); font-variant-numeric: tabular-nums; min-width: 56px; text-align: center; }
+.enter-next { animation: enter-next .28s var(--md-ease-emph-decel); }
+.enter-prev { animation: enter-prev .28s var(--md-ease-emph-decel); }
+@keyframes enter-next { from { transform: translateX(32%); opacity: 0; } }
+@keyframes enter-prev { from { transform: translateX(-32%); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .enter-next, .enter-prev { animation: none; } }

@@ -26,7 +26,7 @@ export default function SavedScreen({ tab, onTab, favorites, onToggleFav, saved,
 
       {tab === 'listings' && (favs.length ? (
         <div className="pad grid saved-grid">
-          {favs.map(l => <ListingCard key={l.id} listing={l} onTap={() => onOpenListing(l.id)} />)}
+          {favs.map(l => <ListingCard key={l.id} listing={l} onTap={() => onOpenListing(l.id, favs.map(x => x.id))} />)}
         </div>
       ) : (
         <Empty icon="heart" title="nothing saved yet" body="tap the heart on a listing and it lands here, even after you close the app." action="browse listings" onAction={onBrowse} />

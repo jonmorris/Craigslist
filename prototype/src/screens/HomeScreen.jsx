@@ -56,7 +56,7 @@ export default function HomeScreen({ onManageSaved, toast, onOpen, onOpenSection
       <section className="block">
         <div className="block-head pad"><h2>fresh near you</h2><button type="button" className="link" onClick={() => onOpen('sale')}>see all</button></div>
         <div className="grid pad">
-          {fresh.map(l => <ListingCard key={l.id} listing={l} onTap={() => onOpenListing(l.id)} />)}
+          {fresh.map(l => <ListingCard key={l.id} listing={l} onTap={() => onOpenListing(l.id, fresh.map(x => x.id))} />)}
         </div>
       </section>
     </div>

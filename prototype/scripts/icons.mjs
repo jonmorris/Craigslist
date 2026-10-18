@@ -16,7 +16,7 @@ export const MAP = {
   back: 'arrow_back', close: 'close', sliders: 'tune', grid: 'grid_view', list: 'view_list', single: 'view_agenda', text: 'view_headline',
   check: 'check', sort: 'swap_vert', history: 'history', fill: 'north_west', trend: 'trending_up',
   share: 'share', heart: 'favorite', 'heart-fill': 'favorite-fill', more: 'more_vert',
-  shield: 'verified_user', link: 'link', hide: 'visibility_off', flag: 'flag', 'bell-off': 'notifications_off', delete: 'delete',
+  shield: 'verified_user', link: 'link', hide: 'visibility_off', flag: 'flag', 'bell-off': 'notifications_off', delete: 'delete', 'chev-left': 'chevron_left', 'chev-right': 'chevron_right',
 }
 
 mkdirSync(OUT, { recursive: true })

@@ -163,7 +163,7 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
             {query ? `${rows.length} result${rows.length === 1 ? '' : 's'}` : f.sub === 'all' && !filtered ? `${fmt(section.count)} listings · ${fmt(section.newToday)} new today` : `${rows.length} match`} · {SORTS.find(s => s[0] === sort)[1]}
           </p>
           <div className={'pad ' + (view === 'grid' ? 'grid' : view === 'text' ? 'rows rows-text' : 'rows')}>
-            {rows.map(({ l, similar }) => <ListingCard key={l.id} listing={l} similar={similar} variant={view} onTap={() => onOpenListing(l.id)} />)}
+            {rows.map(({ l, similar }) => <ListingCard key={l.id} listing={l} similar={similar} variant={view} onTap={() => onOpenListing(l.id, rows.map(r => r.l.id))} />)}
           </div>
           <p className="feed-end pad">that's everything posted in the last day.</p>
         </>
