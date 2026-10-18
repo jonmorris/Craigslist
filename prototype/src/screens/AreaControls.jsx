@@ -1,5 +1,5 @@
 import React from 'react'
-import { REGIONS, NEIGHBORHOODS, RADII } from '../area.js'
+import { REGIONS, NEIGHBORHOODS, RADII, SUBAREAS } from '../area.js'
 import { Icon } from '../ui.jsx'
 
 // Shared area controls (regions, neighborhoods, distance), used by the list's area
@@ -24,6 +24,8 @@ export default function AreaControls({ value, onChange }) {
       </div>
       <p className="area-label">neighborhoods</p>
       <div className="presets">{NEIGHBORHOODS.map(h => chip(h))}</div>
+      <p className="area-label">craigslist sub-areas</p>
+      <div className="presets">{Object.keys(SUBAREAS).map(s => chip(s))}</div>
       <p className="area-label">distance from you</p>
       <div className="segmented" role="radiogroup" aria-label="distance">
         {RADII.map(r => (

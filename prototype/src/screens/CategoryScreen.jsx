@@ -11,18 +11,36 @@ import ResultsMap from '../ResultsMap.jsx'
 // (b) Category → list. Filters live in plain sight as chips; price uses the
 // fair-price histogram; repeat dealer posts collapse; save search = alerts on.
 const SORTS = [
-  ['newest', 'newest first'], ['low', 'price: low to high'], ['high', 'price: high to low'], ['near', 'nearest first'],
+  ['newest', 'newest first'], ['oldest', 'oldest first'], ['low', 'price: low to high'], ['high', 'price: high to low'], ['near', 'nearest first'],
 ]
-const PRESETS = [['under $100', null, 100], ['under $250', null, 250], ['under $500', null, 500], ['$500+', 500, null]]
+const PRESETS = [['free', null, 0], ['under $100', null, 100], ['under $250', null, 250], ['under $500', null, 500], ['$500+', 500, null]]
 
-function applyFilters(all, f) {
+function applyFilters(all, f, query) {
   return all.filter(l =>
     (f.sub === 'all' || l.sub === f.sub) &&
     (!f.ownerOnly || !l.dealer) &&
+    (!f.dealerOnly || l.dealer) &&
     (!f.photosOnly || l.photo) &&
+    (!f.today || ageMinutes(l.age) < 24 * 60) &&
+    (!f.delivery || l.delivery) &&
+    (!f.crypto || l.crypto) &&
+    (!f.lang || (l.lang || 'english') === f.lang) &&
+    (!f.titles || !query || query.toLowerCase().split(/\s+/).filter(Boolean).every(t => l.title.toLowerCase().includes(t))) &&
     (f.min == null || (l.price ?? 0) >= f.min) &&
     (f.max == null || (l.price ?? 0) <= f.max) &&
     matchesAttrs(l, f.attrs))
+}
+
+// listing options from the current app's filter screen, as chips
+const FLAGS = [['photosOnly', 'has image'], ['today', 'posted today'], ['titles', 'search titles only'], ['delivery', 'delivery available'], ['crypto', 'cryptocurrency ok']]
+const LANGS = ['english', 'español', 'français', 'deutsch', '中文', 'tiếng việt', 'soomaali', 'hmoob']
+const SHEET_KEYS = ['attrs', 'ownerOnly', 'dealerOnly', 'photosOnly', 'today', 'titles', 'delivery', 'crypto', 'lang', 'bundle']
+const extraCount = f => attrCount(f.attrs) + (f.dealerOnly ? 1 : 0) + ['today', 'titles', 'delivery', 'crypto', 'lang'].filter(k => f[k]).length + (f.bundle === false ? 1 : 0)
+
+// filter, then bundle dealer reposts unless "bundle duplicates" is off
+const runFilters = (list, f, query) => {
+  const hits = applyFilters(list, f, query)
+  return f.bundle === false ? hits.map(l => ({ l, similar: 0 })) : groupDealers(hits)
 }
 
 // One card per dealer; the rest show as "+N similar".
@@ -42,6 +60,7 @@ function groupDealers(items) {
 function sortItems(rows, sort) {
   const r = [...rows]
   if (sort === 'newest') r.sort((a, b) => ageMinutes(a.l.age) - ageMinutes(b.l.age))
+  if (sort === 'oldest') r.sort((a, b) => ageMinutes(b.l.age) - ageMinutes(a.l.age))
   if (sort === 'low') r.sort((a, b) => (a.l.price ?? 0) - (b.l.price ?? 0))
   if (sort === 'high') r.sort((a, b) => (b.l.price ?? 0) - (a.l.price ?? 0))
   if (sort === 'near') r.sort((a, b) => a.l.mi - b.l.mi)
@@ -50,7 +69,7 @@ function sortItems(rows, sort) {
 
 const money = n => '$' + fmt(n)
 const priceChipLabel = (min, max) =>
-  min == null && max == null ? 'price' : min == null ? `under ${money(max)}` : max == null ? `${money(min)}+` : `${money(min)}–${money(max)}`
+  max === 0 ? 'free' : min == null && max == null ? 'price' : min == null ? `under ${money(max)}` : max == null ? `${money(min)}+` : `${money(min)}–${money(max)}`
 
 // Also renders search results: pass `query` (and optionally no sectionId = all sections).
 // layout menu: [key, icon, label]; the bar button always shows the current layout's icon
@@ -71,6 +90,7 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
 
   const [f, setF] = useState(() => memory.f || { sub: initialSub, ownerOnly: false, photosOnly: false, min: null, max: null })
   const [sort, setSort] = useState(memory.sort || 'newest')
+  const run = (list, ff) => runFilters(list, ff, query)
   const setView = v => onViewChange(v) // grid | large | row | text
   const [menu, setMenu] = useState(false)
   const [sheet, setSheet] = useState(null)
@@ -79,26 +99,29 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
   // switching subcategory drops the old one's category filters
   const set = patch => { setF(prev => ({ ...prev, ...(patch.sub && patch.sub !== prev.sub ? { attrs: {} } : {}), ...patch })); setSaved(false) }
   const facets = facetsFor(sectionId || all.find(l => l.sub === f.sub)?.section, f.sub)
-  const nAttrs = attrCount(f.attrs)
+  const nAttrs = extraCount(f)
 
-  const rows = sortItems(groupDealers(applyFilters(all, f)), sort)
+  const rows = sortItems(run(all, f), sort)
   const subName = f.sub === 'all' ? sectionName : f.sub
   const heading = query ? `“${query}”` : subName
   const filtered = f.ownerOnly || f.photosOnly || f.min != null || f.max != null || nAttrs > 0
   // nothing in this subcategory anywhere in the metro (not just filtered out)
   const zero = !query && f.sub !== 'all' ? zeroLocal[f.sub] : null
   // empty only because of the area: the same search with any area has results
-  const areaEmpty = (area.places.length > 0 || area.radius != null) && groupDealers(applyFilters(anyArea, f)).length > 0
+  const areaEmpty = (area.places.length > 0 || area.radius != null) && run(anyArea, f).length > 0
 
   // Each way to widen an empty result, with how many it would bring back.
   const relaxers = [
     (f.min != null || f.max != null) && ['clear the price filter', { min: null, max: null }],
     f.ownerOnly && ['include dealers', { ownerOnly: false }],
     f.photosOnly && ['include posts without photos', { photosOnly: false }],
-    nAttrs > 0 && [`clear ${attrSummary(f.attrs).join(', ')}`, { attrs: {} }],
+    attrCount(f.attrs) > 0 && [`clear ${attrSummary(f.attrs).join(', ')}`, { attrs: {} }],
+    f.dealerOnly && ['include owners', { dealerOnly: false }],
+    ...FLAGS.filter(([k]) => k !== 'photosOnly' && f[k]).map(([k, label]) => [`without “${label}”`, { [k]: false }]),
+    f.lang && ['any language', { lang: null }],
     f.sub !== 'all' && [`all of ${sectionName}`, { sub: 'all' }],
-  ].filter(Boolean).map(([label, patch]) => [label, patch, groupDealers(applyFilters(all, { ...f, ...patch })).length])
-  if (area.places.length || area.radius != null) relaxers.unshift(['search all areas', 'area', groupDealers(applyFilters(anyArea, f)).length])
+  ].filter(Boolean).map(([label, patch]) => [label, patch, run(all, { ...f, ...patch }).length])
+  if (area.places.length || area.radius != null) relaxers.unshift(['search all areas', 'area', run(anyArea, f).length])
 
   return (
     <div className="cat">
@@ -134,7 +157,7 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
           </button>
           <button type="button" className="scope-btn" onClick={() => onOpenLocation({
             noun: query ? `results for “${query}”` : subName,
-            countFor: a => groupDealers(applyFilters(anyArea.filter(l => inArea(l, a)), f)).length,
+            countFor: a => run(anyArea.filter(l => inArea(l, a)), f).length,
           })}>
             <span className="scope-text"><span className="scope-k">area</span><span className="scope-v">{area.places.length || area.center || area.radius != null ? areaLabel(area) : 'Minneapolis, MN'}</span></span>
             <Icon name="chevron" />
@@ -142,18 +165,16 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
         </div>
 
         {!zero && <div className="hscroll chips filter-row" aria-label="filters">
-          {facets.length > 0 && (
-            <button type="button" className={'chip' + (nAttrs ? ' chip-on' : '')} onClick={() => setSheet('facets')}>
-              <Icon name="sliders" size={18} />{nAttrs ? `${f.sub} filters · ${nAttrs}` : `${f.sub} filters`}
-            </button>
-          )}
+          <button type="button" className={'chip' + (nAttrs ? ' chip-on' : '')} onClick={() => setSheet('facets')}>
+            <Icon name="sliders" size={18} />{nAttrs ? `filters · ${nAttrs}` : 'filters'}
+          </button>
           <button type="button" className="chip" onClick={() => setSheet('sort')}>
             <Icon name="sort" size={18} />{SORTS.find(s => s[0] === sort)[1]}<Icon name="chevron" size={16} />
           </button>
           <button type="button" className={'chip' + (f.min != null || f.max != null ? ' chip-on' : '')} onClick={() => setSheet('price')}>
             {priceChipLabel(f.min, f.max)}<Icon name="chevron" size={16} />
           </button>
-          <button type="button" className={'chip' + (f.ownerOnly ? ' chip-on' : '')} aria-pressed={f.ownerOnly} onClick={() => set({ ownerOnly: !f.ownerOnly })}>
+          <button type="button" className={'chip' + (f.ownerOnly ? ' chip-on' : '')} aria-pressed={f.ownerOnly} onClick={() => set({ ownerOnly: !f.ownerOnly, dealerOnly: false })}>
             {f.ownerOnly && <Icon name="check" size={18} />}by owner
           </button>
           <button type="button" className={'chip' + (f.photosOnly ? ' chip-on' : '')} aria-pressed={f.photosOnly} onClick={() => set({ photosOnly: !f.photosOnly })}>
@@ -163,7 +184,7 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
       </div>
 
       {zero ? null : rows.length === 0 && areaEmpty ? (
-        <AreaEmpty area={area} what={query ? `“${query}”` : subName} options={widenOptions(area, a => groupDealers(applyFilters(anyArea.filter(l => inArea(l, a)), f)).length)}
+        <AreaEmpty area={area} what={query ? `“${query}”` : subName} options={widenOptions(area, a => run(anyArea.filter(l => inArea(l, a)), f).length)}
           onWiden={a => onAreaChange(a)} onAlert={() => setSheet('save')} saved={saved} />
       ) : null}
       {zero ? (
@@ -225,10 +246,10 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
         </Sheet>
       )}
 
-      {sheet === 'facets' && <FacetSheet title={`${f.sub} filters`} facets={facets} attrs={f.attrs || {}}
-        countFor={attrs => groupDealers(applyFilters(all, { ...f, attrs })).length} onClose={() => setSheet(null)} onApply={attrs => { set({ attrs }); setSheet(null) }} />}
+      {sheet === 'facets' && <FilterSheet title={f.sub === 'all' ? 'filters' : `${f.sub} filters`} facets={facets} f={f} query={query}
+        countFor={ff => run(all, ff).length} onClose={() => setSheet(null)} onApply={patch => { set(patch); setSheet(null) }} />}
 
-      {sheet === 'price' && <PriceSheet all={all} f={f} onClose={() => setSheet(null)} onApply={p => { set(p); setSheet(null) }} />}
+      {sheet === 'price' && <PriceSheet all={all} f={f} run={run} onClose={() => setSheet(null)} onApply={p => { set(p); setSheet(null) }} />}
 
       {sheet === 'save' && (
         <SaveSheet name={query || subName} f={f} area={area} onClose={() => setSheet(null)} onSave={entry => {
@@ -348,11 +369,11 @@ function SubSheet({ query, section, sectionId, current, counts, total, onClose, 
   )
 }
 
-function PriceSheet({ all, f, onClose, onApply }) {
+function PriceSheet({ all, f, run, onClose, onApply }) {
   const [min, setMin] = useState(f.min ?? '')
   const [max, setMax] = useState(f.max ?? '')
   const num = v => (v === '' ? null : Math.max(0, Number(v)))
-  const count = groupDealers(applyFilters(all, { ...f, min: num(min), max: num(max) })).length
+  const count = run(all, { ...f, min: num(min), max: num(max) }).length
   const h = priceHistogram
   const top = Math.max(...h.bins)
   const inRange = i => {
@@ -384,44 +405,65 @@ function PriceSheet({ all, f, onClose, onApply }) {
   )
 }
 
-// Category filters sheet: chip groups per facet, a live count on the button.
-function FacetSheet({ title, facets, attrs, countFor, onClose, onApply }) {
-  const [picked, setPicked] = useState(attrs)
-  const [find, setFind] = useState('')
-  const toggle = (key, v) => setPicked(p => {
-    const cur = p[key] || []
-    return { ...p, [key]: cur.includes(v) ? cur.filter(x => x !== v) : [...cur, v] }
-  })
-  const n = countFor(picked)
+// All filters, in one sheet: the subcategory's own (make and model, type, wheel size…),
+// then who's selling and the listing options. Live count on the button; clear resets the sheet.
+function FilterSheet({ title, facets, f, query, countFor, onClose, onApply }) {
+  const [p, setP] = useState(() => Object.fromEntries(SHEET_KEYS.map(k => [k, f[k]])))
+  const [text, setText] = useState(() => (f.attrs?.mm || []).join(' '))
+  const set = patch => setP(x => ({ ...x, ...patch }))
+  const attrs = { ...(p.attrs || {}), ...(text.trim() ? { mm: [text.trim()] } : { mm: [] }) }
+  const toggle = (key, v) => set({ attrs: { ...p.attrs, [key]: (p.attrs?.[key] || []).includes(v) ? p.attrs[key].filter(x => x !== v) : [...(p.attrs?.[key] || []), v] } })
+  const next = { ...p, attrs }
+  const n = countFor({ ...f, ...next })
+  const soldBy = p.ownerOnly ? 'owner' : p.dealerOnly ? 'dealer' : 'all'
+  const chip = (on, label, onClick) => <button key={label} type="button" className={'chip' + (on ? ' chip-on' : '')} aria-pressed={on} onClick={onClick}>{on && <Icon name="check" size={18} />}{label}</button>
   return (
     <Sheet title={title} onClose={onClose} footer={
       <div className="facet-foot">
-        <button type="button" className="btn-text" onClick={() => setPicked({})} disabled={!attrCount(picked)}>clear</button>
-        <button type="button" className="btn-primary" onClick={() => onApply(picked)} disabled={n === 0}>{n === 0 ? 'no matches' : `show ${n} listing${n === 1 ? '' : 's'}`}</button>
+        <button type="button" className="btn-text" onClick={() => { setP({ attrs: {} }); setText('') }}>clear</button>
+        <button type="button" className="btn-primary" onClick={() => onApply(next)} disabled={n === 0}>{n === 0 ? 'no matches' : `show ${n} listing${n === 1 ? '' : 's'}`}</button>
       </div>
     }>
-      {facets.map(fc => {
-        const opts = fc.search && find.trim() ? fc.options.filter(o => o.includes(find.trim().toLowerCase())) : fc.options
-        return (
-          <section key={fc.key} className="facet">
-            <h3 className="area-label">{fc.label}</h3>
-            {fc.search && (
-              <label className="loc-search facet-find" htmlFor={'find-' + fc.key}>
-                <Icon name="search" size={20} />
-                <input id={'find-' + fc.key} type="search" autoComplete="off" placeholder={`find a ${fc.label}`} value={find} onChange={e => setFind(e.target.value)} />
-              </label>
-            )}
-            <div className="presets">
-              {opts.map(o => {
-                const on = (picked[fc.key] || []).includes(o)
-                return <button key={o} type="button" className={'chip' + (on ? ' chip-on' : '')} aria-pressed={on} onClick={() => toggle(fc.key, o)}>{on && <Icon name="check" size={18} />}{o}</button>
-              })}
-              {opts.length === 0 && <p className="sv-none">no {fc.label} matches “{find.trim()}”.</p>}
-            </div>
-            {fc.hint && <p className="facet-hint">{fc.hint}</p>}
-          </section>
-        )
-      })}
+      {facets.map(fc => fc.kind === 'text' ? (
+        <section key={fc.key} className="facet">
+          <h3 className="area-label">{fc.label}</h3>
+          <label className="loc-search facet-find" htmlFor={'find-' + fc.key}>
+            <Icon name="search" size={20} />
+            <input id={'find-' + fc.key} type="search" autoComplete="off" placeholder="e.g. surly long haul trucker" value={text} onChange={e => setText(e.target.value)} />
+          </label>
+          <div className="presets">{fc.suggest.filter(m => !text.trim() || m.includes(text.trim().toLowerCase())).map(m => chip(text.trim().toLowerCase() === m, m, () => setText(text.trim().toLowerCase() === m ? '' : m)))}</div>
+        </section>
+      ) : (
+        <section key={fc.key} className="facet">
+          <h3 className="area-label">{fc.label}</h3>
+          <div className="presets">{fc.options.map(o => chip((p.attrs?.[fc.key] || []).includes(o), o, () => toggle(fc.key, o)))}</div>
+          {fc.hint && <p className="facet-hint">{fc.hint}</p>}
+        </section>
+      ))}
+
+      <section className="facet">
+        <h3 className="area-label">sold by</h3>
+        <div className="segmented" role="radiogroup" aria-label="sold by">
+          {['all', 'owner', 'dealer'].map(o => (
+            <button key={o} type="button" role="radio" aria-checked={soldBy === o} className={soldBy === o ? 'seg-on' : ''}
+              onClick={() => set({ ownerOnly: o === 'owner', dealerOnly: o === 'dealer' })}>{soldBy === o && <Icon name="check" size={18} />}{o}</button>
+          ))}
+        </div>
+      </section>
+
+      <section className="facet">
+        <h3 className="area-label">listing</h3>
+        <div className="presets">
+          {FLAGS.filter(([k]) => k !== 'titles' || query).map(([k, label]) => chip(!!p[k], label, () => set({ [k]: !p[k] })))}
+          {chip(p.bundle !== false, 'bundle duplicates', () => set({ bundle: p.bundle === false }))}
+        </div>
+        <p className="facet-hint">bundle duplicates groups a dealer's repeat posts into one card.</p>
+      </section>
+
+      <section className="facet">
+        <h3 className="area-label">language of posting</h3>
+        <div className="presets">{LANGS.map(l => chip(p.lang === l, l, () => set({ lang: p.lang === l ? null : l })))}</div>
+      </section>
     </Sheet>
   )
 }
@@ -430,7 +472,7 @@ function SaveSheet({ name, f, area, onClose, onSave }) {
   const [label, setLabel] = useState(name)
   const [alerts, setAlerts] = useState(true)
   const [freq, setFreq] = useState('instantly')
-  const parts = [priceChipLabel(f.min, f.max) !== 'price' && priceChipLabel(f.min, f.max), ...attrSummary(f.attrs), f.ownerOnly && 'by owner', f.photosOnly && 'has photos', areaLabel(area)].filter(Boolean)
+  const parts = [priceChipLabel(f.min, f.max) !== 'price' && priceChipLabel(f.min, f.max), ...attrSummary(f.attrs), f.ownerOnly && 'by owner', f.dealerOnly && 'dealers', ...FLAGS.filter(([k]) => k !== 'photosOnly' && f[k]).map(([, l]) => l), f.lang, f.photosOnly && 'has photos', areaLabel(area)].filter(Boolean)
   return (
     <Sheet title="save this search" onClose={onClose} footer={
       <button type="button" className="btn-primary" onClick={() => onSave({ label, detail: parts.join(' · '), alerts })}>save search</button>

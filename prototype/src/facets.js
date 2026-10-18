@@ -3,29 +3,36 @@
 import { detailFor } from './details.js'
 
 const BIKES = {
-  1: { type: 'gravel / touring', size: 'medium', make: 'surly' },
-  3: { type: 'cruiser', make: 'electra' },
-  6: { type: 'road', size: 'medium', make: 'austro daimler' },
-  8: { type: 'city', size: 'medium', make: 'surly' },
-  10: { type: 'road', size: 'large', make: 'trek' },
-  12: { type: 'fat bike', size: 'large', make: 'surly' },
-  14: { type: 'mountain', make: 'fuji' },
-  16: { type: 'cruiser', make: 'haro' },
-  17: { type: 'kids', make: 'schwinn' },
-  19: { type: 'frame only', size: 'medium', make: 'surly' },
-  20: { type: 'cruiser', make: 'haro' },
+  1: { type: 'gravel', size: 'medium', wheel: '700c', material: 'steel', suspension: 'none', brakes: 'mechanical disc', bars: 'drop', electric: 'none', make: 'surly' },
+  3: { type: 'cruiser', wheel: '26"', material: 'aluminum', suspension: 'none', brakes: 'rim', bars: 'cruiser', electric: 'none', make: 'electra' },
+  6: { type: 'road', size: 'medium', wheel: '700c', material: 'carbon', suspension: 'none', brakes: 'rim', bars: 'aero', electric: 'none', make: 'austro daimler' },
+  8: { type: 'city', size: 'medium', wheel: '27.5" / 650b', material: 'steel', suspension: 'none', brakes: 'rim', bars: 'riser', electric: 'none', make: 'surly' },
+  10: { type: 'road', size: 'large', wheel: '700c', material: 'carbon', suspension: 'none', brakes: 'rim', bars: 'drop', electric: 'none', make: 'trek' },
+  12: { type: 'fat bike', size: 'large', wheel: '26"', material: 'steel', suspension: 'none', brakes: 'mechanical disc', bars: 'flat', electric: 'none', make: 'surly' },
+  14: { type: 'mountain', wheel: '29"', material: 'aluminum', suspension: 'front', brakes: 'hydraulic disc', bars: 'flat', electric: 'none', make: 'fuji' },
+  16: { type: 'cruiser', wheel: '26"', material: 'steel', suspension: 'none', brakes: 'coaster', bars: 'cruiser', electric: 'none', make: 'haro' },
+  17: { type: 'kids', wheel: '20"', material: 'steel', suspension: 'none', brakes: 'coaster', bars: 'cruiser', electric: 'none', make: 'schwinn' },
+  19: { type: 'frame only', size: 'medium', wheel: '29"', material: 'steel', suspension: 'none', electric: 'none', make: 'surly' },
+  20: { type: 'cruiser', wheel: '26"', material: 'steel', suspension: 'none', brakes: 'coaster', bars: 'cruiser', electric: 'none', make: 'haro' },
 }
 const HOUSING = {
   4: { beds: '1', pets: ['cats ok'], laundry: 'in building' },
   13: { beds: 'room', pets: [], laundry: 'in unit' },
 }
 
-const CONDITION = { key: 'condition', label: 'condition', options: ['new', 'like new', 'excellent', 'good', 'fair'] }
+const CONDITION = { key: 'condition', label: 'condition', options: ['new', 'like new', 'excellent', 'good', 'fair', 'salvage'] }
 export const FACETS = {
+  // every bicycle filter in the current app, plus frame size
   bicycles: [
-    { key: 'type', label: 'type', options: ['road', 'gravel / touring', 'mountain', 'fat bike', 'city', 'cruiser', 'kids', 'frame only'] },
+    { key: 'mm', label: 'make and model', kind: 'text', suggest: ['surly', 'trek', 'electra', 'fuji', 'haro', 'schwinn', 'austro daimler', 'specialized'] },
+    { key: 'type', label: 'bicycle type', options: ['road', 'gravel', 'mountain', 'hybrid', 'city', 'cruiser', 'fat bike', 'bmx', 'kids', 'frame only'] },
     { key: 'size', label: 'frame size', options: ['small', 'medium', 'large'], hint: 'small ≤ 52 cm / 16 in · medium 53–56 cm / 17–18 in · large 57 cm+ / 19 in+' },
-    { key: 'make', label: 'make', search: true, options: ['austro daimler', 'electra', 'fuji', 'haro', 'schwinn', 'specialized', 'surly', 'trek'] },
+    { key: 'wheel', label: 'wheel size', options: ['20"', '24"', '26"', '27.5" / 650b', '29"', '700c'] },
+    { key: 'material', label: 'frame material', options: ['steel', 'aluminum', 'carbon', 'titanium'] },
+    { key: 'suspension', label: 'suspension', options: ['none', 'front', 'full'] },
+    { key: 'brakes', label: 'brake type', options: ['rim', 'coaster', 'mechanical disc', 'hydraulic disc'] },
+    { key: 'bars', label: 'handlebar type', options: ['drop', 'flat', 'riser', 'cruiser', 'aero'] },
+    { key: 'electric', label: 'electric assist', options: ['none', 'pedal assist', 'throttle'] },
     CONDITION,
   ],
   apartments: [
@@ -50,6 +57,8 @@ export function facetValue(l, key) {
 export function matchesAttrs(l, attrs = {}) {
   return Object.entries(attrs).every(([key, picked]) => {
     if (!picked?.length) return true
+    // make and model: free text against the title and the make
+    if (key === 'mm') return picked.every(t => (l.title + ' ' + (facetValue(l, 'make') || '')).toLowerCase().includes(t.toLowerCase()))
     const v = facetValue(l, key)
     return Array.isArray(v) ? picked.every(p => v.includes(p)) : picked.includes(v)
   })

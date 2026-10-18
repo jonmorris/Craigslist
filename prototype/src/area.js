@@ -7,6 +7,13 @@ export const REGIONS = {
   suburbs: ['Richfield', 'St. Louis Park', 'Edina', 'Bloomington', 'Roseville', 'Brooklyn Park'],
 }
 export const NEIGHBORHOODS = Object.values(REGIONS).flat()
+// craigslist's own sub-areas for Minneapolis (counties), as in the current app's filters
+export const SUBAREAS = {
+  'hennepin co': [...REGIONS.Minneapolis, 'Richfield', 'St. Louis Park', 'Edina', 'Bloomington', 'Brooklyn Park'],
+  'ramsey co': [...REGIONS['St. Paul'], 'Roseville'],
+  'anok/chis/isa': [], 'washington/WI': [], 'dakota/scott': [], 'carv/sher/wri': [],
+}
+const GROUPS = { ...REGIONS, ...SUBAREAS }
 export const RADII = [null, 2, 5, 10, 25]
 
 // approximate neighborhood centers (lat, lng); listings sit at their neighborhood
@@ -30,11 +37,13 @@ export function nearestHood(c) {
 // An area may also have a custom center (dragged on the map): { center: [lat, lng], radius }.
 export const ALL_AREAS = { places: [], radius: null, center: null }
 
+export const placesIn = p => GROUPS[p] || [p]
+
 export function inArea(l, area) {
   if (area.center) return COORDS[l.hood] ? distMeters(COORDS[l.hood], area.center) <= (area.radius ?? 5) * MI : false
   if (area.radius != null && l.mi > area.radius) return false
   if (!area.places.length) return true
-  return area.places.some(p => p === l.hood || (REGIONS[p] || []).includes(l.hood))
+  return area.places.some(p => p === l.hood || (GROUPS[p] || []).includes(l.hood))
 }
 
 // Full label with the city, without repeating it: "minneapolis · all areas",

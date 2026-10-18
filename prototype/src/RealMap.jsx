@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
-import { REGIONS, COORDS, distMeters, MI } from './area.js'
+import { COORDS, distMeters, MI, placesIn } from './area.js'
 import metroMap from './assets/metro-map.webp'
 
 // Map (Leaflet) over a static metro map image for now, georeferenced from known
@@ -20,7 +20,7 @@ const dist = distMeters
 
 export function cutoutFor(area) {
   if (area.center) return { center: area.center, r: (area.radius ?? 5) * MI }
-  const picked = area.places.flatMap(p => REGIONS[p] || [p]).map(n => COORDS[n]).filter(Boolean)
+  const picked = area.places.flatMap(placesIn).map(n => COORDS[n]).filter(Boolean)
   if (!picked.length && area.radius == null) return METRO
   const center = picked.length
     ? [picked.reduce((t, [a]) => t + a, 0) / picked.length, picked.reduce((t, [, b]) => t + b, 0) / picked.length]
