@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { sections, listings, priceHistogram, ageMinutes, city, fmt, visible } from '../data.js'
 import { Icon, ListingCard, Sheet, PeaceSign } from '../ui.jsx'
 import { matches } from '../search.js'
@@ -53,7 +53,9 @@ const priceChipLabel = (min, max) =>
 // layout menu: [key, icon, label]; the bar button always shows the current layout's icon
 const VIEWS = [['grid', 'grid', 'grid'], ['large', 'single', 'large photos'], ['row', 'list', 'list'], ['text', 'text', 'no images']]
 
-export default function CategoryScreen({ sectionId, initialSub = 'all', query = null, area = ALL_AREAS, onAreaChange, onOpenLocation, onBack, onSearch, onOpenListing, toast, onSaveSearch }) {
+// `memory` / `onRemember` keep filters and sort with the route, so coming back from a listing
+// restores them (a top complaint about the current app). Layout is an app-wide preference.
+export default function CategoryScreen({ sectionId, initialSub = 'all', query = null, area = ALL_AREAS, onAreaChange, onOpenLocation, onBack, onSearch, onOpenListing, toast, onSaveSearch, memory = {}, onRemember, view = 'grid', onViewChange }) {
   const section = sectionId ? sections.find(s => s.id === sectionId) : null
   // not memoized: hiding or un-hiding a listing must show up immediately
   const anyArea = visible(listings).filter(l => (!sectionId || l.section === sectionId) && (!query || matches(l, query)))
@@ -64,12 +66,13 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
   const subs = query ? [...subCounts].sort((a, b) => b[1] - a[1]).map(([k]) => k) : section.subs.filter(s => subCounts.has(s))
   const sectionName = section ? section.name : 'everything'
 
-  const [f, setF] = useState({ sub: initialSub, ownerOnly: false, photosOnly: false, min: null, max: null })
-  const [sort, setSort] = useState('newest')
-  const [view, setView] = useState('grid') // grid | large | row | text
+  const [f, setF] = useState(() => memory.f || { sub: initialSub, ownerOnly: false, photosOnly: false, min: null, max: null })
+  const [sort, setSort] = useState(memory.sort || 'newest')
+  const setView = v => onViewChange(v) // grid | large | row | text
   const [menu, setMenu] = useState(false)
   const [sheet, setSheet] = useState(null)
-  const [saved, setSaved] = useState(false)
+  const [saved, setSaved] = useState(!!memory.saved)
+  useEffect(() => { onRemember?.({ f, sort, saved }) }, [f, sort, saved])
   const set = patch => { setF(prev => ({ ...prev, ...patch })); setSaved(false) }
 
   const rows = sortItems(groupDealers(applyFilters(all, f)), sort)

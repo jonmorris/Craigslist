@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import HomeScreen from './screens/HomeScreen.jsx'
 import CategoryScreen from './screens/CategoryScreen.jsx'
 import SearchScreen from './screens/SearchScreen.jsx'
@@ -22,18 +22,24 @@ const store = {
   set(k, v) { try { localStorage.setItem(k, v) } catch { /* storage blocked */ } },
 }
 
+// What a person did survives reloads and reopening the installed app.
+const SAVE_KEY = 'cl-state-v1'
+const kept = (() => { try { return JSON.parse(store.get(SAVE_KEY)) || {} } catch { return {} } })()
+for (const id of kept.hidden || []) hidden.add(id)
+
 export default function App() {
   // Navigation stack: { name: 'home' } | { name: 'cat', section, sub } |
   // { name: 'search', scope, q } | { name: 'results', query, section, sub }
   const [stack, setStack] = useState(() => [{ name: 'home' }, ...(location.hash === '#b' ? [{ name: 'cat', section: 'sale', sub: 'all' }] : [])])
   const route = stack[stack.length - 1]
-  const [saved, setSaved] = useState(seedSaved)
-  const [recent, setRecent] = useState(seedRecent)
-  const [favorites, setFavorites] = useState(() => new Set())
-  const [area, setArea] = useState(ALL_AREAS)
+  const [saved, setSaved] = useState(kept.saved || seedSaved)
+  const [recent, setRecent] = useState(kept.recent || seedRecent)
+  const [favorites, setFavorites] = useState(() => new Set(kept.favorites || []))
+  const [area, setArea] = useState(kept.area || ALL_AREAS)
+  const [view, setView] = useState(kept.view || 'grid')
   const [theme, setTheme] = useState(() => store.get('cl-theme') || 'system')
   const [toastMsg, setToastMsg] = useState(null) // { msg, action?: { label, run } }
-  const [, setHiddenVersion] = useState(0)
+  const [hiddenVersion, setHiddenVersion] = useState(0)
   const screenRef = useRef(null)
   const timer = useRef()
 
@@ -59,7 +65,13 @@ export default function App() {
     return () => removeEventListener('popstate', onPop)
   }, [])
 
-  useEffect(() => { screenRef.current?.scrollTo({ top: 0 }) }, [route])
+  useEffect(() => {
+    store.set(SAVE_KEY, JSON.stringify({ saved, recent, favorites: [...favorites], hidden: [...hidden], area, view }))
+  }, [saved, recent, favorites, hiddenVersion, area, view])
+
+  // New screen → top; back to a screen → where you left it.
+  const routeKey = [stack.length, route.name, route.id, route.query, route.section, route.sub].join('|')
+  useLayoutEffect(() => { screenRef.current?.scrollTo({ top: route.scroll || 0 }) }, [routeKey])
 
   const toast = (msg, action) => {
     clearTimeout(timer.current)
@@ -68,8 +80,11 @@ export default function App() {
   }
   const push = r => {
     try { history.pushState({ depth: stack.length }, '') } catch { /* sandboxed */ }
-    setStack(s => [...s, r])
+    const scroll = screenRef.current?.scrollTop || 0
+    setStack(s => [...s.slice(0, -1), { ...s[s.length - 1], scroll }, r])
   }
+  // screens stash their own state (filters, sort) on their stack entry
+  const remember = mem => setStack(s => s.map((r, i) => (i === s.length - 1 ? { ...r, mem } : r)))
   const back = () => { try { history.back() } catch { setStack(s => s.slice(0, -1)) } }
   const replaceTop = r => setStack(s => [...s.slice(0, -1), r])
   const goHome = () => {
@@ -129,6 +144,7 @@ export default function App() {
           ))}
         </div>
         <p className="panel-note">Bike photos are cropped from the audit screenshots as stand-ins. Listings without photos show the designed no-photo state.</p>
+        <button type="button" className="link panel-reset" onClick={() => { store.set(SAVE_KEY, '{}'); location.reload() }}>reset prototype data</button>
       </aside>
 
       <div className="device">
@@ -141,9 +157,11 @@ export default function App() {
             onOpenList={openCategory} onSearch={scope => openSearch(scope)} onRunSearch={(q, sec) => runSearch(q, sec, 'all')}
             onOpenListing={openListing} toast={toast} />}
           {route.name === 'cat' && <CategoryScreen key={'c' + route.section + route.sub} sectionId={route.section} initialSub={route.sub} area={area} onAreaChange={setArea} onOpenLocation={openLocation}
-            onBack={back} onSearch={searchFromList} onOpenListing={openListing} toast={toast} onSaveSearch={addSaved} />}
+            onBack={back} onSearch={searchFromList} onOpenListing={openListing} toast={toast} onSaveSearch={addSaved}
+            memory={route.mem} onRemember={remember} view={view} onViewChange={setView} />}
           {route.name === 'results' && <CategoryScreen key={'r' + route.query + route.section + route.sub} sectionId={route.section} initialSub={route.sub} query={route.query} area={area} onAreaChange={setArea} onOpenLocation={openLocation}
-            onBack={back} onSearch={searchFromList} onOpenListing={openListing} toast={toast} onSaveSearch={addSaved} />}
+            onBack={back} onSearch={searchFromList} onOpenListing={openListing} toast={toast} onSaveSearch={addSaved}
+            memory={route.mem} onRemember={remember} view={view} onViewChange={setView} />}
           {route.name === 'search' && <SearchScreen key={'s' + stack.length} autoFocus={route.focus !== false} scopeSection={route.scope} initialQuery={route.q} recent={recent} saved={saved}
             onSubmit={runSearch} onOpenSaved={openSaved} onOpenListing={openListing} onBack={back} toast={toast}
             onRemoveRecent={r => setRecent(x => x.filter(y => y !== r))} onClearRecent={() => setRecent([])}

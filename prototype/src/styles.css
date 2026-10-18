@@ -89,6 +89,7 @@ button:disabled::before { display: none; }
 .theme-btn { display: flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border-radius: var(--md-shape-sm); border: 1px solid var(--md-sys-color-outline-variant); font: var(--md-label-large); }
 .theme-on { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); border-color: transparent; }
 .panel-note { font: var(--md-body-small); color: var(--md-sys-color-on-surface-variant); margin-top: 18px; }
+.panel-reset { margin-top: 8px; padding: 0; min-height: 32px; }
 
 /* ---------- shared app components ---------- */
 .pad { padding-inline: 16px; }
