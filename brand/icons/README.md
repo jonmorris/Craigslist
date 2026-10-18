@@ -50,5 +50,7 @@
 | `link` | link |
 | `visibility_off` | hide |
 | `flag` | flag |
+| `notifications_off` | bell-off |
+| `delete` | delete |
 
 Category icons (sell, house, work, handyman, bolt, group) are the candidates for custom brand icons later.

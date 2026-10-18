@@ -215,7 +215,7 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
 
       {sheet === 'save' && (
         <SaveSheet name={query || subName} f={f} area={area} onClose={() => setSheet(null)} onSave={entry => {
-          setSaved(true); setSheet(null); onSaveSearch({ ...entry, query, section: sectionId, sub: f.sub === 'all' ? null : f.sub })
+          setSaved(true); setSheet(null); onSaveSearch({ ...entry, query, section: sectionId, sub: f.sub === 'all' ? null : f.sub, filters: f })
           toast(entry.alerts ? `saved · we'll tell you when new ${query ? '“' + query + '”' : subName} listings post` : 'saved')
         }} />
       )}

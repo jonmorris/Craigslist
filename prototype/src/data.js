@@ -31,8 +31,8 @@ export const sections = [
 ]
 
 export const savedSearches = [
-  { id: 's1', label: 'road bike', detail: 'under $500 · 10 mi', fresh: 3, section: 'sale', sub: 'bicycles' },
-  { id: 's2', label: '1br northeast', detail: 'under $1,400', fresh: 5, section: 'housing', sub: 'apartments' },
+  { id: 's1', label: 'road bike', detail: 'under $500 · 10 mi', fresh: 3, section: 'sale', sub: 'bicycles', filters: { sub: 'bicycles', ownerOnly: false, photosOnly: false, min: null, max: 500 } },
+  { id: 's2', label: '1br northeast', detail: 'under $1,400', fresh: 5, section: 'housing', sub: 'apartments', filters: { sub: 'apartments', ownerOnly: false, photosOnly: false, min: null, max: 1400 } },
   { id: 's3', label: 'fat bike', detail: 'any price', fresh: 1, section: 'sale', sub: 'bicycles' },
 ]
 

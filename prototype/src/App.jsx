@@ -5,6 +5,7 @@ import SearchScreen from './screens/SearchScreen.jsx'
 import DetailScreen from './screens/DetailScreen.jsx'
 import SectionScreen from './screens/SectionScreen.jsx'
 import LocationScreen from './screens/LocationScreen.jsx'
+import SavedScreen from './screens/SavedScreen.jsx'
 import { seedRecent } from './search.js'
 import { ALL_AREAS, areaFull } from './area.js'
 import { savedSearches as seedSaved, hidden } from './data.js'
@@ -102,14 +103,30 @@ export default function App() {
     hidden.add(id); setHiddenVersion(v => v + 1); back()
     toast('hidden · you won\u2019t see it in lists or search', { label: 'undo', run: () => { hidden.delete(id); setHiddenVersion(v => v + 1) } })
   }
-  const toggleFav = id => setFavorites(f => { const n = new Set(f); n.has(id) ? (n.delete(id), toast('removed from saved')) : (n.add(id), toast('saved · find it under saved')); return n })
+  const openSavedTab = (tab = 'listings') => (route.name === 'saved' ? replaceTop({ ...route, tab }) : push({ name: 'saved', tab }))
+  const toggleFav = id => {
+    const had = favorites.has(id)
+    setFavorites(f => { const n = new Set(f); had ? n.delete(id) : n.add(id); return n })
+    had ? toast('removed from saved') : toast('saved', { label: 'view', run: () => openSavedTab('listings') })
+  }
+  const unhide = id => { hidden.delete(id); setHiddenVersion(v => v + 1); toast('back in lists and search') }
+  const toggleAlerts = id => setSaved(list => list.map(s => (s.id === id ? { ...s, alerts: s.alerts === false } : s)))
+  const deleteSaved = id => {
+    const i = saved.findIndex(s => s.id === id), gone = saved[i]
+    setSaved(list => list.filter(s => s.id !== id))
+    toast(`deleted “${gone.label}”`, { label: 'undo', run: () => setSaved(list => [...list.slice(0, i), gone, ...list.slice(i)]) })
+  }
   const openSearch = (scope = null, q = '', focus = true) => push({ name: 'search', scope, q, focus })
   const runSearch = (query, section, sub) => {
     setRecent(r => [query, ...r.filter(x => x !== query)].slice(0, 6))
     push({ name: 'results', query, section, sub })
   }
-  const openSaved = s => (s.query ? push({ name: 'results', query: s.query, section: s.section ?? null, sub: s.sub || 'all' })
-    : push({ name: 'cat', section: s.section, sub: s.sub || 'all' }))
+  // a saved search reopens with its own filters
+  const openSaved = s => {
+    const mem = s.filters ? { f: s.filters, saved: true } : undefined
+    s.query ? push({ name: 'results', query: s.query, section: s.section ?? null, sub: s.sub || 'all', mem })
+      : push({ name: 'cat', section: s.section, sub: s.sub || 'all', mem })
+  }
   const addSaved = entry => setSaved(prev => [{ id: 'u' + Date.now(), fresh: 0, ...entry, label: entry.label }, ...prev])
   // From the results bar: search icon reopens search; "search all sections" swaps scope in place.
   const searchFromList = (scope, q, widen) => (widen ? replaceTop({ name: 'results', query: q, section: null, sub: 'all' }) : openSearch(scope, q))
@@ -150,7 +167,10 @@ export default function App() {
       <div className="device">
         <div className="statusbar" aria-hidden="true"><span>9:41</span><span className="sb-icons">▲ ◢ ▮</span></div>
         <main className="screen" ref={screenRef}>
-          {route.name === 'home' && <HomeScreen toast={toast} onOpen={openCategory} onOpenSection={openSection} onSearch={() => openSearch()} onOpenSaved={openSaved} onOpenListing={openListing} savedSearches={saved} areaText={areaFull(area)} onLocation={() => openLocation()} />}
+          {route.name === 'home' && <HomeScreen toast={toast} onOpen={openCategory} onOpenSection={openSection} onSearch={() => openSearch()} onOpenSaved={openSaved} onOpenListing={openListing} savedSearches={saved} areaText={areaFull(area)} onLocation={() => openLocation()} onManageSaved={() => openSavedTab('searches')} />}
+          {route.name === 'saved' && <SavedScreen tab={route.tab} onTab={tab => replaceTop({ ...route, tab })} favorites={favorites} onToggleFav={toggleFav}
+            saved={saved} onOpenSaved={openSaved} onToggleAlerts={toggleAlerts} onDeleteSaved={deleteSaved} hiddenIds={[...hidden]} onUnhide={unhide}
+            onOpenListing={openListing} onBrowse={goHome} />}
           {route.name === 'location' && <LocationScreen area={area} context={route.context} toast={toast} onClose={back}
             onApply={a => { setArea(a); back(); toast(`location saved · ${areaFull(a)}`) }} />}
           {route.name === 'section' && <SectionScreen key={'sec' + route.section} sectionId={route.section} onBack={back}
@@ -175,7 +195,7 @@ export default function App() {
             {toastMsg.action && <button type="button" className="snack-action" onClick={() => { toastMsg.action.run(); setToastMsg(null) }}>{toastMsg.action.label}</button>}
           </div>
         )}
-        {!['search', 'detail', 'location'].includes(route.name) && <BottomNav onTap={toast} onHome={goHome} />}
+        {!['search', 'detail', 'location'].includes(route.name) && <BottomNav onTap={toast} onHome={goHome} onSaved={() => openSavedTab()} active={route.name === 'saved' ? 'saved' : 'home'} />}
         <div className="gesture" aria-hidden="true" />
       </div>
     </div>
