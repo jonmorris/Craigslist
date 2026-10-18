@@ -1,0 +1,129 @@
+# Decision log: today's app vs. the redesign
+
+Every change from the current Craigslist Android app (v1.29.1), and why we made it. It's for building the presentation and for answering "why is this different?"
+
+**How to read it:**
+- **Today:** what the current app does. Screenshot numbers point to [`audit-screens/`](audit-screens/).
+- **Redesign:** what the prototype does instead.
+- **Why:** the reason for the change.
+- **Source:** where the evidence came from:
+  - **audit:** our UX audit ([`audit.md`](audit.md))
+  - **users:** what people praise or complain about (midflow audit, from review and press summaries)
+  - **review:** feedback from testing the prototype on a phone
+  - **brief:** the design challenge
+  - **platform:** Android / Material 3 conventions
+
+Kept on purpose: things we deliberately did *not* change are listed too, because "we kept this" is a decision.
+
+Update this log with every change to the prototype (see `CLAUDE.md`).
+
+---
+
+## Home
+
+| # | Today | Redesign | Why | Source |
+|---|---|---|---|---|
+| H1 | Home is a search bar plus a two-pane text list of 7 sections and their subcategories, with a "my searches" tab. No listings ([06](audit-screens/06-home-categories.jpg)) | Search, six section tiles with live counts, your saved searches with new-match badges, and a "fresh near you" grid | Home was a directory, not a destination. The first listing was 3+ taps away, and saved searches (the main reason to come back) sat on another tab | audit, brief |
+| H2 | Location is set during onboarding and hard to find later | A location header on home ("Minneapolis, MN · all areas") opens the location picker | Where you're looking changes every result, so it should be visible and one tap away | audit |
+| H3 | Search bar scrolls away | The search bar collapses into a sticky bar with the peace sign as you scroll | Search stays reachable without a separate header | platform (M3 search) |
+| H4 | — | Three home directions were built side by side to compare on the phone, and we chose A (search + browse) | A keeps Craigslist's browse-by-category habit and still puts listings on the first screen | review |
+
+## Category → list
+
+| # | Today | Redesign | Why | Source |
+|---|---|---|---|---|
+| L1 | A category picker modal lists subcategories A–Z ("atvs" and "aviation" above bicycles), with an odd outlined "raised tab" ([07](audit-screens/07-category-picker-modal.jpg)) | A section landing page: popular subcategories ordered by demand, trending searches, just posted, then the full A–Z list with "none nearby" marked | People pick a subcategory in context, not from an alphabetical wall. A–Z is kept for people who know what they want | audit |
+| L2 | Changing category or area means backing out | A scope row of two full-size buttons under the title: **category** and **area** | Both change the results, so both should be one tap away. The first version used small text links that failed the 48dp touch-target minimum, so they're now 56dp buttons | audit, review, platform |
+| L3 | Filter, sort, map, view, save search and share all sit behind ☰, which on Android reads as a navigation drawer ([14](audit-screens/14-list-overflow-menu.jpg)) | Filter chips in plain sight (filters, sort, price, sold by, has photos), a layout button in the top bar, and a save-search button | The main actions were hidden, and the icon misled | audit, platform |
+| L4 | Cards show a cut-off title and a price ([12](audit-screens/12-list-bicycles-grid.jpg)) | Cards show price, "below/above typical", title, age, neighborhood and distance | Buyers judge by price, freshness and distance, and we shouldn't make them open each listing for those | audit |
+| L5 | Dealer reposts crowd the grid (two Haro bikes at $128) ([12](audit-screens/12-list-bicycles-grid.jpg)). "Hide duplicates" is an option you turn on ([35](audit-screens/35-filter-sort-bikes-options.jpg)) | Dealer reposts are bundled into one card with "+N similar" by default. "Bundle duplicates" can be turned off | Repost spam is a common complaint, so the clean view should be the default | audit, users |
+| L6 | "355 results" takes a full row and says little | A quiet results line: "12,480 listings · 1,312 new today · newest first" | It says how fresh the list is and how it's sorted | audit |
+| L7 | No results says "retry", plus "search a wider area" with no count ([18](audit-screens/18-list-no-results.jpg)) | Each way out shows what it would bring back ("clear the price filter · 6"). Separate states for area-empty (with a small map) and zero-local (the nearest cities that have one, and related categories) | A dead end becomes a next step, and people can see what each option gets them | audit |
+| L8 | List, thumbnail and gallery views behind ☰ | A layout menu: grid, large photos, list, no images, map. The button shows the current layout's icon | The current app's views, plus a no-images mode people use for scanning. It's a menu so the options are named, not a cycle | review |
+| L9 | Going back from a listing (or to home) clears the search filters | Filters, sort and scroll position survive going back. Layout is an app-wide preference. Choices survive reopening the app | "Back wipes my filters" is one of the most common app-review complaints | users |
+| L10 | Save search toggles are **off** by default and labeled "(optional)" ([21](audit-screens/21-save-search.jpg)) | Save search turns alerts on by default (instantly or once a day) | Alerts are the point of saving a search | audit |
+| L11 | Map view, behind ☰ ([14](audit-screens/14-list-overflow-menu.jpg)) | Map view with count bubbles for listings close together (tap to zoom in) and price markers for single ones, Zillow-style. The area is outlined, and tapping opens a preview | Readable at metro scale, and price is the first thing people scan | review |
+| L12 | — | Kept: newest first is the default sort, with no promoted or ranked feed | No algorithm and no ads is one of the most-praised things about Craigslist | users |
+
+## Filters and sort
+
+| # | Today | Redesign | Why | Source |
+|---|---|---|---|---|
+| F1 | A full-screen "filter & sort" page with **two apply buttons** (top and bottom) and attributes collapsed into accordions ([15](audit-screens/15-filter-sort-price-histogram.jpg), [16](audit-screens/16-filter-category-attributes.jpg), [33](audit-screens/33-filter-sort-bikes-top.jpg)–[35](audit-screens/35-filter-sort-bikes-options.jpg)) | One bottom sheet with every group open as chips, a single button that shows the live result count ("show 4 listings"), and clear | No hidden accordions or duplicate buttons, and you can see what a filter will do before you apply it | audit, platform |
+| F2 | Bicycle filters: make and model, type, wheel size, frame material, suspension, brake type, handlebar type, electric assist, condition ([34](audit-screens/34-filter-sort-bikes-attributes.jpg)) | All of them, plus **frame size** (with cm/in ranges), which riders shop by first | Parity first; frame size answers "will it fit me?" | audit, review |
+| F3 | Make-and-model typeahead ([17](audit-screens/17-filter-make-model-typeahead.jpg)) | A make-and-model search with quick picks of common makes. It also matches titles, so "long haul trucker" works | Kept one of the current app's hidden gems | audit |
+| F4 | Sold by: all / owner / dealer | A **sold by** chip that opens all / owner / dealer, mirrored in the sheet | It's a three-way choice, not a toggle | review |
+| F5 | Has image, hide duplicates, posted today, search titles only, cryptocurrency ok, delivery available, language of posting ([35](audit-screens/35-filter-sort-bikes-options.jpg)) | All of them. "Search titles only" shows only in search results, where it means something | Parity | review |
+| F6 | Price: min–max fields, with the histogram and average shown in filters ([15](audit-screens/15-filter-sort-price-histogram.jpg)) | A price sheet with the histogram, the typical price for Minneapolis, presets (free, under $100…) and min–max | The histogram is unique market data, and it was buried | audit |
+| F7 | A free toggle | "Free" as a price preset, plus "free" shown in green on cards | Free is a price, so it belongs with price | review |
+| F8 | Sort: newest, oldest, low→high, high→low, distance | The same five, in a sort sheet | Parity | review |
+| F9 | Sub-areas as filter chips (hennepin co, ramsey co, anok/chis/isa, washington/WI, dakota/scott, carv/sher/wri) ([35](audit-screens/35-filter-sort-bikes-options.jpg)) | Sub-areas live in the location picker, next to neighborhoods and distance | Where you're looking is one decision, so it's in one place | review |
+
+## Location
+
+| # | Today | Redesign | Why | Source |
+|---|---|---|---|---|
+| A1 | Two different radius controls: a 30–200 mi dialog ([20](audit-screens/20-list-radius-dialog.jpg)) and a map picker ([22](audit-screens/22-location-picker-50mi.jpg)) | One full-screen location picker everywhere (home, lists, search), with save in the top bar | One control, one mental model | audit |
+| A2 | Radius only, 30 mi minimum. 50 mi from Epping, NH includes Boston | Regions (Minneapolis, St. Paul, the suburbs), neighborhoods, sub-areas, and distance of 2, 5, 10 or 25 mi | People in Minneapolis think in neighborhoods, and radius-only is an app-review complaint | audit, users |
+| A3 | Two confirm buttons ("apply" and "choose this location"). Panning snaps the center to the nearest town and gives odd radii ("49 miles") ([23](audit-screens/23-location-picker-panned-cornish.jpg)) | One save. Dragging the map sets a custom center ("near Uptown"), and the radius snaps to the set distances | No duplicate actions and no surprising values | audit |
+| A4 | Kept: a fixed purple circle over a map that pans underneath, with the outside tinted | The same interaction, without the center dot or "you" marker | People already know it, and the cutout reads well | review |
+| A5 | No count while choosing | A live count ("about 21,330 listings", or the list's own count), plus a warning when an area has nothing | You can see the result of a choice before saving it | audit |
+| A6 | Kept: Craigslist capitalizes place names | Place names capitalized with state abbreviations ("Minneapolis, MN"); the rest of the UI stays lowercase | Matches Craigslist's own convention (our first pass had them lowercase) | review |
+
+## Search
+
+| # | Today | Redesign | Why | Source |
+|---|---|---|---|---|
+| S1 | Empty: "You do not seem to have any search history," with random suggestions (plumber, community volunteer) ([08](audit-screens/08-search-focus-empty-history.jpg)) | Recent searches, saved searches with new-match badges, trending in Minneapolis | An empty screen becomes a useful starting point | audit |
+| S2 | Suggestions shown in quotes, like raw data, with no thumbnails ([09](audit-screens/09-search-typeahead-keyboard.jpg)) | Completions with the typed part plain and the rest bold, an arrow to edit the search, and up to three matching listings with thumbnails | Reads like a modern search, and you can jump straight to a listing | audit, platform |
+| S3 | Results-by-category list is noisy ("all housing 399" for "bike") and counts don't match between screens ([10](audit-screens/10-search-results-by-category.jpg), [11](audit-screens/11-search-results-loading-overlay.jpg)) | "Search in" rows with the most relevant first, counted the same way as the results screen | Counts that disagree erode trust | audit |
+| S4 | A translucent "searching for…" overlay sits on top of the results ([11](audit-screens/11-search-results-loading-overlay.jpg)) | No overlay | It hid the very thing you were waiting for | audit |
+| S5 | — | The location chip in search opens the same picker and shows counts for the current query | One location control everywhere (A1) | audit |
+| S6 | No results | "Search all areas (n listings)" when only the area is too tight, or an offer to save the search and get an alert | A no-result search becomes an alert | audit |
+| S7 | Kept: scrolling the suggestions closes the keyboard | Same | It's the native behavior people expect | review |
+
+## Listing detail
+
+| # | Today | Redesign | Why | Source |
+|---|---|---|---|---|
+| D1 | Specs are right-aligned purple text that looks like links ([25](audit-screens/25-detail-specs.jpg)) | A readable spec grid (label above value) | Specs aren't links | audit |
+| D2 | Distance never shown; the example listing was ~40 mi away ([24](audit-screens/24-detail-top-gallery.jpg)) | "Longfellow · 3.8 mi away · posted 38 min ago" under the title, plus an approximate-area map card | Distance decides whether a pickup is worth it | audit |
+| D3 | Reply opens another menu (email / view or copy contact info / cancel), two taps for the main job ([28](audit-screens/28-detail-reply-sheet.jpg)) | **Message seller** is the primary button. Quick replies ("is this still available?", an offer at the typical price) and a choice of craigslist chat or email relay | One tap for the main job, plus a nudge past the blank-message problem (and the flaky-buyer complaint) | audit, users |
+| D4 | No seller context or safety guidance. "Flag as prohibited" sits in an overflow sheet next to "vote for best-of" ([27](audit-screens/27-detail-overflow-sheet.jpg)) | A seller card (on craigslist since, other listings), a report link in plain sight, and a meet-somewhere-public safety tip | Scams are the top complaint, and trust has to show up when someone gets in touch | audit, users |
+| D5 | Favorite ★ and hide 🗑 are gray squares that look disabled, and hide has a scary trash icon ([26](audit-screens/26-detail-map-actions.jpg)) | Hide (eye-off icon) and save (heart) as tonal buttons next to message seller, with undo after hiding | They read as active, and hide is reversible, not a deletion | audit, review |
+| D6 | Share and "this listing" options in an overflow menu that duplicates share | Share over the photo opens the Android share sheet (which has copy link). The overflow menu is removed | One way to share, using the platform's own sheet | review, platform |
+| D7 | Kept: prev/next through results ([24](audit-screens/24-detail-top-gallery.jpg)) | A "3 of 17" pager over the photo, plus a sideways swipe on the page | Kept a hidden gem and made it a gesture | audit |
+| D8 | — | A fair-price bar: "bicycles in Minneapolis usually go for $300–$1,200. this one is $235" | Uses the histogram data to answer "is this a good price?" | audit |
+| D9 | The listing ID is shown on the page | Removed (it's in the shared link) | It means nothing to buyers | audit |
+| D10 | Kept: approximate location circle, never an exact pin | Same, on the detail map and the results map | Privacy first | audit |
+| D11 | — | Similar listings, and a "have one to sell?" prompt | Keeps browsing going and feeds the supply side | brief |
+
+## Saved
+
+| # | Today | Redesign | Why | Source |
+|---|---|---|---|---|
+| V1 | Favorites and saved searches live in separate places. Saved searches can't be edited, only deleted and re-created | A Saved tab with listings, searches and hidden. Searches reopen with their filters, alerts toggle per search, and delete has undo | Every save and hide now leads somewhere; editing saved searches is a known complaint | users |
+| V2 | Hidden posts are gone for good | A hidden tab with "unhide" | Hiding should be reversible | review |
+
+## Visual design, brand and platform
+
+| # | Today | Redesign | Why | Source |
+|---|---|---|---|---|
+| B1 | A dated custom UI | Material 3 throughout (search view, chips, sheets, segmented buttons, menus, snackbars, nav bar) | It's an Android app, and everything maps to Jetpack Compose components | platform |
+| B2 | Purple accent | A hand-picked, brighter palette pinned over M3 roles generated from the craigslist purple (#9945C8), with a tint per section. Dynamic color was tried first (too neon, then too muted) | Brand recognition plus a brighter, friendlier feel | review |
+| B3 | System sans | Young Serif (headings, wordmark) + Figtree (UI) | Warm and a little old-fashioned like the brand, and clear at small sizes | review |
+| B4 | Mixed icons | Material Symbols Rounded, weight 500 | Native, consistent, and ready for Compose | platform |
+| B5 | Kept: the lowercase, plain-spoken voice, the peace sign, and dark mode | Same voice everywhere, including empty states. Peace sign as the app mark | It's the brand's personality | audit |
+| B6 | — | **Post** stays a filled, highlighted pill in the nav bar (an exception to M3) | Posting is the other half of the marketplace | review |
+| B7 | — | No hover states, only pressed and focus | It's a touch app | review, platform |
+| B8 | — | WCAG 2.1 AA: text at least 4.5:1, control outlines at least 3:1, both themes, 48dp+ touch targets, selection not shown by color alone | Accessibility is table stakes for a client-ready app | review |
+
+## Still open
+
+| # | Question | Notes |
+|---|---|---|
+| O1 | Should "below typical" stay green? | A price far below typical is a classic scam signal. Consider a neutral style with a safety nudge |
+| O2 | Section landing pages add a tap before the list | Keep them, or let the home tiles go straight to the list? |
+| O3 | Seller verification and ratings | A product decision beyond the brief; name it in the deck or leave it out |
+| O4 | Rollout to loyal users who like that Craigslist never changes | How would a redesign this big ship? |
+| O5 | Chat and post flows | Stubs in the prototype |
