@@ -29,7 +29,7 @@ export default function SavedScreen({ tab, onTab, favorites, onToggleFav, saved,
           {favs.map(l => <ListingCard key={l.id} listing={l} fav onFav={onToggleFav} onTap={() => onOpenListing(l.id, favs.map(x => x.id))} />)}
         </div>
       ) : (
-        <Empty icon="heart" title="nothing saved yet" body="tap the heart on a listing and it lands here, even after you close the app." action="browse listings" onAction={onBrowse} />
+        <Empty icon="bookmark" title="nothing saved yet" body="tap the bookmark on a listing and it lands here, even after you close the app." action="browse listings" onAction={onBrowse} />
       ))}
 
       {tab === 'searches' && (saved.length ? (

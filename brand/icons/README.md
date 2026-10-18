@@ -45,6 +45,7 @@
 | `share` | share |
 | `favorite` | heart |
 | `favorite-fill` | heart-fill |
+| `bookmark-fill` | bookmark-fill |
 | `more_vert` | more |
 | `verified_user` | shield |
 | `link` | link |

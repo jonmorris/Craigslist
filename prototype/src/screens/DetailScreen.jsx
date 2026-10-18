@@ -146,7 +146,7 @@ export default function DetailScreen({ id, ids, enter, onPage, favorites, onTogg
           <Icon name="hide" />
         </button>
         <button type="button" className="btn-tonal-icon" aria-label={fav ? 'remove from saved' : 'save'} aria-pressed={fav} onClick={() => onToggleFav(l.id)}>
-          <Icon name={fav ? 'heart-fill' : 'heart'} />
+          <Icon name={fav ? 'bookmark-fill' : 'bookmark'} />
         </button>
         {sent
           ? <button type="button" className="btn-primary btn-sent" onClick={() => toast('chat comes later')}><Icon name="check" />message sent · open chat</button>

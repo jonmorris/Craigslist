@@ -93,7 +93,7 @@ export function ListingCard({ listing, variant = 'grid', onTap, similar = 0, fav
       {card}
       <button type="button" className={'icon-btn card-fav' + (onPhoto ? ' on-photo' : '') + (fav ? ' fav-on' : '')}
         aria-pressed={!!fav} aria-label={fav ? `remove ${listing.title} from saved` : `save ${listing.title}`} onClick={() => onFav(listing.id)}>
-        <Icon name={fav ? 'heart-fill' : 'heart'} size={22} />
+        <Icon name={fav ? 'bookmark-fill' : 'bookmark'} size={22} />
       </button>
     </div>
   )

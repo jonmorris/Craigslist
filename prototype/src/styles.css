@@ -338,7 +338,7 @@ button:disabled::before { display: none; }
 /* floating actions over the photo: fixed scrim gradient keeps them legible on any image */
 .detail-actions { position: absolute; top: 0; left: 0; right: 0; z-index: 5; display: flex; gap: 4px; padding: 8px; background: linear-gradient(rgb(0 0 0 / .35), transparent); }
 .icon-btn.on-photo { background: rgb(0 0 0 / .55); color: #fff; width: 44px; height: 44px; margin: 2px; }
-.icon-btn.on-photo.fav-on { color: #ffc2d4; }
+.icon-btn.on-photo.fav-on { background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); } /* saved: filled bookmark on the brand color, distinct from the dark unsaved circle */
 .gallery-empty + .detail-actions { background: none; }
 .gallery-empty + .detail-actions .icon-btn.on-photo { background: var(--md-sys-color-surface); color: var(--md-sys-color-on-surface); }
 .detail-body { display: flex; flex-direction: column; padding-top: 16px; }
