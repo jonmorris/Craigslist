@@ -124,12 +124,17 @@ export default function App() {
     push({ name: 'results', query, section, sub })
   }
   // a saved search reopens with its own filters
+  // a saved search reopens exactly as saved: filters, sort and area
   const openSaved = s => {
-    const mem = s.filters ? { f: s.filters, saved: true } : undefined
+    if (s.area) setArea(s.area)
+    const mem = { ...(s.filters ? { f: s.filters } : {}), ...(s.sort ? { sort: s.sort } : {}), saved: true, savedId: s.id, savedLabel: s.label }
     s.query ? push({ name: 'results', query: s.query, section: s.section ?? null, sub: s.sub || 'all', mem })
       : push({ name: 'cat', section: s.section, sub: s.sub || 'all', mem })
   }
-  const addSaved = entry => setSaved(prev => [{ id: 'u' + Date.now(), fresh: 0, ...entry, label: entry.label }, ...prev])
+  // same id = an update in place (keeps its spot); new id = a new saved search on top
+  const addSaved = entry => setSaved(prev => prev.some(s => s.id === entry.id)
+    ? prev.map(s => (s.id === entry.id ? { ...s, ...entry, fresh: 0 } : s))
+    : [{ fresh: 0, ...entry }, ...prev])
   // From the results bar: search icon reopens search; "search all sections" swaps scope in place.
   const searchFromList = (scope, q, widen) => (widen ? replaceTop({ name: 'results', query: q, section: null, sub: 'all' }) : openSearch(scope, q))
 

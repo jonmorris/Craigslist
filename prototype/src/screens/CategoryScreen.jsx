@@ -95,7 +95,12 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
   const [menu, setMenu] = useState(false)
   const [sheet, setSheet] = useState(null)
   const [saved, setSaved] = useState(!!memory.saved)
-  useEffect(() => { onRemember?.({ f, sort, saved }) }, [f, sort, saved])
+  // opened from a saved search (or saved here): saving again updates that search instead of adding another
+  const [savedId, setSavedId] = useState(memory.savedId || null)
+  // sort and area are part of a saved search too, so changing them un-saves it
+  const firstRun = useRef(true)
+  useEffect(() => { if (firstRun.current) { firstRun.current = false; return } setSaved(false) }, [sort, JSON.stringify(area)])
+  useEffect(() => { onRemember?.({ f, sort, saved, savedId }) }, [f, sort, saved, savedId])
   // switching subcategory drops the old one's category filters
   const set = patch => { setF(prev => ({ ...prev, ...(patch.sub && patch.sub !== prev.sub ? { attrs: {} } : {}), ...patch })); setSaved(false) }
   const facets = facetsFor(sectionId || all.find(l => l.sub === f.sub)?.section, f.sub)
@@ -227,7 +232,7 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
       )}
 
       {!zero && view !== 'map' && !(rows.length === 0 && areaEmpty) && <button type="button" className={'fab' + (saved ? ' fab-done' : '')} onClick={() => (saved ? toast('manage alerts in saved') : setSheet('save'))}>
-        <Icon name={saved ? 'check' : 'bell'} />{saved ? 'alerts on' : 'save search'}
+        <Icon name={saved ? 'check' : 'bell'} />{saved ? 'alerts on' : savedId ? 'update search' : 'save search'}
       </button>}
 
       {sheet === 'sub' && (
@@ -267,9 +272,12 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
       {sheet === 'price' && <PriceSheet all={all} f={f} run={run} onClose={() => setSheet(null)} onApply={p => { set(p); setSheet(null) }} />}
 
       {sheet === 'save' && (
-        <SaveSheet name={query || subName} f={f} area={area} onClose={() => setSheet(null)} onSave={entry => {
-          setSaved(true); setSheet(null); onSaveSearch({ ...entry, query, section: sectionId, sub: f.sub === 'all' ? null : f.sub, filters: f })
-          toast(entry.alerts ? `saved · we'll tell you when new ${query ? '“' + query + '”' : subName} listings post` : 'saved')
+        <SaveSheet name={query || subName} f={f} area={area} updating={!!savedId} existingLabel={memory.savedLabel} onClose={() => setSheet(null)} onSave={entry => {
+          // a saved search keeps everything: filters, area and sort
+          const id = savedId || 'u' + Date.now()
+          setSaved(true); setSavedId(id); setSheet(null)
+          onSaveSearch({ ...entry, id, query, section: sectionId, sub: f.sub === 'all' ? null : f.sub, filters: f, area, sort })
+          toast(savedId ? 'search updated' : entry.alerts ? `saved · we'll tell you when new ${query ? '“' + query + '”' : subName} listings post` : 'saved')
         }} />
       )}
     </div>
@@ -529,14 +537,14 @@ function FilterSheet({ title, facets, f, query, countFor, onClose, onApply }) {
   )
 }
 
-function SaveSheet({ name, f, area, onClose, onSave }) {
-  const [label, setLabel] = useState(name)
+function SaveSheet({ name, f, area, updating, existingLabel, onClose, onSave }) {
+  const [label, setLabel] = useState(existingLabel || name)
   const [alerts, setAlerts] = useState(true)
   const [freq, setFreq] = useState('instantly')
   const parts = [priceChipLabel(f.min, f.max) !== 'price' && priceChipLabel(f.min, f.max), ...attrSummary(f.attrs), f.ownerOnly && 'by owner', f.dealerOnly && 'by dealer', ...FLAGS.filter(([k]) => k !== 'photosOnly' && f[k]).map(([, l]) => l), f.lang, f.photosOnly && 'has photos', areaLabel(area)].filter(Boolean)
   return (
-    <Sheet title="save this search" onClose={onClose} footer={
-      <button type="button" className="btn-primary" onClick={() => onSave({ label, detail: parts.join(' · '), alerts })}>save search</button>
+    <Sheet title={updating ? 'update this search' : 'save this search'} onClose={onClose} footer={
+      <button type="button" className="btn-primary" onClick={() => onSave({ label, detail: parts.join(' · '), alerts })}>{updating ? 'update search' : 'save search'}</button>
     }>
       <label className="tf" htmlFor="sname">
         <input id="sname" value={label} onChange={e => setLabel(e.target.value)} /><span className="tf-label">name</span>

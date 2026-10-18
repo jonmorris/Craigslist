@@ -104,8 +104,9 @@ Update this log with every change to the prototype (see `CLAUDE.md`).
 
 | # | Today | Redesign | Why | Source |
 |---|---|---|---|---|
-| V1 | Favorites and saved searches live in separate places. Saved searches can't be edited, only deleted and re-created | A Saved tab with listings, searches and hidden. Searches reopen with their filters, alerts toggle per search, and delete has undo | Every save and hide now leads somewhere; editing saved searches is a known complaint | users |
+| V1 | Favorites and saved searches live in separate places. Saved searches can't be edited, only deleted and re-created | A Saved tab with listings, searches and hidden. A saved search keeps **everything**: filters, area and sort. Opening it restores all of them; change anything and the button becomes "update search", which updates that search in place (no duplicates). Alerts toggle per search; delete has undo | Every save and hide now leads somewhere, and "saved searches can't be edited" is a known complaint | users, review |
 | V2 | Hidden posts are gone for good | A hidden tab with "unhide" | Hiding should be reversible | review |
+| V3 | Filters reset between visits; no way to keep "my size" or "owners only" | **Considered, not built:** separate filter preferences (global like owners only, or per category like frame size). Saved searches cover it instead: save "apartments · Northeast · under $1,400 · cats ok" once and jump back in | One feature instead of two similar ones. Most real cases (apartment hunting in an area at a price) are a saved search already. Revisit if people keep re-applying the same size across many searches | review |
 
 ## Visual design, brand and platform
 
