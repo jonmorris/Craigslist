@@ -699,8 +699,11 @@ button:disabled::before { display: none; }
    width through container queries. */
 .screen { container: screen / inline-size; }
 
+@media (max-width: 599px) { .nav-phone-hidden { display: none; } }
+.framed .nav-phone-hidden { display: none; }
 @media (min-width: 600px) {
-  /* navigation rail instead of the bottom bar */
+  /* navigation rail instead of the bottom bar, on every screen */
+  :root:not(.framed) .device:has(> .navbar) .detail-bar { left: 80px; }
   :root:not(.framed) .navbar { top: 0; right: auto; bottom: 0; width: 80px; height: auto; display: flex; flex-direction: column; justify-content: flex-start; gap: 12px; padding: calc(24px + env(safe-area-inset-top, 0px)) 0 0; }
   /* rail items: a rounded square that holds both the icon and the label, so the active
      state is a real target, not a small pill over the icon */
@@ -733,17 +736,29 @@ button:disabled::before { display: none; }
   .grid { grid-template-columns: repeat(auto-fill, minmax(176px, 1fr)); gap: 20px 16px; }
   .pop-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
   .rows:has(> .card-large), .rows:has(> .card-wrap-large) { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px 16px; }
-  .detail { max-width: 760px; margin-inline: auto; }
+  .detail { max-width: 760px; margin-inline: auto; display: grid; grid-template-columns: minmax(0, 1fr); }
+  /* a pinned top bar on larger screens instead of buttons floating over the photo */
+  .detail > .detail-actions { position: sticky; top: 0; grid-row: 1; padding: 8px 16px; background: var(--md-sys-color-surface); }
+  .detail-actions .icon-btn.on-photo { background: none; color: var(--md-sys-color-on-surface); }
+  .detail-actions .pager { background: var(--md-sys-color-surface-container-high); color: var(--md-sys-color-on-surface); }
+  .detail-actions .pager .icon-btn { color: inherit; }
+  .detail > .gallery { grid-row: 2; }
+  .detail > .detail-body { grid-row: 3; }
   .gallery-track { aspect-ratio: 16 / 10; }
   .detail-bar { padding-inline: max(16px, calc((100% - 728px) / 2)); }
 }
 @container screen (min-width: 840px) { .tiles { grid-template-columns: repeat(6, 1fr); } }
-/* wide pane: listing in two columns, photos and the essentials on the left */
+/* wide pane: listing in two columns. A pinned top bar (back, prev/next, share) spans the
+   page; every photo stacks in the left column instead of a swipe gallery; details on the right */
 @container screen (min-width: 800px) {
-  .detail { max-width: 1120px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 32px; align-items: start; padding: 16px 24px 0; }
-  .detail > .gallery { position: sticky; top: 16px; border-radius: var(--md-shape-lg); overflow: hidden; }
-  .detail > .detail-actions { left: 24px; right: auto; width: calc(50% - 40px); top: 16px; border-radius: var(--md-shape-lg) var(--md-shape-lg) 0 0; }
-  .detail > .detail-body { padding-top: 0; }
-  .gallery-track { aspect-ratio: 4 / 3.4; }
+  .detail { max-width: 1120px; margin-inline: auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 32px; align-items: start; padding: 0 24px; }
+  .detail > .detail-actions { position: sticky; top: 0; grid-column: 1 / -1; grid-row: 1; margin: 0 -24px; padding: 8px 16px; background: var(--md-sys-color-surface); }
+  .detail > .gallery { grid-column: 1; grid-row: 2; background: none; }
+  .detail > .detail-body { grid-column: 2; grid-row: 2; padding-top: 16px; }
+  .gallery-track { flex-direction: column; gap: 12px; overflow: visible; aspect-ratio: auto; scroll-snap-type: none; padding-top: 16px; }
+  .slide { height: auto; aspect-ratio: 4 / 3; border-radius: var(--md-shape-lg); }
+  .gallery .dots, .gallery .gallery-count { display: none; }
+  .gallery-empty { padding-top: 16px; }
+  .gallery-empty .nophoto { border-radius: var(--md-shape-lg); }
 }
 

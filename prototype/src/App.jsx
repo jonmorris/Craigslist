@@ -208,7 +208,8 @@ export default function App() {
             {toastMsg.action && <button type="button" className="snack-action" onClick={() => { toastMsg.action.run(); setToastMsg(null) }}>{toastMsg.action.label}</button>}
           </div>
         )}
-        {!['search', 'detail', 'location'].includes(route.name) && <BottomNav onTap={toast} onHome={goHome} onSaved={() => openSavedTab()} active={route.name === 'saved' ? 'saved' : 'home'} />}
+        {/* phones hide the bottom bar on full-screen views; on larger screens the rail stays on every screen */}
+        <BottomNav onTap={toast} onHome={goHome} onSaved={() => openSavedTab()} active={route.name === 'saved' ? 'saved' : 'home'} hideOnPhone={['search', 'detail', 'location'].includes(route.name)} />
         <div className="gesture" aria-hidden="true" />
       </div>
     </div>

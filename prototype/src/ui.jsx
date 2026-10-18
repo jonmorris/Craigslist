@@ -119,9 +119,9 @@ const NAV = [
   ['home', 'home'], ['bookmark', 'saved'], ['plus', 'post'], ['chat', 'chat'], ['person', 'account'],
 ]
 
-export function BottomNav({ onTap, onHome, onSaved, active = 'home' }) {
+export function BottomNav({ onTap, onHome, onSaved, active = 'home', hideOnPhone = false }) {
   return (
-    <nav className="navbar" aria-label="main">
+    <nav className={'navbar' + (hideOnPhone ? ' nav-phone-hidden' : '')} aria-label="main">
       {NAV.map(([icon, label]) => (
         <button key={label} type="button" className={'nav-item' + (label === active ? ' active' : '') + (label === 'post' ? ' nav-post' : '')}
           aria-current={label === active ? 'page' : undefined}
