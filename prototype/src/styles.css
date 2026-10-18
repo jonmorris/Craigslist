@@ -641,7 +641,7 @@ button:disabled::before { display: none; }
 .facet-foot .btn-text:disabled, .btn-primary:disabled { opacity: .38; }
 
 /* results map view */
-.results-map { position: relative; }
+.results-map { position: relative; isolation: isolate; } /* keeps the map's own layers (pins, tip, preview) under the sticky header and sheets */
 .results-map-canvas { border-radius: var(--md-shape-md); }
 .pin-wrap { background: none; border: 0; }
 .pin { position: relative; display: inline-block; translate: -50% calc(-100% - 7px); padding: 4px 10px; border-radius: var(--md-shape-full); background: var(--md-sys-color-surface); color: var(--md-sys-color-on-surface); font: var(--md-label-large); white-space: nowrap; box-shadow: var(--md-elev-1); border: 1px solid var(--md-sys-color-outline); }
