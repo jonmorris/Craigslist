@@ -50,6 +50,9 @@ const priceChipLabel = (min, max) =>
   min == null && max == null ? 'price' : min == null ? `under ${money(max)}` : max == null ? `${money(min)}+` : `${money(min)}–${money(max)}`
 
 // Also renders search results: pass `query` (and optionally no sectionId = all sections).
+const VIEWS = { grid: ['grid', 'grid'], large: ['single', 'one column'], row: ['list', 'list'] }
+const nextView = v => ({ grid: 'large', large: 'row', row: 'grid' })[v]
+
 export default function CategoryScreen({ sectionId, initialSub = 'all', query = null, area = ALL_AREAS, onAreaChange, onOpenLocation, onBack, onSearch, onOpenListing, toast, onSaveSearch }) {
   const section = sectionId ? sections.find(s => s.id === sectionId) : null
   // not memoized: hiding or un-hiding a listing must show up immediately
@@ -63,7 +66,7 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
 
   const [f, setF] = useState({ sub: initialSub, ownerOnly: false, photosOnly: false, min: null, max: null })
   const [sort, setSort] = useState('newest')
-  const [view, setView] = useState('grid')
+  const [view, setView] = useState('grid') // grid | large | row
   const [sheet, setSheet] = useState(null)
   const [saved, setSaved] = useState(false)
   const set = patch => { setF(prev => ({ ...prev, ...patch })); setSaved(false) }
@@ -95,8 +98,9 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
             <h1>{heading}</h1>
           </div>
           <button type="button" className="icon-btn" aria-label={'search ' + subName} onClick={() => onSearch(sectionId, query || '')}><Icon name="search" /></button>
-          <button type="button" className="icon-btn" aria-label={view === 'grid' ? 'show as list' : 'show as grid'}
-            onClick={() => setView(v => (v === 'grid' ? 'list' : 'grid'))}><Icon name={view === 'grid' ? 'list' : 'grid'} /></button>
+          {/* cycles grid → one column of big photos → compact list; the icon shows what's next */}
+          <button type="button" className="icon-btn" aria-label={`show as ${VIEWS[nextView(view)][1]}`}
+            onClick={() => setView(nextView)}><Icon name={VIEWS[nextView(view)][0]} /></button>
         </header>
 
         {/* scope row: what and where, as two full-size switchers (56dp tall, well above the 48dp minimum) */}
@@ -144,7 +148,7 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
             {query ? `${rows.length} result${rows.length === 1 ? '' : 's'}` : f.sub === 'all' && !filtered ? `${fmt(section.count)} listings · ${fmt(section.newToday)} new today` : `${rows.length} match`} · {SORTS.find(s => s[0] === sort)[1]}
           </p>
           <div className={'pad ' + (view === 'grid' ? 'grid' : 'rows')}>
-            {rows.map(({ l, similar }) => <ListingCard key={l.id} listing={l} similar={similar} variant={view === 'grid' ? 'grid' : 'row'} onTap={() => onOpenListing(l.id)} />)}
+            {rows.map(({ l, similar }) => <ListingCard key={l.id} listing={l} similar={similar} variant={view} onTap={() => onOpenListing(l.id)} />)}
           </div>
           <p className="feed-end pad">that's everything posted in the last day.</p>
         </>

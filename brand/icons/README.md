@@ -35,6 +35,7 @@
 | `tune` | sliders |
 | `grid_view` | grid |
 | `view_list` | list |
+| `view_agenda` | single |
 | `check` | check |
 | `swap_vert` | sort |
 | `history` | history |

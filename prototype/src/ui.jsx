@@ -72,7 +72,7 @@ export function Thumb({ listing, big }) {
 export function ListingCard({ listing, variant = 'grid', onTap, similar = 0 }) {
   return (
     <button type="button" className={'card card-' + variant} onClick={onTap}>
-      <Thumb listing={listing} big={variant === 'hero'} />
+      <Thumb listing={listing} big={variant === 'large'} />
       <div className="card-body">
         <div className="card-price-row">
           <span className={'price' + (listing.price === 0 ? ' price-free' : '')}>{priceLabel(listing)}</span>

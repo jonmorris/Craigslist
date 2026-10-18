@@ -134,6 +134,9 @@ button:disabled::before { display: none; }
 .card-meta { font: var(--md-body-small); color: var(--md-sys-color-on-surface-variant); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .card-seller { font: var(--md-label-small); color: var(--md-sys-color-on-surface-variant); }
 .card-row { flex-direction: row; gap: 16px; align-items: flex-start; }
+.card-large .thumb { aspect-ratio: 4 / 3; }
+.card-large .nophoto { aspect-ratio: 2 / 1; } /* no photo: keep the tint short so the feed stays scannable */
+.card-large .card-title { font: var(--md-body-large); }
 .card-row .thumb, .card-row .nophoto { width: 104px; flex: none; }
 .card-row .nophoto .icon { width: 32px; height: 32px; }
 .card-row .nophoto-meta { display: none; }
