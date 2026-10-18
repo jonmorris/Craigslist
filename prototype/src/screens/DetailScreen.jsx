@@ -142,7 +142,7 @@ export default function DetailScreen({ id, ids, enter, onPage, favorites, onTogg
     </div>
 
       <div className="detail-bar">
-        <button type="button" className="btn-tonal-icon" aria-label="hide this listing" onClick={() => onHide(l.id)}>
+        <button type="button" className="btn-tonal-icon" aria-label="hide this listing" onClick={() => setSheet('hide')}>
           <Icon name="hide" />
         </button>
         <button type="button" className="btn-tonal-icon" aria-label={fav ? 'remove from saved' : 'save'} aria-pressed={fav} onClick={() => onToggleFav(l.id)}>
@@ -168,6 +168,9 @@ export default function DetailScreen({ id, ids, enter, onPage, favorites, onTogg
         </Sheet>
       )}
       {sheet === 'report' && <ReportSheet onClose={() => setSheet(null)} onSubmit={() => { setSheet(null); toast('thanks for flagging it. we\u2019ll take a look') }} />}
+      {sheet === 'hide' && <HideSheet onClose={() => setSheet(null)} onHide={() => { setSheet(null); onHide(l.id) }} onReport={() => setSheet('report-hide')} />}
+      {/* reached from the hide sheet: report it and hide it in one go */}
+      {sheet === 'report-hide' && <ReportSheet andHide onClose={() => setSheet(null)} onSubmit={() => { setSheet(null); onHide(l.id, 'reported and hidden · thanks, we\u2019ll take a look') }} />}
     </>
   )
 }
@@ -228,12 +231,26 @@ function AreaMap() {
   )
 }
 
-function ReportSheet({ onClose, onSubmit }) {
+// Hide asks first (it takes the post out of every list), with a way to report it instead of just hiding.
+function HideSheet({ onClose, onHide, onReport }) {
+  return (
+    <Sheet title="hide this listing?" onClose={onClose} footer={
+      <button type="button" className="btn-primary" onClick={onHide}><Icon name="hide" />hide listing</button>
+    }>
+      <p className="sheet-note">it won't show up in your lists or search on this phone. you can bring it back from saved › hidden.</p>
+      <button type="button" className="report-row hide-report" onClick={onReport}>
+        <Icon name="flag" size={20} /><span>something wrong with it? report it and hide it</span><Icon name="arrow" size={18} />
+      </button>
+    </Sheet>
+  )
+}
+
+function ReportSheet({ onClose, onSubmit, andHide = false }) {
   const reasons = ['looks like a scam', 'prohibited item', 'already sold or not available', 'wrong category', 'offensive or inappropriate']
   const [why, setWhy] = useState(null)
   return (
     <Sheet title="report this listing" onClose={onClose} footer={
-      <button type="button" className="btn-primary" disabled={!why} onClick={onSubmit}>send report</button>
+      <button type="button" className="btn-primary" disabled={!why} onClick={onSubmit}>{andHide ? 'report and hide' : 'send report'}</button>
     }>
       <p className="sheet-note">reports are anonymous. the seller won't know it was you.</p>
       <div className="radio-list">

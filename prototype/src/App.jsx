@@ -101,9 +101,9 @@ export default function App() {
   const openSection = id => push({ name: 'section', section: id })
   // one location picker everywhere; lists pass a context so it shows their own count
   const openLocation = (context = null) => push({ name: 'location', context })
-  const hideListing = id => {
+  const hideListing = (id, msg = 'hidden · you won\u2019t see it in lists or search') => {
     hidden.add(id); setHiddenVersion(v => v + 1); back()
-    toast('hidden · you won\u2019t see it in lists or search', { label: 'undo', run: () => { hidden.delete(id); setHiddenVersion(v => v + 1) } })
+    toast(msg, { label: 'undo', run: () => { hidden.delete(id); setHiddenVersion(v => v + 1) } })
   }
   const openSavedTab = (tab = 'listings') => (route.name === 'saved' ? replaceTop({ ...route, tab }) : push({ name: 'saved', tab }))
   const toggleFav = id => {
