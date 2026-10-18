@@ -149,13 +149,12 @@ button:disabled::before { display: none; }
 
 /* M3 navigation bar */
 .navbar { position: absolute; left: 0; right: 0; bottom: 0; z-index: 20; height: 80px; display: grid; grid-template-columns: repeat(5, 1fr); background: var(--md-sys-color-surface-container); }
-.nav-item { display: flex; flex-direction: column; align-items: center; padding-top: 12px; gap: 4px; font: var(--md-label-medium); color: var(--md-sys-color-on-surface-variant); }
-.nav-item::before { display: none; }
-.nav-pill { position: relative; width: 64px; height: 32px; border-radius: var(--md-shape-full); display: grid; place-items: center; }
-.nav-pill::before { content: ""; position: absolute; inset: 0; border-radius: inherit; background: currentColor; opacity: 0; transition: opacity .15s; }
-.nav-item:active .nav-pill::before { opacity: .10; }
-.nav-item.active { color: var(--md-sys-color-on-surface); font-weight: 700; }
-.nav-item.active .nav-pill { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); }
+.nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; width: 64px; height: 64px; margin: 8px auto 0; border-radius: var(--md-shape-lg); font: var(--md-label-medium); color: var(--md-sys-color-on-surface-variant); }
+/* the whole rounded square is the target and the active indicator (icon and label inside), on the bottom bar and the rail */
+.nav-item::before { content: ""; position: absolute; inset: 0; border-radius: inherit; background: currentColor; opacity: 0; transition: opacity .15s; }
+.nav-item:active::before { opacity: .10; }
+.nav-pill { position: relative; display: grid; place-items: center; }
+.nav-item.active { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); font-weight: 700; }
 
 /* M3 snackbar */
 .snackbar { position: absolute; z-index: 22; left: 16px; right: 16px; bottom: 92px; min-height: 48px; display: flex; align-items: center; padding: 14px 16px; border-radius: var(--md-shape-xs); background: var(--md-sys-color-inverse-surface); color: var(--md-sys-color-inverse-on-surface); font: var(--md-body-medium); box-shadow: var(--md-elev-3); animation: fade-in .2s var(--md-ease-emph-decel); }
@@ -282,8 +281,7 @@ button:disabled::before { display: none; }
 /* Post: deliberate brand departure from the standard nav bar. New listings are the
    marketplace's supply (and paid categories are revenue), so the entry point stays
    prominent: an always-on primaryContainer indicator, same size and position as the others. */
-.nav-post { color: var(--md-sys-color-primary); font-weight: 700; }
-.nav-post .nav-pill { background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); }
+.nav-post { background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); font-weight: 700; }
 
 /* ---------- (c) search: M3 full-screen search view ---------- */
 .search { min-height: 100%; background: var(--md-sys-color-surface-container-high); animation: fade-in .25s var(--md-ease-emph-decel); }
@@ -708,7 +706,7 @@ button:disabled::before { display: none; }
   :root:not(.framed) .navbar { top: 0; right: auto; bottom: 0; width: 80px; height: auto; display: flex; flex-direction: column; justify-content: flex-start; gap: 12px; padding: calc(24px + env(safe-area-inset-top, 0px)) 0 0; }
   /* rail items: a rounded square that holds both the icon and the label, so the active
      state is a real target, not a small pill over the icon */
-  :root:not(.framed) .nav-item { width: 64px; height: 64px; margin-inline: auto; padding: 0; justify-content: center; gap: 4px; border-radius: var(--md-shape-lg); }
+  :root:not(.framed) .nav-item { width: 64px; height: 64px; margin: 0 auto; padding: 0; justify-content: center; gap: 4px; border-radius: var(--md-shape-lg); }
   :root:not(.framed) .nav-item .nav-pill { width: auto; height: auto; background: none; }
   :root:not(.framed) .nav-item::before { display: block; content: ""; position: absolute; inset: 0; border-radius: inherit; background: currentColor; opacity: 0; transition: opacity .15s; }
   :root:not(.framed) .nav-item:active::before { opacity: .10; }
