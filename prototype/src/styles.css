@@ -137,7 +137,7 @@ button:disabled::before { display: none; }
 .card-large .thumb { aspect-ratio: 4 / 3; }
 .card-large .nophoto { aspect-ratio: 2 / 1; } /* no photo: keep the tint short so the feed stays scannable */
 .card-large .card-title { font: var(--md-body-large); }
-.rows-text { gap: 0; }
+.rows.rows-text { gap: 0; }
 .card-text { padding: 12px 0; border-radius: 0; border-bottom: 1px solid var(--md-sys-color-outline-variant); }
 .card-row .thumb, .card-row .nophoto { width: 104px; flex: none; }
 .card-row .nophoto .icon { width: 32px; height: 32px; }
