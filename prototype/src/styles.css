@@ -773,8 +773,19 @@ button:disabled::before { display: none; }
 .post-fill { flex: none; display: inline-flex; align-items: center; gap: 4px; padding: 0 8px; margin-right: 4px; min-height: 48px; }
 .post-progress { height: 4px; background: var(--md-sys-color-surface-container-highest); }
 .post-progress span { display: block; height: 100%; background: var(--md-sys-color-primary); transition: width .3s var(--md-ease-emph-decel); }
-.post-body { padding-top: 8px; display: flex; flex-direction: column; gap: 12px; }
-.post-h { font: var(--md-title-large); font-family: var(--brand); margin-top: 16px; }
+.post-body { padding-top: 8px; display: flex; flex-direction: column; }
+/* form rhythm: a label sits 8 above its field; fields and groups are 24–28 apart; section headings 32 */
+.post-body > * { margin-top: 16px; }
+.post-body > :first-child { margin-top: 16px; }
+.post-body > .post-h { margin-top: 32px; }
+.post-body > .post-h:first-child { margin-top: 16px; }
+.post-body > .post-h + * { margin-top: 12px; }
+.post-body > .area-label { margin: 24px 0 0; color: var(--md-sys-color-on-surface); }
+.post-body > .area-label + * { margin-top: 8px; }
+.post-body > .post-tf { margin-top: 28px; }
+.post-body > .post-hint, .post-body > .post-error { margin-top: 8px; }
+.post-body > .switch-row { margin-top: 16px; }
+.post-h { font: var(--md-title-large); font-family: var(--brand); }
 .post-sections { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .post-section { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: 14px; min-height: 80px; border-radius: var(--md-shape-md); font: var(--md-label-large); outline: 2px solid transparent; }
 .post-section.on { outline-color: var(--md-sys-color-primary); }
@@ -788,7 +799,6 @@ button:disabled::before { display: none; }
 .post-cover { position: absolute; left: 6px; bottom: 6px; padding: 2px 8px; border-radius: var(--md-shape-xs); background: rgb(0 0 0 / .6); color: #fff; font: var(--md-label-small); }
 .post-photo-x { position: absolute; top: 2px; right: 2px; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: rgb(0 0 0 / .6); color: #fff; }
 .post-photo-x::after { content: ""; position: absolute; inset: -8px; } /* 48dp touch target */
-.post-tf { margin-top: 12px; }
 .tf-support { display: flex; justify-content: space-between; gap: 12px; padding: 4px 16px 0; font: var(--md-body-small); color: var(--md-sys-color-on-surface-variant); }
 .tf-support em { font-style: normal; color: var(--md-sys-color-error); }
 .tf-support strong { color: var(--md-sys-color-on-surface); }

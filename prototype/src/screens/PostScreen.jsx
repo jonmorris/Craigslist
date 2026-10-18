@@ -100,7 +100,7 @@ export default function PostScreen({ draft, onCancel, onPublish }) {
               <input id="pprice" inputMode="numeric" value={p.price} placeholder="0" onChange={e => set({ price: e.target.value.replace(/\D/g, '').slice(0, 7) })}
                 aria-invalid={tried && p.price === ''} />
               <span className="tf-label">price</span>
-              <span className="tf-support">{tried && p.price === '' ? <em>add a price, or 0 for free</em> : range ? <>{p.sub} in {city.name} usually go for <strong>${fmt(range[0])}–${fmt(range[1])}</strong></> : '0 lists it as free'}</span>
+              <span className="tf-support">{tried && p.price === '' ? <em>add a price, or 0 for free</em> : range ? <span>{p.sub} in {city.name} usually go for <strong>${fmt(range[0])}–${fmt(range[1])}</strong></span> : '0 lists it as free'}</span>
             </label>
 
             {p.section === 'sale' && (
@@ -117,10 +117,10 @@ export default function PostScreen({ draft, onCancel, onPublish }) {
                   <span className="tf-label">make</span>
                 </label>
                 {BIKE_FIELDS.map(([k, label, opts]) => (
-                  <div key={k}>
+                  <React.Fragment key={k}>
                     <h3 className="area-label">{label}</h3>
                     <div className="presets">{opts.map(o => <Chip key={o} on={p.attrs[k] === o} onClick={() => setAttr(k, o)}>{o}</Chip>)}</div>
-                  </div>
+                  </React.Fragment>
                 ))}
                 <p className="post-hint">these match the filters buyers use, so your bike shows up when someone filters by size or type.</p>
               </>
