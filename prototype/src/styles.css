@@ -31,6 +31,7 @@
 }
 
 html, body, #root { height: 100%; }
+body { margin: 0; }
 body { background: var(--md-sys-color-surface-dim); color: var(--md-sys-color-on-surface); font: var(--md-body-medium); -webkit-font-smoothing: antialiased; }
 * { box-sizing: border-box; }
 button { font: inherit; letter-spacing: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; text-align: inherit; -webkit-tap-highlight-color: transparent; position: relative; }
@@ -62,14 +63,15 @@ button:disabled::before { display: none; }
 .home { animation: fade-in .3s var(--md-ease-emph-decel); }
 @keyframes fade-in { from { opacity: 0; } }
 
+/* the phone-frame preview with the overview panel: only with ?frame on a wide screen */
 @media (min-width: 900px) {
-  .stage { align-items: center; justify-content: center; gap: 64px; padding: 24px 32px; min-height: 100%; height: auto; }
-  .panel { display: block; width: 360px; flex: none; }
-  .device { flex: none; align-self: flex-start; position: sticky; top: calc(24px / var(--device-zoom, 1)); width: 432px; height: 935px; zoom: var(--device-zoom, 1); border: 10px solid var(--md-sys-color-inverse-surface); border-radius: 48px; box-shadow: var(--md-elev-3); }
-  .statusbar { display: flex; flex: none; justify-content: space-between; align-items: center; height: 40px; padding: 0 24px; font: var(--md-label-large); background: var(--md-sys-color-surface); }
-  .sb-icons { font-size: 10px; letter-spacing: 3px; }
-  .gesture { display: block; position: absolute; bottom: 8px; left: 50%; translate: -50% 0; width: 108px; height: 4px; border-radius: 2px; background: var(--md-sys-color-on-surface); opacity: .4; z-index: 21; }
-  .navbar { padding-bottom: 16px; height: 96px !important; }
+  .framed .stage { align-items: center; justify-content: center; gap: 64px; padding: 24px 32px; min-height: 100%; height: auto; }
+  .framed .panel { display: block; width: 360px; flex: none; }
+  .framed .device { flex: none; align-self: flex-start; position: sticky; top: calc(24px / var(--device-zoom, 1)); width: 432px; height: 935px; zoom: var(--device-zoom, 1); border: 10px solid var(--md-sys-color-inverse-surface); border-radius: 48px; box-shadow: var(--md-elev-3); }
+  .framed .statusbar { display: flex; flex: none; justify-content: space-between; align-items: center; height: 40px; padding: 0 24px; font: var(--md-label-large); background: var(--md-sys-color-surface); }
+  .framed .sb-icons { font-size: 10px; letter-spacing: 3px; }
+  .framed .gesture { display: block; position: absolute; bottom: 8px; left: 50%; translate: -50% 0; width: 108px; height: 4px; border-radius: 2px; background: var(--md-sys-color-on-surface); opacity: .4; z-index: 21; }
+  .framed .navbar { padding-bottom: 16px; height: 96px !important; }
 }
 
 .eyebrow { font: var(--md-label-medium); letter-spacing: .08em; text-transform: uppercase; color: var(--md-sys-color-on-surface-variant); }
@@ -411,7 +413,7 @@ button:disabled::before { display: none; }
 .btn-tonal-icon { width: 56px; height: 56px; flex: none; border-radius: var(--md-shape-full); display: grid; place-items: center; background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); }
 .btn-tonal-icon[aria-pressed="true"] { color: var(--md-sys-color-primary); }
 .btn-primary:disabled { opacity: .38; }
-@media (min-width: 900px) { .detail-bar { padding-bottom: 28px; } }
+@media (min-width: 900px) { .framed .detail-bar { padding-bottom: 28px; } }
 .screen:has(> .detail) ~ .snackbar { bottom: 96px; }
 /* reply sheet */
 .tf textarea { width: 100%; min-height: 96px; border-radius: var(--md-shape-xs); border: 1px solid var(--md-sys-color-outline); background: transparent; color: var(--md-sys-color-on-surface); padding: 14px 16px; font: var(--md-body-large); resize: none; }
@@ -575,20 +577,18 @@ button:disabled::before { display: none; }
    Chrome can draw the page edge-to-edge behind the navigation bar; pad our own
    bottom bars by the inset and paint everything under them in the nav-bar color
    so the system buttons sit on our surface, not on white. */
-@media (max-width: 899px) {
-  html, body { background: var(--md-sys-color-surface-container); }
-  .device { padding-top: env(safe-area-inset-top, 0px); }
-  .navbar { height: calc(80px + env(safe-area-inset-bottom, 0px)); padding-bottom: env(safe-area-inset-bottom, 0px); }
-  .detail-bar { padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
-  .sheet-foot { padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)); }
-  .sheet-layer .sheet:not(:has(.sheet-foot)) .sheet-body { padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
-  .snackbar { bottom: calc(92px + env(safe-area-inset-bottom, 0px)); }
-  .fab { bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
-  .screen { padding-bottom: calc(160px + env(safe-area-inset-bottom, 0px)); }
-  .screen:has(> .detail) { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
-  .screen:has(> .loc-page) { padding-bottom: calc(32px + env(safe-area-inset-bottom, 0px)); }
-  .screen:has(> .search) { padding-bottom: env(safe-area-inset-bottom, 0px); }
-}
+:root:not(.framed), :root:not(.framed) body { background: var(--md-sys-color-surface-container); }
+:root:not(.framed) .device { padding-top: env(safe-area-inset-top, 0px); }
+:root:not(.framed) .navbar { height: calc(80px + env(safe-area-inset-bottom, 0px)); padding-bottom: env(safe-area-inset-bottom, 0px); }
+:root:not(.framed) .detail-bar { padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
+:root:not(.framed) .sheet-foot { padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)); }
+:root:not(.framed) .sheet-layer .sheet:not(:has(.sheet-foot)) .sheet-body { padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
+:root:not(.framed) .snackbar { bottom: calc(92px + env(safe-area-inset-bottom, 0px)); }
+:root:not(.framed) .fab { bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+:root:not(.framed) .screen { padding-bottom: calc(160px + env(safe-area-inset-bottom, 0px)); }
+:root:not(.framed) .screen:has(> .detail) { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+:root:not(.framed) .screen:has(> .loc-page) { padding-bottom: calc(32px + env(safe-area-inset-bottom, 0px)); }
+:root:not(.framed) .screen:has(> .search) { padding-bottom: env(safe-area-inset-bottom, 0px); }
 
 /* ---------- saved tab ---------- */
 .saved-title { font: var(--md-title-large); font-family: var(--brand); padding-left: 12px; }
@@ -689,3 +689,62 @@ button:disabled::before { display: none; }
 .card-wrap-row .card-fav.fav-on, .card-wrap-text .card-fav.fav-on { color: var(--md-sys-color-primary); }
 .card-wrap-row .card-price-row, .card-wrap-text .card-price-row { padding-right: 36px; }
 .card-wrap-text .card-fav { top: 6px; }
+
+/* ---------- responsive: foldables and tablets (M3 window size classes) ----------
+   compact < 600: the phone layout above.
+   medium 600–839 (e.g. a Galaxy Z Fold opened, portrait): navigation rail, wider grids,
+   content capped and centered, sheets 640 wide.
+   expanded 800+ (the Fold in landscape, tablets): list and listing side by side.
+   Chrome (rail, sheets, snackbar) follows the window; content follows its own pane
+   width through container queries, so a pane in split view lays out like a phone. */
+.screen { container: screen / inline-size; }
+
+@media (min-width: 600px) {
+  /* navigation rail instead of the bottom bar */
+  :root:not(.framed) .navbar { top: 0; right: auto; bottom: 0; width: 80px; height: auto; display: flex; flex-direction: column; justify-content: flex-start; gap: 12px; padding: calc(24px + env(safe-area-inset-top, 0px)) 0 0; }
+  :root:not(.framed) .nav-item { padding-top: 0; }
+  /* the rail's primary action sits first, like an M3 rail FAB */
+  :root:not(.framed) .nav-post { order: -1; margin-bottom: 16px; }
+  :root:not(.framed) .nav-post .nav-pill { width: 56px; height: 56px; border-radius: var(--md-shape-lg); }
+  :root:not(.framed) .device:has(> .navbar) > .screen { margin-left: 80px; }
+  :root:not(.framed) .screen { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+  :root:not(.framed) .fab { bottom: calc(24px + env(safe-area-inset-bottom, 0px)); right: 24px; }
+  :root:not(.framed) .snackbar { left: 50%; right: auto; translate: -50% 0; width: min(560px, calc(100% - 48px)); bottom: calc(24px + env(safe-area-inset-bottom, 0px)); }
+  :root:not(.framed) .screen:has(> .detail) ~ .snackbar { bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+  /* bottom sheets max out at 640 wide (M3) */
+  :root:not(.framed) .sheet { width: min(640px, 100%); margin-inline: auto; }
+  :root:not(.framed) .sheet-layer:has(.sheet) { align-items: stretch; }
+  /* full-screen pickers and search: centered column */
+  :root:not(.framed) .search, :root:not(.framed) .loc-page { padding-inline: max(0px, calc((100% - 760px) / 2)); }
+  :root:not(.framed) .screen:has(> .search) { background: var(--md-sys-color-surface-container-high); }
+}
+
+/* content inside a pane: capped and centered once it's wider than a phone */
+@container screen (min-width: 600px) {
+  .home, .cat, .section-page, .saved { padding-inline: max(0px, calc((100% - 1040px) / 2)); }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(176px, 1fr)); gap: 20px 16px; }
+  .pop-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+  .rows:has(> .card-large), .rows:has(> .card-wrap-large) { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px 16px; }
+  .detail { max-width: 760px; margin-inline: auto; }
+  .gallery-track { aspect-ratio: 16 / 10; }
+  .detail-bar { padding-inline: max(16px, calc((100% - 728px) / 2)); }
+}
+@container screen (min-width: 840px) { .tiles { grid-template-columns: repeat(6, 1fr); } }
+/* wide pane: listing in two columns, photos and the essentials on the left */
+@container screen (min-width: 900px) {
+  .detail { max-width: 1120px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 32px; align-items: start; padding: 16px 24px 0; }
+  .detail > .gallery { position: sticky; top: 16px; border-radius: var(--md-shape-lg); overflow: hidden; }
+  .detail > .detail-actions { left: 24px; right: auto; width: calc(50% - 40px); top: 16px; border-radius: var(--md-shape-lg) var(--md-shape-lg) 0 0; }
+  .detail > .detail-body { padding-top: 0; }
+  .gallery-track { aspect-ratio: 4 / 3.4; }
+}
+
+/* split view (expanded windows): the list stays on the left, the listing opens on the right */
+.split { flex: 1; min-height: 0; display: flex; }
+.split > .pane { position: relative; min-width: 0; display: flex; flex-direction: column; overflow: hidden; }
+.split > .pane-list { flex: 0 0 clamp(340px, 40%, 520px); border-right: 1px solid var(--md-sys-color-outline-variant); }
+.split > .pane-detail { flex: 1; }
+.split .screen { flex: 1; }
+:root:not(.framed) .split .pane-list .screen { padding-bottom: 32px; }
+.split .pane-list .fab { display: none; }
+.pane-list .card-wrap.is-open > .card, .pane-list .card.is-open { outline: 2px solid var(--md-sys-color-primary); outline-offset: 4px; }

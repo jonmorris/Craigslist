@@ -4,6 +4,11 @@ import App from './App.jsx'
 import './theme.css'
 import './styles.css'
 
+// The app is responsive (phone, foldable, tablet). The phone-frame preview with the overview
+// panel is opt-in for presenting on a laptop: add ?frame to the URL.
+const framed = new URLSearchParams(location.search).has('frame') && matchMedia('(min-width: 900px)').matches
+document.documentElement.classList.toggle('framed', framed)
+
 createRoot(document.getElementById('root')).render(<App />)
 
 // Installable PWA: register the service worker when served over http(s), e.g.
@@ -16,7 +21,7 @@ if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
 // the keyboard (interactive-widget=resizes-content). For browsers that ignore
 // it, size the app to the visible viewport so suggestions can scroll into view.
 const vv = window.visualViewport
-if (vv && matchMedia('(max-width: 899px)').matches) {
+if (vv && !framed) {
   const fit = () => { document.getElementById('root').style.height = vv.height + 'px' }
   vv.addEventListener('resize', fit)
   fit()

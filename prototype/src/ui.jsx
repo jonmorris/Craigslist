@@ -71,9 +71,9 @@ export function Thumb({ listing, big }) {
 
 // `onFav` adds a save heart on the card itself, so people can collect a few listings
 // from a list without opening each one.
-export function ListingCard({ listing, variant = 'grid', onTap, similar = 0, fav, onFav }) {
+export function ListingCard({ listing, variant = 'grid', onTap, similar = 0, fav, onFav, open = false }) {
   const card = (
-    <button type="button" className={'card card-' + variant} onClick={onTap}>
+    <button type="button" className={'card card-' + variant + (open ? ' is-open' : '')} aria-current={open || undefined} onClick={onTap}>
       {variant !== 'text' && <Thumb listing={listing} big={variant === 'large'} />}
       <div className="card-body">
         <div className="card-price-row">
