@@ -14,7 +14,7 @@ import metroMap from './assets/metro-map.webp'
 export const YOU = COORDS.downtown
 const METRO = { center: [44.965, -93.24], r: 15000 } // 'all areas': the core metro, leaving room to pan
 // [south-west, north-east] of the 2000×1851 map image
-const IMAGE_BOUNDS = L.latLngBounds([44.618, -93.9376], [45.5367, -92.5368])
+export const IMAGE_BOUNDS = L.latLngBounds([44.618, -93.9376], [45.5367, -92.5368])
 
 const dist = distMeters
 
@@ -40,7 +40,7 @@ function ring([lat, lng], r, n = 72) {
 }
 
 const cssVar = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim()
-const isDark = () => document.documentElement.dataset.theme === 'dark'
+export const isDark = () => document.documentElement.dataset.theme === 'dark'
   || (document.documentElement.dataset.theme !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches)
 
 // Fixed circle in the middle of the view; the map pans underneath it (like the

@@ -6,6 +6,7 @@ import { taxonomy, zeroLocal } from '../taxonomy.js'
 import { ALL_AREAS, inArea, areaLabel, areaFull, widenOptions } from '../area.js'
 import RealMap from '../RealMap.jsx'
 import { facetsFor, matchesAttrs, attrCount, attrSummary } from '../facets.js'
+import ResultsMap from '../ResultsMap.jsx'
 
 // (b) Category → list. Filters live in plain sight as chips; price uses the
 // fair-price histogram; repeat dealer posts collapse; save search = alerts on.
@@ -53,7 +54,7 @@ const priceChipLabel = (min, max) =>
 
 // Also renders search results: pass `query` (and optionally no sectionId = all sections).
 // layout menu: [key, icon, label]; the bar button always shows the current layout's icon
-const VIEWS = [['grid', 'grid', 'grid'], ['large', 'single', 'large photos'], ['row', 'list', 'list'], ['text', 'text', 'no images']]
+const VIEWS = [['grid', 'grid', 'grid'], ['large', 'single', 'large photos'], ['row', 'list', 'list'], ['text', 'text', 'no images'], ['map', 'map', 'map']]
 
 // `memory` / `onRemember` keep filters and sort with the route, so coming back from a listing
 // restores them (a top complaint about the current app). Layout is an app-wide preference.
@@ -173,10 +174,12 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
           <p className="results-line pad">
             {query ? `${rows.length} result${rows.length === 1 ? '' : 's'}` : f.sub === 'all' && !filtered ? `${fmt(section.count)} listings · ${fmt(section.newToday)} new today` : `${rows.length} match`} · {SORTS.find(s => s[0] === sort)[1]}
           </p>
-          <div className={'pad ' + (view === 'grid' ? 'grid' : view === 'text' ? 'rows rows-text' : 'rows')}>
-            {rows.map(({ l, similar }) => <ListingCard key={l.id} listing={l} similar={similar} variant={view} onTap={() => onOpenListing(l.id, rows.map(r => r.l.id))} />)}
-          </div>
-          <p className="feed-end pad">that's everything posted in the last day.</p>
+          {view === 'map' ? <ResultsMap rows={rows} area={area} onOpen={id => onOpenListing(id, rows.map(r => r.l.id))} /> : <>
+            <div className={'pad ' + (view === 'grid' ? 'grid' : view === 'text' ? 'rows rows-text' : 'rows')}>
+              {rows.map(({ l, similar }) => <ListingCard key={l.id} listing={l} similar={similar} variant={view} onTap={() => onOpenListing(l.id, rows.map(r => r.l.id))} />)}
+            </div>
+            <p className="feed-end pad">that's everything posted in the last day.</p>
+          </>}
         </>
       ) : all.length === 0 && query ? (
         <div className="empty-state pad">
@@ -201,7 +204,7 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
         </div>
       )}
 
-      {!zero && !(rows.length === 0 && areaEmpty) && <button type="button" className={'fab' + (saved ? ' fab-done' : '')} onClick={() => (saved ? toast('manage alerts in saved') : setSheet('save'))}>
+      {!zero && view !== 'map' && !(rows.length === 0 && areaEmpty) && <button type="button" className={'fab' + (saved ? ' fab-done' : '')} onClick={() => (saved ? toast('manage alerts in saved') : setSheet('save'))}>
         <Icon name={saved ? 'check' : 'bell'} />{saved ? 'alerts on' : 'save search'}
       </button>}
 
