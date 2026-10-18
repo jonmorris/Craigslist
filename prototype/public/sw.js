@@ -1,7 +1,7 @@
 // Offline support. The app is one self-contained HTML file, so caching it plus
 // the manifest and icons is the whole app. Navigations go network-first so a
 // new deploy shows up on the next open; everything else is cache-first.
-const CACHE = 'craigslist-proto-v33'
+const CACHE = 'craigslist-proto-v34'
 const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/maskable-512.png']
 
 self.addEventListener('install', e => {

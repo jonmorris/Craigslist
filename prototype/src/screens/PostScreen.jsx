@@ -184,7 +184,9 @@ export default function PostScreen({ draft, onCancel, onPublish }) {
       </div>
 
       <div className="detail-bar post-actions">
-        {step > 0 ? <button type="button" className="btn-tonal post-back" onClick={() => go(step - 1)}>back</button> : <span className="flex1" />}
+        {/* back keeps its slot on step 1 (hidden) so the buttons don't change size between steps */}
+        <button type="button" className="btn-tonal post-back" onClick={() => go(step - 1)} disabled={step === 0}
+          style={step === 0 ? { visibility: 'hidden' } : undefined} aria-hidden={step === 0 || undefined} tabIndex={step === 0 ? -1 : undefined}>back</button>
         {step < 3
           ? <button type="button" className="btn-primary" onClick={next}>next</button>
           : <button type="button" className="btn-primary" disabled={gaps.length > 0} onClick={() => onPublish(p)}><Icon name={editing ? 'check' : 'plus'} />{editing ? 'save changes' : 'post it'}</button>}
