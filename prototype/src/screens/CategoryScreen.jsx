@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { sections, listings, priceHistogram, ageMinutes, city, fmt, visible } from '../data.js'
 import { Icon, ListingCard, Sheet, PeaceSign } from '../ui.jsx'
 import { matches } from '../search.js'
@@ -176,7 +176,7 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
           </button>
           {/* sold by is a three-way choice (all / owner / dealer), so it opens a picker like sort */}
           <button type="button" className={'chip' + (f.ownerOnly || f.dealerOnly ? ' chip-on' : '')} onClick={() => setSheet('soldby')}>
-            {f.ownerOnly ? 'by owner' : f.dealerOnly ? 'by dealer' : 'sold by'}<Icon name="chevron" size={16} />
+            {f.ownerOnly ? 'by owner' : f.dealerOnly ? 'by dealer' : 'all sellers'}<Icon name="chevron" size={16} />
           </button>
           <button type="button" className={'chip' + (f.photosOnly ? ' chip-on' : '')} aria-pressed={f.photosOnly} onClick={() => set({ photosOnly: !f.photosOnly })}>
             {f.photosOnly && <Icon name="check" size={18} />}has photos
@@ -395,14 +395,60 @@ function PriceSheet({ all, f, run, onClose, onApply }) {
     const lo = i * h.step, hi = lo + h.step
     return (num(min) == null || hi > num(min)) && (num(max) == null || lo < num(max))
   }
+
+  // Interactive histogram: tap to drop a $300 bracket centered where you tapped, then drag
+  // either end (or the middle, to slide it). Snaps to $50; the right edge past $2k means "any".
+  const chart = useRef(null)
+  const drag = useRef(null)
+  const SNAP = 50, WIDTH = 300, GAP = 50
+  const lo = num(min), hi = num(max)
+  const has = lo != null || hi != null
+  const pct = v => `${(Math.min(v, h.max) / h.max) * 100}%`
+  const priceAt = x => { const r = chart.current.getBoundingClientRect(); return Math.round(Math.max(0, Math.min(1, (x - r.left) / r.width)) * h.max / SNAP) * SNAP }
+  const put = (a, b) => { setMin(a <= 0 ? '' : String(a)); setMax(b >= h.max ? '' : String(b)) }
+  const down = e => {
+    const part = e.target.dataset.part
+    const at = priceAt(e.clientX)
+    e.currentTarget.setPointerCapture(e.pointerId)
+    if (part) { drag.current = { part, start: at, lo: lo ?? 0, hi: hi ?? h.max }; return }
+    // tap on the chart: a new bracket centered here
+    const a = Math.max(0, Math.min(at - WIDTH / 2, h.max - WIDTH))
+    put(a, a + WIDTH)
+    drag.current = null
+  }
+  const move = e => {
+    const d = drag.current; if (!d) return
+    const at = priceAt(e.clientX)
+    if (d.part === 'lo') put(Math.min(at, d.hi - GAP), d.hi)
+    else if (d.part === 'hi') put(d.lo, Math.max(at, d.lo + GAP))
+    else { const w = d.hi - d.lo, a = Math.max(0, Math.min(d.lo + at - d.start, h.max - w)); put(a, a + w) }
+  }
+  const up = () => { drag.current = null }
+  const nudge = (end, e) => {
+    const step = { ArrowLeft: -SNAP, ArrowDown: -SNAP, ArrowRight: SNAP, ArrowUp: SNAP }[e.key]; if (!step) return
+    e.preventDefault()
+    const a = lo ?? 0, b = hi ?? h.max
+    end === 'lo' ? put(Math.max(0, Math.min(a + step, b - GAP)), b) : put(a, Math.min(h.max, Math.max(b + step, a + GAP)))
+  }
   return (
     <Sheet title="price" onClose={onClose} footer={
       <button type="button" className="btn-primary" onClick={() => onApply({ min: num(min), max: num(max) })}>show {count} listing{count === 1 ? '' : 's'}</button>
     }>
-      <p className="sheet-note">what things sell for in Minneapolis · typical is <strong>{money(h.avg)}</strong></p>
-      <div className="histo" aria-hidden="true">
-        {h.bins.map((b, i) => <span key={i} className={'bar' + (inRange(i) ? ' bar-on' : '')} style={{ height: `${Math.max(4, (b / top) * 100)}%` }} />)}
+      <div className="histo-head">
+        <p className="sheet-note">what things sell for in Minneapolis · typical is <strong>{money(h.avg)}</strong></p>
+        {has && <button type="button" className="btn-text" onClick={() => put(0, h.max)}>clear</button>}
+      </div>
+      <div className="histo" ref={chart} onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up}>
+        {h.bins.map((b, i) => <span key={i} className={'bar' + (has && inRange(i) ? ' bar-on' : '')} style={{ height: `${Math.max(4, (b / top) * 100)}%` }} />)}
         <span className="histo-avg" style={{ left: `${(h.avg / h.max) * 100}%` }}><span>typical</span></span>
+        {has ? (
+          <span className="bracket" data-part="mid" style={{ left: pct(lo ?? 0), width: `calc(${pct(hi ?? h.max)} - ${pct(lo ?? 0)})` }}>
+            <span className="bracket-end bracket-lo" data-part="lo" role="slider" tabIndex={0} aria-label="minimum price"
+              aria-valuemin={0} aria-valuemax={h.max} aria-valuenow={lo ?? 0} aria-valuetext={money(lo ?? 0)} onKeyDown={e => nudge('lo', e)} />
+            <span className="bracket-end bracket-hi" data-part="hi" role="slider" tabIndex={0} aria-label="maximum price"
+              aria-valuemin={0} aria-valuemax={h.max} aria-valuenow={hi ?? h.max} aria-valuetext={hi == null ? 'any' : money(hi)} onKeyDown={e => nudge('hi', e)} />
+          </span>
+        ) : <span className="histo-hint">tap the chart to pick a range</span>}
       </div>
       <div className="histo-axis"><span>$0</span><span>$500</span><span>$1k</span><span>$1.5k</span><span>$2k+</span></div>
       <div className="price-inputs">

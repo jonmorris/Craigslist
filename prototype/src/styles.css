@@ -239,7 +239,7 @@ button:disabled::before { display: none; }
 .radio-on::after { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--md-sys-color-primary); }
 /* price histogram (custom view) */
 .histo { position: relative; height: 96px; display: flex; align-items: flex-end; gap: 3px; margin-top: 16px; }
-.bar { flex: 1; border-radius: var(--md-shape-xs) var(--md-shape-xs) 0 0; background: var(--md-sys-color-surface-container-highest); }
+.bar { flex: 1; border-radius: var(--md-shape-xs) var(--md-shape-xs) 0 0; background: var(--md-sys-color-outline-variant); }
 .bar-on { background: var(--md-sys-color-primary); }
 .histo-avg { position: absolute; top: -16px; bottom: 0; width: 0; border-left: 1.5px dashed var(--md-sys-color-on-surface); }
 .histo-avg span { position: absolute; top: -4px; left: 6px; font: var(--md-label-small); white-space: nowrap; }
@@ -665,3 +665,17 @@ button:disabled::before { display: none; }
 .hide-report { margin: 8px -24px 0; padding: 0 24px; width: calc(100% + 48px); min-height: 56px; }
 .fair-card .fair-nudge { display: flex; gap: 8px; align-items: flex-start; padding-top: 10px; border-top: 1px solid var(--md-sys-color-outline-variant); color: var(--md-sys-color-on-surface); }
 .fair-nudge .icon { flex: none; margin-top: 1px; color: var(--md-sys-color-on-surface-variant); }
+
+/* price histogram: tap to drop a bracket, drag its ends */
+.histo-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.histo-head .btn-text { margin-right: -12px; }
+.histo { touch-action: none; cursor: pointer; }
+.bracket { position: absolute; top: -8px; bottom: -6px; border-radius: var(--md-shape-sm); background: color-mix(in srgb, var(--md-sys-color-primary) 10%, transparent); box-shadow: inset 0 0 0 2px var(--md-sys-color-primary); cursor: grab; }
+.bracket-end { position: absolute; top: 0; bottom: 0; width: 44px; cursor: ew-resize; }
+.bracket-lo { left: -22px; }
+.bracket-hi { right: -22px; }
+/* the visible grip, centered on the edge */
+.bracket-end::after { content: ""; position: absolute; left: 50%; top: 50%; width: 12px; height: 32px; translate: -50% -50%; border-radius: var(--md-shape-full); background: var(--md-sys-color-primary); box-shadow: 0 0 0 2px var(--md-sys-color-surface-container-low); }
+.bracket-end:focus-visible { outline: none; }
+.bracket-end:focus-visible::after { outline: 3px solid var(--md-sys-color-secondary); outline-offset: 2px; }
+.histo-hint { position: absolute; left: 50%; top: 50%; translate: -50% -50%; padding: 4px 12px; border-radius: var(--md-shape-full); background: var(--md-sys-color-inverse-surface); color: var(--md-sys-color-inverse-on-surface); font: var(--md-label-medium); white-space: nowrap; pointer-events: none; }
