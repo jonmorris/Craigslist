@@ -702,10 +702,17 @@ button:disabled::before { display: none; }
 @media (min-width: 600px) {
   /* navigation rail instead of the bottom bar */
   :root:not(.framed) .navbar { top: 0; right: auto; bottom: 0; width: 80px; height: auto; display: flex; flex-direction: column; justify-content: flex-start; gap: 12px; padding: calc(24px + env(safe-area-inset-top, 0px)) 0 0; }
-  :root:not(.framed) .nav-item { padding-top: 0; }
+  /* rail items: a rounded square that holds both the icon and the label, so the active
+     state is a real target, not a small pill over the icon */
+  :root:not(.framed) .nav-item { width: 64px; height: 64px; margin-inline: auto; padding: 0; justify-content: center; gap: 4px; border-radius: var(--md-shape-lg); }
+  :root:not(.framed) .nav-item .nav-pill { width: auto; height: auto; background: none; }
+  :root:not(.framed) .nav-item::before { display: block; content: ""; position: absolute; inset: 0; border-radius: inherit; background: currentColor; opacity: 0; transition: opacity .15s; }
+  :root:not(.framed) .nav-item:active::before { opacity: .10; }
+  :root:not(.framed) .nav-item.active { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); }
+  :root:not(.framed) .nav-item.active .nav-pill { background: none; color: inherit; }
   /* the rail's primary action sits first, like an M3 rail FAB */
-  :root:not(.framed) .nav-post { order: -1; margin-bottom: 16px; }
-  :root:not(.framed) .nav-post .nav-pill { width: 56px; height: 56px; border-radius: var(--md-shape-lg); }
+  :root:not(.framed) .nav-post { order: -1; margin-bottom: 12px; background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); box-shadow: var(--md-elev-1); }
+  :root:not(.framed) .nav-post .nav-pill { background: none; color: inherit; }
   :root:not(.framed) .device:has(> .navbar) > .screen { margin-left: 80px; }
   :root:not(.framed) .screen { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
   :root:not(.framed) .fab { bottom: calc(24px + env(safe-area-inset-bottom, 0px)); right: 24px; }
@@ -721,6 +728,7 @@ button:disabled::before { display: none; }
 
 /* content inside a pane: capped and centered once it's wider than a phone */
 @container screen (min-width: 600px) {
+  .tile { aspect-ratio: auto; min-height: 112px; }
   .home, .cat, .section-page, .saved { padding-inline: max(0px, calc((100% - 1040px) / 2)); }
   .grid { grid-template-columns: repeat(auto-fill, minmax(176px, 1fr)); gap: 20px 16px; }
   .pop-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
