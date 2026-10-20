@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { listings, city, fmt, visible } from '../data.js'
 import { inArea, areaFull } from '../area.js'
-import { countAll } from '../counts.js'
+import { shownIn } from '../counts.js'
+import { sections } from '../data.js'
 import AreaControls from './AreaControls.jsx'
 import RealMap, { YOU } from '../RealMap.jsx'
 import { Icon } from '../ui.jsx'
@@ -20,8 +21,8 @@ export default function LocationScreen({ area, context, onApply, onClose, toast 
   const [next, setNext] = useState(area)
   const [q, setQ] = useState('')
   const all = visible(listings)
-  // Home: every listing in the area (the same count the lists add up to)
-  const homeCount = a => countAll(a)
+  // Home: the section tiles' shown counts, added up (so the picker and the tiles agree)
+  const homeCount = a => sections.reduce((t, s) => t + shownIn(s.id, 'all', a), 0)
   const n = context ? context.countFor(next) : homeCount(next)
   const countText = context ? `${fmt(n)} ${context.noun}` : `${fmt(n)} listing${n === 1 ? '' : 's'}`
   const matches = q.trim() ? SITES.filter(([name]) => name.toLowerCase().includes(q.trim().toLowerCase()) || (/^\d{5}$/.test(q.trim()) && name.startsWith('Minneapolis'))) : []

@@ -7,6 +7,7 @@ import { ALL_AREAS, inArea, areaLabel, areaFull, widenOptions } from '../area.js
 import RealMap from '../RealMap.jsx'
 import { facetsFor, matchesAttrs, attrCount, attrSummary } from '../facets.js'
 import ResultsMap from '../ResultsMap.jsx'
+import { scaledIn, newTodayIn, shareOf } from '../counts.js'
 
 // (b) Category → list. Filters live in plain sight as chips; price uses the
 // fair-price histogram; repeat dealer posts collapse; save search = alerts on.
@@ -90,6 +91,8 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
 
   const [f, setF] = useState(() => memory.f || { sub: initialSub, ownerOnly: false, photosOnly: false, min: null, max: null })
   const [sort, setSort] = useState(memory.sort || 'newest')
+  // counts as people see them: search results are real counts; category lists use the realistic totals (counts.js)
+  const shown = (n, a = area) => (query || !sectionId ? n : scaledIn(sectionId, f.sub, a, n))
   const run = (list, ff) => runFilters(list, ff, query)
   const setView = v => onViewChange(v) // grid | large | row | text
   const [menu, setMenu] = useState(false)
@@ -125,8 +128,8 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
     ...FLAGS.filter(([k]) => k !== 'photosOnly' && f[k]).map(([k, label]) => [`without “${label}”`, { [k]: false }]),
     f.lang && ['any language', { lang: null }],
     f.sub !== 'all' && [`all of ${sectionName}`, { sub: 'all' }],
-  ].filter(Boolean).map(([label, patch]) => [label, patch, run(all, { ...f, ...patch }).length])
-  if (area.places.length || area.radius != null) relaxers.unshift(['search all areas', 'area', run(anyArea, f).length])
+  ].filter(Boolean).map(([label, patch]) => [label, patch, shown(run(all, { ...f, ...patch }).length)])
+  if (area.places.length || area.radius != null) relaxers.unshift(['search all areas', 'area', shown(run(anyArea, f).length, ALL_AREAS)])
 
   return (
     <div className="cat">
@@ -162,7 +165,7 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
           </button>
           <button type="button" className="scope-btn" onClick={() => onOpenLocation({
             noun: query ? `results for “${query}”` : subName,
-            countFor: a => run(anyArea.filter(l => inArea(l, a)), f).length,
+            countFor: a => shown(run(anyArea.filter(l => inArea(l, a)), f).length, a),
           })}>
             <span className="scope-text"><span className="scope-k">area</span><span className="scope-v">{area.places.length || area.center || area.radius != null ? areaLabel(area) : 'Minneapolis, MN'}</span></span>
             <Icon name="chevron" />
@@ -190,7 +193,7 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
       </div>
 
       {zero ? null : rows.length === 0 && areaEmpty ? (
-        <AreaEmpty area={area} what={query ? `“${query}”` : subName} options={widenOptions(area, a => run(anyArea.filter(l => inArea(l, a)), f).length)}
+        <AreaEmpty area={area} what={query ? `“${query}”` : subName} options={widenOptions(area, a => shown(run(anyArea.filter(l => inArea(l, a)), f).length, a))}
           onWiden={a => onAreaChange(a)} onAlert={() => setSheet('save')} saved={saved} />
       ) : null}
       {zero ? (
@@ -199,13 +202,13 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
       ) : rows.length === 0 && areaEmpty ? null : rows.length > 0 ? (
         <>
           <p className="results-line pad">
-            {query ? `${rows.length} result${rows.length === 1 ? '' : 's'}` : f.sub === 'all' && !filtered ? `${fmt(rows.length)} listing${rows.length === 1 ? '' : 's'} · ${rows.filter(r => ageMinutes(r.l.age) <= 180).length} in the last 3 hours` : `${rows.length} match${rows.length === 1 ? '' : 'es'}`} · {SORTS.find(s => s[0] === sort)[1]}
+            {query ? `${rows.length} result${rows.length === 1 ? '' : 's'}` : f.sub === 'all' && !filtered ? `${fmt(shown(rows.length))} listings · ${fmt(newTodayIn(sectionId, area))} new today` : filtered ? `${fmt(shown(rows.length))} match${shown(rows.length) === 1 ? '' : 'es'}` : `${fmt(shown(rows.length))} listing${shown(rows.length) === 1 ? '' : 's'}`} · {SORTS.find(s => s[0] === sort)[1]}
           </p>
           {view === 'map' ? <ResultsMap rows={rows} area={area} favorites={favorites} onToggleFav={onToggleFav} onOpen={id => onOpenListing(id, rows.map(r => r.l.id))} /> : <>
             <div className={'pad ' + (view === 'grid' ? 'grid' : view === 'text' ? 'rows rows-text' : 'rows')}>
               {rows.map(({ l, similar }) => <ListingCard key={l.id} listing={l} similar={similar} variant={view} fav={favorites.has(l.id)} onFav={onToggleFav} onTap={() => onOpenListing(l.id, rows.map(r => r.l.id))} />)}
             </div>
-            <p className="feed-end pad">that's everything posted in the last day.</p>
+            <p className="feed-end pad">{!query && shown(rows.length) > rows.length ? `prototype: showing ${rows.length} sample listings of ${fmt(shown(rows.length))}` : 'that\u2019s everything posted in the last day.'}</p>
           </>}
         </>
       ) : all.length === 0 && query ? (
@@ -236,7 +239,7 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
       </button>}
 
       {sheet === 'sub' && (
-        <SubSheet query={query} section={section} sectionId={sectionId} current={f.sub} counts={subCounts} total={groupDealers(all).length}
+        <SubSheet query={query} section={section} sectionId={sectionId} current={f.sub} counts={subCounts} total={groupDealers(all).length} scale={(sub, n) => (query ? n : scaledIn(sectionId, sub, area, n))} share={shareOf(area)}
           onClose={() => setSheet(null)} onPick={sub => { set({ sub }); setSheet(null) }} toast={toast} />
       )}
       {sheet === 'soldby' && (
@@ -267,9 +270,9 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
       )}
 
       {sheet === 'facets' && <FilterSheet title="filters" facets={facets} f={f} query={query}
-        countFor={ff => run(all, ff).length} onClose={() => setSheet(null)} onApply={patch => { set(patch); setSheet(null) }} />}
+        countFor={ff => shown(run(all, ff).length)} onClose={() => setSheet(null)} onApply={patch => { set(patch); setSheet(null) }} />}
 
-      {sheet === 'price' && <PriceSheet all={all} f={f} run={run} onClose={() => setSheet(null)} onApply={p => { set(p); setSheet(null) }} />}
+      {sheet === 'price' && <PriceSheet all={all} f={f} run={run} shown={shown} onClose={() => setSheet(null)} onApply={p => { set(p); setSheet(null) }} />}
 
       {sheet === 'save' && (
         <SaveSheet name={query || subName} f={f} area={area} updating={!!savedId} existingLabel={memory.savedLabel} onClose={() => setSheet(null)} onSave={entry => {
@@ -368,17 +371,17 @@ function RangeRings({ nearest }) {
   )
 }
 
-function SubSheet({ query, section, sectionId, current, counts, total, onClose, onPick, toast }) {
+function SubSheet({ query, section, sectionId, current, counts, total, scale, share = 1, onClose, onPick, toast }) {
   const rows = query
     ? [...counts].sort((a, b) => b[1] - a[1]).map(([key, n]) => ({ name: key, key, count: n }))
-    : taxonomy[sectionId].map(t => ({ ...t, count: t.key ? counts.get(t.key) || 0 : 0 })) // live, same as the list
+    : taxonomy[sectionId].map(t => ({ ...t, count: t.key ? scale(t.key, counts.get(t.key) || 0) : Math.round(t.count * share) })) // same shown counts as the list and section page
   const allLabel = query ? 'all results' : `all of ${section.name}`
   return (
     <Sheet title={query ? 'show results in' : section.name} onClose={onClose}>
       <div className="radio-list">
         <button type="button" role="radio" aria-checked={current === 'all'} className="radio-row" onClick={() => onPick('all')}>
           <span className={'radio' + (current === 'all' ? ' radio-on' : '')} /><span className="flex1">{allLabel}</span>
-          <span className="az-count">{fmt(total)}</span>
+          <span className="az-count">{fmt(scale('all', total))}</span>
         </button>
         {rows.map(r => (
           <button key={r.name} type="button" role="radio" aria-checked={current === r.key} className="radio-row"
@@ -392,11 +395,11 @@ function SubSheet({ query, section, sectionId, current, counts, total, onClose, 
   )
 }
 
-function PriceSheet({ all, f, run, onClose, onApply }) {
+function PriceSheet({ all, f, run, shown, onClose, onApply }) {
   const [min, setMin] = useState(f.min ?? '')
   const [max, setMax] = useState(f.max ?? '')
   const num = v => (v === '' ? null : Math.max(0, Number(v)))
-  const count = run(all, { ...f, min: num(min), max: num(max) }).length
+  const count = shown(run(all, { ...f, min: num(min), max: num(max) }).length)
   const h = priceHistogram
   const top = Math.max(...h.bins)
   const inRange = i => {

@@ -117,7 +117,7 @@ export default function ResultsMap({ rows, area, onOpen, favorites = new Set(), 
             {picks.map(r => <ListingCard key={r.l.id} listing={r.l} similar={r.similar} variant="row" fav={favorites.has(r.l.id)} onFav={onToggleFav} onTap={() => onOpen(r.l.id)} />)}
           </div>
         </div>
-      ) : <p className="map-tip">{points.length} listing{points.length === 1 ? '' : 's'} · tap {view >= 0 && pins.current?.getLayers().some(x => x.options?.title?.endsWith('listings here')) ? 'a number to zoom in' : 'a price to preview'}</p>}
+      ) : <p className="map-tip">tap {view >= 0 && pins.current?.getLayers().some(x => x.options?.title?.endsWith('listings here')) ? 'a number to zoom in' : 'a price to preview'}</p>}
     </div>
   )
 }

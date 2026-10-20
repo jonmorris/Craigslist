@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { sections, city, fmt, bySection } from '../data.js'
 import { taxonomy, trendingBySection } from '../taxonomy.js'
 import { Icon, ListingCard } from '../ui.jsx'
-import { countIn, freshIn } from '../counts.js'
+import { shownIn, newTodayIn, shareOf } from '../counts.js'
 import { areaFull } from '../area.js'
 
 // Section landing (interstitial between Home and the list): pick where to go
@@ -10,10 +10,14 @@ import { areaFull } from '../area.js'
 // real taxonomy A–Z below, plus what's trending and what's fresh.
 export default function SectionScreen({ area, favorites = new Set(), onToggleFav, sectionId, onBack, onOpenList, onSearch, onRunSearch, onOpenListing, toast }) {
   const s = sections.find(x => x.id === sectionId)
-  // counts are live: what tapping in will show, in the chosen area
-  const subs = taxonomy[sectionId].map(t => ({ ...t, count: t.key ? countIn(sectionId, t.key, area) : 0, fresh: t.key ? freshIn(sectionId, t.key, area) : 0 }))
-  const popular = [...subs].filter(t => t.count > 0).sort((a, b) => b.count - a.count).slice(0, 6)
-  const total = countIn(sectionId, 'all', area), fresh3h = freshIn(sectionId, 'all', area)
+  // the same shown counts as the home tile and the list header (realistic totals, scaled to the area)
+  const share = shareOf(area)
+  const subs = taxonomy[sectionId].map(t => {
+    const count = t.key ? shownIn(sectionId, t.key, area) : Math.round(t.count * share)
+    return { ...t, count, fresh: Math.round(count * 0.09) }
+  })
+  const popular = [...subs].sort((a, b) => b.count - a.count).slice(0, 6)
+  const total = shownIn(sectionId, 'all', area), newToday = newTodayIn(sectionId, area)
   const fresh = bySection(sectionId).slice(0, 4)
   const [showAll, setShowAll] = useState(false)
   const az = showAll ? subs : subs.slice(0, 12)
@@ -32,7 +36,7 @@ export default function SectionScreen({ area, favorites = new Set(), onToggleFav
         <div className="pad section-hero-body">
           <Icon name={s.icon} size={32} />
           <h1>{s.name}</h1>
-          <p>{fmt(total)} listing{total === 1 ? '' : 's'} · {fmt(fresh3h)} in the last 3 hours · {areaFull(area)}</p>
+          <p>{fmt(total)} listing{total === 1 ? '' : 's'} · {fmt(newToday)} new today · {areaFull(area)}</p>
         </div>
       </div>
 

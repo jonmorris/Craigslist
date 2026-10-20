@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { sections, listings, city, fmt, visible, priceLabel } from '../data.js'
 import { Icon, PeaceSign, LocationButton, SearchBar, ListingCard, Thumb } from '../ui.jsx'
-import { countIn } from '../counts.js'
+import { shownIn } from '../counts.js'
 
 // (a) Home — search hero, six section tiles, saved searches, fresh grid.
 export default function HomeScreen({ area, myPosts = [], onOpenAccount, favorites = new Set(), onToggleFav, onManageSaved, toast, onOpen, onOpenSection, onSearch, onOpenSaved, onOpenListing, savedSearches, areaText, onLocation }) {
@@ -37,7 +37,7 @@ export default function HomeScreen({ area, myPosts = [], onOpenAccount, favorite
           <button key={s.id} type="button" className={'tile tint-' + s.id} onClick={() => onOpenSection(s.id)}>
             <Icon name={s.icon} size={26} />
             <span className="tile-name">{s.name}</span>
-            <span className="tile-count">{fmt(countIn(s.id, 'all', area))}</span>
+            <span className="tile-count">{fmt(shownIn(s.id, 'all', area))}</span>
           </button>
         ))}
       </section>
