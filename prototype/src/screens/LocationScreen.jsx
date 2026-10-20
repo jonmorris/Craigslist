@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { listings, city, fmt, visible } from '../data.js'
 import { inArea, areaFull } from '../area.js'
+import { countAll } from '../counts.js'
 import AreaControls from './AreaControls.jsx'
 import RealMap, { YOU } from '../RealMap.jsx'
 import { Icon } from '../ui.jsx'
@@ -19,10 +20,10 @@ export default function LocationScreen({ area, context, onApply, onClose, toast 
   const [next, setNext] = useState(area)
   const [q, setQ] = useState('')
   const all = visible(listings)
-  // Home: mock listings stand in for the whole metro, so scale their share to the real total.
-  const homeCount = a => Math.round((city.total * all.filter(l => inArea(l, a)).length) / all.length / 10) * 10
+  // Home: every listing in the area (the same count the lists add up to)
+  const homeCount = a => countAll(a)
   const n = context ? context.countFor(next) : homeCount(next)
-  const countText = context ? `${fmt(n)} ${context.noun}` : `about ${fmt(n)} listings`
+  const countText = context ? `${fmt(n)} ${context.noun}` : `${fmt(n)} listing${n === 1 ? '' : 's'}`
   const matches = q.trim() ? SITES.filter(([name]) => name.toLowerCase().includes(q.trim().toLowerCase()) || (/^\d{5}$/.test(q.trim()) && name.startsWith('Minneapolis'))) : []
 
   const useMyLocation = () => {

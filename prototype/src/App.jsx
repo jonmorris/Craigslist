@@ -173,13 +173,13 @@ export default function App() {
   // the screen for a stack entry
   const screenFor = (r, o = {}) => (
     <>
-          {r.name === 'home' && <HomeScreen myPosts={posts.map(p => listings.find(l => l.id === p.id)).filter(Boolean)} onOpenAccount={openAccount} favorites={favorites} onToggleFav={toggleFav} toast={toast} onOpen={openCategory} onOpenSection={openSection} onSearch={() => openSearch()} onOpenSaved={openSaved} onOpenListing={o.openListing || openListing} savedSearches={saved} areaText={areaFull(area)} onLocation={() => openLocation()} onManageSaved={() => openSavedTab('searches')} />}
+          {r.name === 'home' && <HomeScreen area={area} myPosts={posts.map(p => listings.find(l => l.id === p.id)).filter(Boolean)} onOpenAccount={openAccount} favorites={favorites} onToggleFav={toggleFav} toast={toast} onOpen={openCategory} onOpenSection={openSection} onSearch={() => openSearch()} onOpenSaved={openSaved} onOpenListing={o.openListing || openListing} savedSearches={saved} areaText={areaFull(area)} onLocation={() => openLocation()} onManageSaved={() => openSavedTab('searches')} />}
       {r.name === 'saved' && <SavedScreen tab={r.tab} onTab={tab => replaceTop({ ...r, tab })} favorites={favorites} onToggleFav={toggleFav}
         saved={saved} onOpenSaved={openSaved} onToggleAlerts={toggleAlerts} onDeleteSaved={deleteSaved} hiddenIds={[...hidden]} onUnhide={unhide}
         onOpenListing={o.openListing || openListing} onBrowse={goHome} />}
       {r.name === 'location' && <LocationScreen area={area} context={r.context} toast={toast} onClose={back}
         onApply={a => { setArea(a); back(); toast(`location saved · ${areaFull(a)}`) }} />}
-      {r.name === 'section' && <SectionScreen favorites={favorites} onToggleFav={toggleFav} key={'sec' + r.section} sectionId={r.section} onBack={back}
+      {r.name === 'section' && <SectionScreen area={area} favorites={favorites} onToggleFav={toggleFav} key={'sec' + r.section} sectionId={r.section} onBack={back}
         onOpenList={openCategory} onSearch={scope => openSearch(scope)} onRunSearch={(q, sec) => runSearch(q, sec, 'all')}
         onOpenListing={o.openListing || openListing} toast={toast} />}
       {r.name === 'cat' && <CategoryScreen key={'c' + r.section + r.sub} sectionId={r.section} initialSub={r.sub} area={area} onAreaChange={setArea} onOpenLocation={openLocation}

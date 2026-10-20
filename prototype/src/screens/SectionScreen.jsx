@@ -2,14 +2,18 @@ import React, { useState } from 'react'
 import { sections, city, fmt, bySection } from '../data.js'
 import { taxonomy, trendingBySection } from '../taxonomy.js'
 import { Icon, ListingCard } from '../ui.jsx'
+import { countIn, freshIn } from '../counts.js'
+import { areaFull } from '../area.js'
 
 // Section landing (interstitial between Home and the list): pick where to go
 // inside a section before seeing listings. Popular subcategories first, the full
 // real taxonomy A–Z below, plus what's trending and what's fresh.
-export default function SectionScreen({ favorites = new Set(), onToggleFav, sectionId, onBack, onOpenList, onSearch, onRunSearch, onOpenListing, toast }) {
+export default function SectionScreen({ area, favorites = new Set(), onToggleFav, sectionId, onBack, onOpenList, onSearch, onRunSearch, onOpenListing, toast }) {
   const s = sections.find(x => x.id === sectionId)
-  const subs = taxonomy[sectionId]
-  const popular = [...subs].sort((a, b) => b.count - a.count).slice(0, 6)
+  // counts are live: what tapping in will show, in the chosen area
+  const subs = taxonomy[sectionId].map(t => ({ ...t, count: t.key ? countIn(sectionId, t.key, area) : 0, fresh: t.key ? freshIn(sectionId, t.key, area) : 0 }))
+  const popular = [...subs].filter(t => t.count > 0).sort((a, b) => b.count - a.count).slice(0, 6)
+  const total = countIn(sectionId, 'all', area), fresh3h = freshIn(sectionId, 'all', area)
   const fresh = bySection(sectionId).slice(0, 4)
   const [showAll, setShowAll] = useState(false)
   const az = showAll ? subs : subs.slice(0, 12)
@@ -28,7 +32,7 @@ export default function SectionScreen({ favorites = new Set(), onToggleFav, sect
         <div className="pad section-hero-body">
           <Icon name={s.icon} size={32} />
           <h1>{s.name}</h1>
-          <p>{fmt(s.count)} listings · {fmt(s.newToday)} new today · {city.name}, {city.area}</p>
+          <p>{fmt(total)} listing{total === 1 ? '' : 's'} · {fmt(fresh3h)} in the last 3 hours · {areaFull(area)}</p>
         </div>
       </div>
 
@@ -45,7 +49,7 @@ export default function SectionScreen({ favorites = new Set(), onToggleFav, sect
           {popular.map(sub => (
             <button key={sub.name} type="button" className={'pop-tile tint-' + sectionId} onClick={() => openSub(sub)}>
               <strong>{sub.name}</strong>
-              <span>{fmt(sub.count)} · {fmt(sub.fresh)} new</span>
+              <span>{fmt(sub.count)} listing{sub.count === 1 ? '' : 's'}{sub.fresh > 0 ? ` · ${sub.fresh} new` : ''}</span>
             </button>
           ))}
         </div>
@@ -76,7 +80,7 @@ export default function SectionScreen({ favorites = new Set(), onToggleFav, sect
           {az.map(sub => (
             <button key={sub.name} type="button" role="listitem" className="az-row" onClick={() => openSub(sub)}>
               <span className="az-name">{sub.name}</span>
-              <span className={'az-count' + (sub.zero ? ' az-none' : '')}>{sub.zero ? 'none nearby' : fmt(sub.count)}</span>
+              <span className={'az-count' + (sub.zero || !sub.count ? ' az-none' : '')}>{sub.zero ? 'none nearby' : fmt(sub.count)}</span>
               <Icon name="arrow" size={18} />
             </button>
           ))}

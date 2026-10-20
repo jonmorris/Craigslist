@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { sections, listings, city, fmt, visible, priceLabel } from '../data.js'
 import { Icon, PeaceSign, LocationButton, SearchBar, ListingCard, Thumb } from '../ui.jsx'
+import { countIn } from '../counts.js'
 
 // (a) Home — search hero, six section tiles, saved searches, fresh grid.
-export default function HomeScreen({ myPosts = [], onOpenAccount, favorites = new Set(), onToggleFav, onManageSaved, toast, onOpen, onOpenSection, onSearch, onOpenSaved, onOpenListing, savedSearches, areaText, onLocation }) {
+export default function HomeScreen({ area, myPosts = [], onOpenAccount, favorites = new Set(), onToggleFav, onManageSaved, toast, onOpen, onOpenSection, onSearch, onOpenSaved, onOpenListing, savedSearches, areaText, onLocation }) {
   const fresh = visible(listings).filter(l => l.photo || l.section === 'sale').slice(0, 8)
   // Brand + location row scrolls away; the search bar pins and picks up the mark.
   const barRef = useRef(null)
@@ -36,7 +37,7 @@ export default function HomeScreen({ myPosts = [], onOpenAccount, favorites = ne
           <button key={s.id} type="button" className={'tile tint-' + s.id} onClick={() => onOpenSection(s.id)}>
             <Icon name={s.icon} size={26} />
             <span className="tile-name">{s.name}</span>
-            <span className="tile-count">{fmt(s.count)}</span>
+            <span className="tile-count">{fmt(countIn(s.id, 'all', area))}</span>
           </button>
         ))}
       </section>

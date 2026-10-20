@@ -199,7 +199,7 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
       ) : rows.length === 0 && areaEmpty ? null : rows.length > 0 ? (
         <>
           <p className="results-line pad">
-            {query ? `${rows.length} result${rows.length === 1 ? '' : 's'}` : f.sub === 'all' && !filtered ? `${fmt(section.count)} listings · ${fmt(section.newToday)} new today` : `${rows.length} match`} · {SORTS.find(s => s[0] === sort)[1]}
+            {query ? `${rows.length} result${rows.length === 1 ? '' : 's'}` : f.sub === 'all' && !filtered ? `${fmt(rows.length)} listing${rows.length === 1 ? '' : 's'} · ${rows.filter(r => ageMinutes(r.l.age) <= 180).length} in the last 3 hours` : `${rows.length} match${rows.length === 1 ? '' : 'es'}`} · {SORTS.find(s => s[0] === sort)[1]}
           </p>
           {view === 'map' ? <ResultsMap rows={rows} area={area} favorites={favorites} onToggleFav={onToggleFav} onOpen={id => onOpenListing(id, rows.map(r => r.l.id))} /> : <>
             <div className={'pad ' + (view === 'grid' ? 'grid' : view === 'text' ? 'rows rows-text' : 'rows')}>
@@ -371,20 +371,20 @@ function RangeRings({ nearest }) {
 function SubSheet({ query, section, sectionId, current, counts, total, onClose, onPick, toast }) {
   const rows = query
     ? [...counts].sort((a, b) => b[1] - a[1]).map(([key, n]) => ({ name: key, key, count: n }))
-    : taxonomy[sectionId].map(t => ({ ...t, count: t.count }))
+    : taxonomy[sectionId].map(t => ({ ...t, count: t.key ? counts.get(t.key) || 0 : 0 })) // live, same as the list
   const allLabel = query ? 'all results' : `all of ${section.name}`
   return (
     <Sheet title={query ? 'show results in' : section.name} onClose={onClose}>
       <div className="radio-list">
         <button type="button" role="radio" aria-checked={current === 'all'} className="radio-row" onClick={() => onPick('all')}>
           <span className={'radio' + (current === 'all' ? ' radio-on' : '')} /><span className="flex1">{allLabel}</span>
-          <span className="az-count">{fmt(query ? total : section.count)}</span>
+          <span className="az-count">{fmt(total)}</span>
         </button>
         {rows.map(r => (
           <button key={r.name} type="button" role="radio" aria-checked={current === r.key} className="radio-row"
             onClick={() => (r.key ? onPick(r.key) : toast(`prototype: no mock listings for ${r.name} yet`))}>
             <span className={'radio' + (current === r.key && r.key ? ' radio-on' : '')} /><span className="flex1">{r.name}</span>
-            <span className={'az-count' + (r.zero ? ' az-none' : '')}>{r.zero ? 'none nearby' : fmt(r.count)}</span>
+            <span className={'az-count' + (r.zero || !r.count ? ' az-none' : '')}>{r.zero ? 'none nearby' : fmt(r.count)}</span>
           </button>
         ))}
       </div>
