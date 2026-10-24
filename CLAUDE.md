@@ -16,3 +16,7 @@ Whenever a change alters what the user sees or does compared with today's app (o
 ## Native-feasible only
 
 This prototype stands in for a native Android app (Jetpack Compose, Material 3). Only design things a native app can do. If something is web-only or prototype-only, either avoid it or flag it in the "Native feasibility" section of `docs/decisions.md` in the same commit, with the native equivalent or the reason it's prototype-only.
+
+## Shareable decision tracker
+
+The log is also published as an artifact: https://claude.ai/artifact/E7PkDFeWbYp7PJS884M1LU. It's built from `docs/decisions.md` by `prototype/scripts/decisions-page.mjs`. After changing the log, rebuild it (`node prototype/scripts/decisions-page.mjs <out.html>`) and republish to that URL.
