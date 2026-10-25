@@ -128,7 +128,7 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
     ...FLAGS.filter(([k]) => k !== 'photosOnly' && f[k]).map(([k, label]) => [`without “${label}”`, { [k]: false }]),
     f.lang && ['any language', { lang: null }],
     f.sub !== 'all' && [`all of ${sectionName}`, { sub: 'all' }],
-  ].filter(Boolean).map(([label, patch]) => [label, patch, shown(run(all, { ...f, ...patch }).length)])
+  ].filter(Boolean).map(([label, patch]) => { const ff = { ...f, ...patch }, n = run(all, ff).length; return [label, patch, query || !sectionId ? n : scaledIn(sectionId, ff.sub, area, n)] })
   if (area.places.length || area.radius != null) relaxers.unshift(['search all areas', 'area', shown(run(anyArea, f).length, ALL_AREAS)])
 
   return (
@@ -227,7 +227,7 @@ export default function CategoryScreen({ sectionId, initialSub = 'all', query = 
           <div className="relaxers">
             {relaxers.map(([label, patch, n]) => (
               <button key={label} type="button" className="relaxer" disabled={n === 0} onClick={() => (patch === 'area' ? onAreaChange(ALL_AREAS) : set(patch))}>
-                <span>{label}</span><span className="relaxer-n">{n} listing{n === 1 ? '' : 's'}</span><Icon name="arrow" size={18} />
+                <span>{label}</span><span className="relaxer-n">{fmt(n)} listing{n === 1 ? '' : 's'}</span><Icon name="arrow" size={18} />
               </button>
             ))}
           </div>
@@ -303,7 +303,7 @@ function AreaEmpty({ area, what, options, onWiden, onAlert, saved }) {
         {options.map(o => (
           <button key={o.label} type="button" className="relaxer" onClick={() => onWiden(o.area)}>
             <Icon name={o.label.startsWith('within') || o.label === 'any distance' ? 'near' : 'pin'} size={20} />
-            <span className="relaxer-label">{o.label}</span><span className="relaxer-n">{o.n} listing{o.n === 1 ? '' : 's'}</span><Icon name="arrow" size={18} />
+            <span className="relaxer-label">{o.label}</span><span className="relaxer-n">{fmt(o.n)} listing{o.n === 1 ? '' : 's'}</span><Icon name="arrow" size={18} />
           </button>
         ))}
       </div>
