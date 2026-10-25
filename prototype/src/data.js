@@ -21,7 +21,7 @@ export const sections = [
   { id: 'housing', name: 'housing', icon: 'house', count: 3215, newToday: 284,
     subs: ['apartments', 'rooms & shares', 'sublets', 'parking & storage'], more: 6 },
   { id: 'jobs', name: 'jobs', icon: 'briefcase', count: 1904, newToday: 167,
-    subs: ['food & beverage', 'general labor', 'healthcare', 'skilled trades'], more: 27 },
+    subs: ['food & beverage', 'resumes', 'general labor', 'healthcare', 'skilled trades'], more: 27 },
   { id: 'services', name: 'services', icon: 'wrench', count: 2310, newToday: 96,
     subs: ['moving', 'snow removal', 'cleaning', 'handyman'], more: 18 },
   { id: 'gigs', name: 'gigs', icon: 'bolt', count: 486, newToday: 41,
@@ -62,6 +62,8 @@ export const listings = [
   { id: 22, section: 'sale', sub: 'sporting', title: 'fischer cross-country skis + boots, size 43', price: 90, hood: 'Linden Hills', mi: 4.7, age: '11 h', glyph: 'snow' },
   { id: 23, section: 'sale', sub: 'furniture', title: 'uplift standing desk, 60×30, walnut top', price: 450, hood: 'Downtown', mi: 0.6, age: '12 h', glyph: 'desk' },
   { id: 24, section: 'sale', sub: 'household', title: 'lodge cast iron set — 8, 10, 12 in', price: 40, hood: 'Bryn Mawr', mi: 2.4, age: '13 h', glyph: 'tag' },
+  { id: 25, section: 'jobs', sub: 'resumes', title: 'line cook, 6 years scratch kitchens, available nights + weekends', price: null, pay: 'seeking part-time', hood: 'Powderhorn', mi: 3.0, age: '2 h', glyph: 'person' },
+  { id: 26, section: 'jobs', sub: 'resumes', title: 'forklift certified warehouse lead looking for full-time days', price: null, pay: 'seeking full-time', hood: 'Brooklyn Park', mi: 11.2, age: '6 h', glyph: 'person' },
 ]
 
 export function ageMinutes(age) {

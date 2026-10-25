@@ -24,7 +24,7 @@ const raw = {
     ['accounting/finance', 64], ['admin/office', 88], ['architect/engineer/cad', 31], ['art/media/design', 22], ['biotech/science', 17],
     ['business/mgmt', 46], ['customer service', 93], ['education/teaching', 52], ['et cetera', 40], ['food/beverage/hospitality', 214, 'food & beverage'],
     ['general labor', 187], ['government', 19], ['healthcare', 176], ['human resources', 14], ['legal/paralegal', 11],
-    ['manufacturing', 98], ['marketing/advertising/pr', 21], ['nonprofit', 26], ['real estate', 18], ['retail/wholesale', 121],
+    ['manufacturing', 98], ['marketing/advertising/pr', 21], ['nonprofit', 26], ['real estate', 18], ['resumes', 318, 'resumes'], ['retail/wholesale', 121],
     ['sales', 102], ['salon/spa/fitness', 34], ['security', 29], ['skilled trades/artisan', 143], ['software/qa/dba/etc', 23],
     ['systems/networking', 12], ['technical support', 19], ['transportation', 158], ['tv/film/video/radio', 0], ['web/html/info design', 9],
     ['writing/editing', 8],

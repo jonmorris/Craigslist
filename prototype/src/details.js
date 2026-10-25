@@ -30,6 +30,10 @@ const DETAILS = {
     desc: 'karate monkey frame and fork, ready for a build. some cosmetic wear on the chainstay.' },
   21: { specs: [['condition', 'good'], ['size', '82 in'], ['color', 'dove gray'], ['make', 'west elm']],
     desc: 'no pets, no smoking. cushions are a little soft. we have a truck if you need help getting it home for a few bucks.' },
+  25: { specs: [['looking for', 'part-time, nights + weekends'], ['experience', '6 years'], ['skills', 'line, prep, expo, food safety cert'], ['start', 'right away']],
+    desc: 'six years on the line in scratch kitchens around south minneapolis. fast, clean, shows up. happy to do a working interview. references on request.' },
+  26: { specs: [['looking for', 'full-time, days'], ['experience', '9 years'], ['skills', 'forklift + reach truck certified, inventory, team lead'], ['start', 'two weeks notice']],
+    desc: 'warehouse lead with nine years in distribution. forklift and reach truck certified, ran a crew of six. looking for steady day shifts in the north metro.' },
 }
 
 const FALLBACK = {

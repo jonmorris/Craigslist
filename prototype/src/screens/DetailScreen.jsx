@@ -65,7 +65,7 @@ export default function DetailScreen({ id, ids, enter, onPage, favorites, onTogg
         <p className="detail-meta"><Icon name="pin" size={16} />{l.hood} · {l.mi} mi away · posted {l.age === 'just now' ? 'just now' : l.age + ' ago'}</p>
         <div className="detail-chips">
           <button type="button" className="chip" onClick={() => onOpenCategory(l.section, l.sub)}><Icon name={section.icon} size={18} />{l.sub}</button>
-          <span className="chip chip-static">{seller.kind === 'dealer' ? 'dealer' : 'by owner'}</span>
+          {l.section === 'sale' && <span className="chip chip-static">{seller.kind === 'dealer' ? 'dealer' : 'by owner'}</span>}
           {l.photos > 0 && <span className="chip chip-static"><Icon name="camera" size={18} />{l.photos} photos</span>}
         </div>
 
@@ -112,7 +112,7 @@ export default function DetailScreen({ id, ids, enter, onPage, favorites, onTogg
             <div className="seller-row">
               <span className={'avatar tint-' + l.section}>{seller.kind === 'dealer' ? seller.name[0] : <Icon name="person" />}</span>
               <span className="seller-text">
-                <strong>{seller.kind === 'dealer' ? seller.name : 'private seller'}</strong>
+                <strong>{seller.kind === 'dealer' ? seller.name : l.sub === 'resumes' ? 'job seeker' : 'private seller'}</strong>
                 <span>on craigslist since {seller.since}{seller.other > 0 && ` · ${seller.other} other listing${seller.other === 1 ? '' : 's'}`}</span>
               </span>
               {seller.verified && <span className="verified"><Icon name="check" size={16} />phone verified</span>}
@@ -172,7 +172,7 @@ export default function DetailScreen({ id, ids, enter, onPage, favorites, onTogg
         <button type="button" className="btn-tonal-icon" aria-label="share" onClick={share}><Icon name="share" /></button>
         {sent
           ? <button type="button" className="btn-primary btn-sent" onClick={() => toast('chat comes later')}><Icon name="check" />message sent · open chat</button>
-          : <button type="button" className="btn-primary" onClick={() => setSheet('reply')}><Icon name="chat" />message {seller.kind === 'dealer' ? 'dealer' : 'seller'}</button>}
+          : <button type="button" className="btn-primary" onClick={() => setSheet('reply')}><Icon name="chat" />{l.sub === 'resumes' ? 'message them' : `message ${seller.kind === 'dealer' ? 'dealer' : 'seller'}`}</button>}
       </div>
       )}
       {sheet === 'owner' && (
