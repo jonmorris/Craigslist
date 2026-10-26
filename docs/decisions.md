@@ -98,6 +98,7 @@ Update this log with every change to the prototype (see `CLAUDE.md`).
 | D7 | Kept: prev/next through results ([24](audit-screens/24-detail-top-gallery.jpg)) | A "3 of 17" pager over the photo, plus a sideways swipe on the page | Kept a hidden gem and made it a gesture | audit |
 | D8 | — | A "price check" section with a fair-price bar ("bicycles in Minneapolis usually go for $300–$1,200. this one is $235"). It sits below description, details and where, above the seller. The price row keeps its small below/above typical badge | Uses the histogram data to answer "is this a good price?" At first it sat right under the title; it moved down so the listing comes first and the market context after | audit, review |
 | D9 | The listing ID is shown on the page | Removed (it's in the shared link) | It means nothing to buyers | audit |
+| D13 | The listing opens with an X in the top left, as if it were an overlay ([24](audit-screens/24-detail-top-gallery.jpg)) | A back arrow in the top left, over the photo | It's a page, and back takes you to the list you came from. The arrow says what tapping it does | audit, review |
 | D10 | Kept: approximate location circle, never an exact pin | Same, on the detail map and the results map | Privacy first | audit |
 | D11 | — | Similar listings, and a "have one to sell?" prompt | Keeps browsing going and feeds the supply side | brief |
 | D12 | — | "Below typical" is a **neutral** gray badge, not green good news. The typical-range bar is neutral too. A price under 40% of the typical low adds a nudge in the price check: "well under the usual price. it may be a great deal, or a scam: see it in person before you pay anything." Above typical keeps its warning color | A price far below the going rate is a classic scam signal (scams are the top complaint), so we shouldn't celebrate it. Resolves open question O1 | users, review |
@@ -149,6 +150,7 @@ What the current app does here needs a hands-on check (Jon is trying it). From t
 | O3 | Seller verification and two-way ratings (eBay / Uber style: buyer and seller leave positive or negative feedback after a deal) | Considering, probably not this version. **For:** answers the top complaint (scams, no buyer protection) and rewards good sellers. **Against:** heavy, long-time users may pick up negative reviews, and if ratings push them off the platform, supply drops; it also needs accounts, which cuts against anonymous, no-login use. Lighter options to weigh first: phone-verified badge (shown today), "on craigslist since", response rate |
 | O4 | Rollout to loyal users who like that Craigslist never changes | How would a redesign this big ship? |
 | O5 | Chat flow | Still a stub in the prototype (the post flow is built: P1–P9) |
+| O6 | Quick replies in message seller | Test which, if any, help. "is this still available?" is a bit of a trope, and an offer at the typical price nudges haggling. Prefilled messages make it easy to send noise and spam, but good suggestions could nudge people toward replies that lead to a real deal |
 
 ## Native feasibility
 
