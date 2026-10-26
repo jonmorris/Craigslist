@@ -31,14 +31,14 @@ Five cards, each a goal with the reason under it:
 - **Today, for feedback and approval:** visual refresh, home screen, browsing a category, search for an item or post, viewing the details of an item or post.
 - **Next time:** iOS app, creating a post, managing saved and created posts, account.
 
-### 5. Same purple, same peace sign, a warmer feel
+### 5. The visual refresh: same purple and peace sign, a warmer feel
 The visual refresh on one slide: logo, five core colors (#6A2BB8, #CAA4FF, #EBDDFB, #FCFAFE, #1E1A24), Young Serif for headlines and Figtree for everything else, the six section tints, and the bottom nav. Detail is in the appendix.
 
 ---
 
 ## Part 2: The walkthrough
 
-### 6. Part 2 · Buying: Let’s start with someone shopping for a bike
+### 6. Part 2 · Design walkthrough: Let’s start with someone shopping for a bike
 Purple divider. “I live in Longfellow and want a used road bike for under $300.”
 
 ### 7. Home gets you to listings right away
