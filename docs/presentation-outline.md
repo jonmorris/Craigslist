@@ -89,13 +89,13 @@ Purple divider. “I live in Longfellow and want a used road bike for under $500
 - Save on every card / **Top right of the photo, the same spot as on the listing**
 - Prominent save search button / **Makes it easy to come back**
 
-### 16. One list, and every way to work it
-A new layout: four redesign screenshots with a callout under each, and no “Today” column, so every feature in the talk track has a picture.
-- **Screens:** `06a-list-bicycles`, `06c-layout-menu`, `10a-map`, `17b-save-search-sheet` (all bicycles under $500)
-- Category, area and key filters up top / **Tweak the list without opening a menu**
-- One menu for every view / **Grid, large photos, list, no images or the map**
-- The map is just another view / **Same list and filters, with a price on every pin**
-- Save the search you built / **A summary of it, and how often to hear about new ones**
+### 16. The same list, four more ways to see it
+A new layout: four redesign screenshots with a callout under each, and no “Today” column. The list slide shows the grid; this one shows the other four views from the view menu.
+- **Screens:** `06e-view-large-photos`, `06d-layout-list`, `06f-view-no-images`, `10a-map` (all bicycles under $500)
+- Large photos / **One listing at a time, photo first**
+- List / **More listings on screen, with a thumbnail**
+- No images / **The fastest scan, and the lightest on data**
+- Map / **Same filters, with a price on every pin**
 
 ### 17. See what a filter does before you apply it
 - **Screens:** today [33](audit-screens/33-filter-sort-bikes-top.jpg); redesign `07b-filters-live-count`, `08b-price-bracket` ($0 to $500)
