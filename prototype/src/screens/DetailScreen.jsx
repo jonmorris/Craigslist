@@ -80,15 +80,15 @@ export default function DetailScreen({ id, ids, enter, onPage, favorites, onTogg
         )}
 
         <section className="detail-block">
+          <h2>description</h2>
+          <p className="desc">{d.desc}</p>
+        </section>
+
+        <section className="detail-block">
           <h2>details</h2>
           <div className="specs" role="list">
             {d.specs.map(([k, v]) => <div key={k} className="spec" role="listitem"><span className="spec-k">{k}</span><span className="spec-v">{v}</span></div>)}
           </div>
-        </section>
-
-        <section className="detail-block">
-          <h2>description</h2>
-          <p className="desc">{d.desc}</p>
         </section>
 
         <section className="detail-block">
