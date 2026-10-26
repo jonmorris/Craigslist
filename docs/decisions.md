@@ -167,7 +167,7 @@ The prototype is a web app standing in for a native Android app (Jetpack Compose
 | Draggable price bracket on the histogram | Custom `Canvas` drawing with `pointerInput` | — |
 | Map with count bubbles and price markers | Google Maps SDK + Maps Compose clustering | **Prototype-only:** the map is a static image overlay; it blurs past zoom 14 and has no real tiles |
 | Keyboard pushes content up; scrolling dismisses it | Edge-to-edge with IME insets (`imePadding`), `adjustResize` | — |
-| Fullscreen display mode in the installed web app | Edge-to-edge drawing with system-bar insets | **Prototype-only:** a workaround for Chrome's white nav bar with 3-button navigation. Native draws behind the bars instead of hiding them |
+| Standalone display mode in the installed web app, with the status bar tinted to the app’s theme (it follows the in-app light/dark choice, not just the phone’s) | Edge-to-edge drawing with system-bar insets (`enableEdgeToEdge`), bar icons light or dark to match | **Prototype-only limit:** Chrome may still draw the 3-button nav bar light while the app is dark; native sets both bars. Fullscreen hid the bars, which made the prototype feel less like a real phone app, so it was dropped |
 | Phone-frame overview (`?frame`), "reset prototype data", service worker and offline cache, `noindex` | — | **Prototype-only:** presentation and hosting tools, not part of the app |
 | No hover states; pressed and focus only | Same (touch-first; ripple + focus indicator) | — |
 | Fonts from Google Fonts (Young Serif, Figtree) | Bundled font resources / downloadable fonts | — |

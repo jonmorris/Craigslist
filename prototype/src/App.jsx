@@ -54,6 +54,14 @@ export default function App() {
     const root = document.documentElement
     if (theme === 'system') root.removeAttribute('data-theme')
     else root.setAttribute('data-theme', theme)
+    // system bars follow the app's theme, not just the phone's: point both theme-color
+    // tags at the forced theme's surface (native: enableEdgeToEdge with matching bar icons)
+    const bar = { light: '#fcfafe', dark: '#15121a' }
+    document.querySelectorAll('meta[name="theme-color"]').forEach(m => {
+      const own = m.media.includes('dark') ? 'dark' : 'light'
+      m.content = bar[theme === 'system' ? own : theme]
+    })
+    document.querySelector('meta[name="color-scheme"]')?.setAttribute('content', theme === 'system' ? 'light dark' : theme)
     store.set('cl-theme', theme)
   }, [theme])
 
