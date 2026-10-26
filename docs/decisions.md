@@ -148,7 +148,7 @@ What the current app does here needs a hands-on check (Jon is trying it). From t
 | O2 | Section landing pages add a tap before the list | Keep them, or let the home tiles go straight to the list? |
 | O3 | Seller verification and two-way ratings (eBay / Uber style: buyer and seller leave positive or negative feedback after a deal) | Considering, probably not this version. **For:** answers the top complaint (scams, no buyer protection) and rewards good sellers. **Against:** heavy, long-time users may pick up negative reviews, and if ratings push them off the platform, supply drops; it also needs accounts, which cuts against anonymous, no-login use. Lighter options to weigh first: phone-verified badge (shown today), "on craigslist since", response rate |
 | O4 | Rollout to loyal users who like that Craigslist never changes | How would a redesign this big ship? |
-| O5 | Chat and post flows | Stubs in the prototype |
+| O5 | Chat flow | Still a stub in the prototype (the post flow is built: P1–P9) |
 
 ## Native feasibility
 
