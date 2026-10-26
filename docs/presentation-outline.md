@@ -2,13 +2,16 @@
 
 The hybrid structure: principles up front, a buyer-then-seller walkthrough as the main story, then what's underneath, what we kept, and what we chose not to build. IDs in brackets (H1, L7…) point to rows in [`decisions.md`](decisions.md), so every callout has a "why" behind it if someone asks.
 
-**Length:** about 24 slides, roughly 15–20 minutes plus the demo. Slides marked *optional* can go if time is short.
+**Length:** about 29 slides (with the visual refresh slides and two section dividers), roughly 15–20 minutes plus the demo. Slides marked *optional* can go if time is short.
 
 **Slide format for the walkthrough:** today's screen on the left (from [`audit-screens/`](audit-screens/)), the redesign on the right, two or three numbered callouts. Each callout is one line: what changed, then why. Tag each callout with a small principle marker (①–⑤) so the principles stay visible through the story.
 
 **Storyline titles:** every slide title is a full sentence that makes the point, so reading the titles alone in order tells the whole story. The story in titles:
 
 1. People love Craigslist because it never changes, so the redesign still feels like Craigslist
+1a. The refresh keeps craigslist purple and the peace sign, just brighter
+1b. Young Serif and Figtree make it warm, and easy to read at small sizes
+1c. New building blocks: rounded icons, square nav states and one bookmark for saving
 2. Five principles shaped every change
 3. We kept what people praise: no ads, no algorithm, the plain voice and privacy
 4. Home now starts you on listings, not a directory
@@ -33,7 +36,7 @@ The hybrid structure: principles up front, a buyer-then-seller walkthrough as th
 23. What's still open, and what comes next
 24. See it for yourself
 
-**Assets:** redesign screenshots are in [`presentation-screens/`](presentation-screens/), named by slide number (phone at 412×915, Fold at 760×850 portrait and 1100×760 landscape, all at 2×). Each slide lists its files under **Screens**. Short screen recordings (5–10 s) are still to capture for the slides marked 🎥.
+**Assets:** redesign screenshots are in [`presentation-screens/`](presentation-screens/), named by slide number (phone shots match the “today” captures: the Galaxy Z Fold 8 cover screen, 1248×1972 with its status bar and 3-button nav; open-Fold shots at 760×850 portrait and 1100×760 landscape, at 2×). Each slide lists its files under **Screens**. Short screen recordings (5–10 s) are still to capture for the slides marked 🎥.
 
 ---
 
@@ -43,6 +46,16 @@ The hybrid structure: principles up front, a buyer-then-seller walkthrough as th
 - **Screens:** `04a-home`
 - **On screen:** the redesigned home next to today's home ([06](audit-screens/06-home-categories.jpg)).
 - **Say:** Craigslist users are loyal *because* it never changes. The goal was to make it easier to use without making it feel like a different product.
+
+### 1a. The refresh keeps craigslist purple and the peace sign, just brighter
+- **On screen:** the logo and app icon, the core palette (primary #6A2BB8, on dark #CAA4FF, container #EBDDFB, surface #FCFAFE, text #1E1A24), and the six section tints [B2, B5].
+- **Say:** we kept what people recognize, brightened it, and every text pair passes 4.5:1 in both themes. Dynamic color was tried and dropped.
+
+### 1b. Young Serif and Figtree make it warm, and easy to read at small sizes
+- **On screen:** a specimen of each face and what it's used for [B3, B5].
+
+### 1c. New building blocks: rounded icons, square nav states and one bookmark for saving
+- **On screen:** the Material Symbols Rounded set, the nav bar, chips, scope buttons, a listing card and the save-search button [B1, B4, B6, B9].
 
 ### 2. Five principles shaped every change
 - **On screen:** five short lines, each with its marker.
