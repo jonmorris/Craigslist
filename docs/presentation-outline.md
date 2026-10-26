@@ -2,11 +2,13 @@
 
 The deck: https://claude.ai/artifact/HfML2PPvNBSg19qWgBHqJh (private until shared from its Share menu).
 
-**Shape:** three parts. Part 1 frames the project (goals, where we are, the visual refresh). Part 2 walks through the four screens up for review today: home, browsing a category, search, and the listing. Part 3 recaps, demos the prototype and opens the discussion. 20 slides, plus a 4-slide appendix (24 in all).
+**Shape:** three parts, 25 slides. Part 1 frames the project: goals, where we are, and the visual refresh in five slides. Part 2 follows one shopper through the four screens up for review today: home, browsing a category, search, and the listing. Part 3 recaps, demos the prototype, takes questions and sets out next steps.
 
-**Walkthrough slides:** today’s screen on the left (from [`audit-screens/`](audit-screens/)), the redesign on the right (from [`presentation-screens/`](presentation-screens/)), and three callouts. Each callout is a short grey label over a bold line, and describes a feature you can see in that slide’s screenshots. No claims about how today’s app works beyond what its screenshot shows.
+**Walkthrough slides:** today’s screen on the left (from [`audit-screens/`](audit-screens/)), the redesign on the right (from [`presentation-screens/`](presentation-screens/)), and numbered callouts. Each callout is a short grey label over a bold 28px line, and describes a feature you can see in that slide’s screenshots. No claims about how today’s app works beyond what its screenshot shows.
 
-**Every phone shot** is the Galaxy Z Fold 8 cover screen at 1248×1972, with its status bar and 3-button nav. Every content slide has the footer “craigslist x Livefront”. Headlines sit in a fixed two-line box so content doesn’t move between slides.
+**The shopper:** “I live in Longfellow and want a used road bike for under $500.” The list, filter, listing, details and actions shots follow that search: bicycles under $500, the Trek 5200 road bike ($375, St. Louis Park) and the Electra Townie ($235, Longfellow). The trust slide uses the $50 Schwinn choppers on purpose, to show the warning a too-good price gets.
+
+**Every phone shot** is the Galaxy Z Fold 8 cover screen at 1248×1972, with its status bar and 3-button nav, redesign shots in light mode. Every slide has the footer “craigslist x Livefront”. Headlines sit in a fixed two-line box so content doesn’t move between slides. “craigslist” is always lowercase.
 
 ---
 
@@ -23,115 +25,130 @@ Five cards, each a goal with the reason under it:
 1. Re-launch mobile apps following modern design trends. *A UI that feels current, native on every screen.*
 2. Improve engagement with new and existing users. *Features that make the app more enjoyable to come back to.*
 3. Build up craigslist’s reputation around security and trust. *Digital security is at a premium. The UI has to show people they’re safe.*
-4. Modernize without losing what people love about craigslist. *No ads, no algorithm, the plain voice, privacy first.*
+4. Modernize without losing what people love about craigslist. *No ads, the plain voice, privacy first.*
 5. Serve both sides of the marketplace: buyers and sellers. *Ensure browsers, buyers, community organizers have the tools they need.*
 
 ### 4. Where we are, and what we’re reviewing today
 - A strip of the seven stages: Discovery and Research, Brand and Visual Design, Concepts and Wireframes, User Testing (done) → **Design Phase** (now) → Development, Release.
 - **Today, for feedback and approval:** visual refresh, home screen, browsing a category, search for an item or post, viewing the details of an item or post.
-- **Next time:** iOS app, creating a post, managing saved and created posts, account.
+- **Next review:** iOS app, creating a post, managing saved and created posts, account.
 
-### 5. The visual refresh: same purple and peace sign, a warmer feel
-The visual refresh on one slide: logo, five core colors (#6A2BB8, #CAA4FF, #EBDDFB, #FCFAFE, #1E1A24), Young Serif for headlines and Figtree for everything else, the six section tints, and the bottom nav. Detail is in the appendix.
+### 5. The visual refresh: same purple, new style
+The refresh on one slide: logo, five core colors (#6A2BB8, #CAA4FF, #EBDDFB, #FCFAFE, #1E1A24), Young Serif and Figtree, the six section tints, and the bottom nav. *To revisit: it overlaps the four slides after it.*
+
+### 6. Warm headlines, and everything else easy to read
+Young Serif for screen titles, section names and the wordmark; Figtree for prices, cards, chips and body text, in regular, semibold and bold.
+
+### 7. Same purple, same peace sign, just a little brighter
+Logo and app icon, the five core colors with their roles, and a tint per section, built from the original #9945C8 and passing 4.5:1 in light and dark.
+
+### 8. One icon family, rounded and friendly
+The 24-icon set, with three callouts:
+- Material Symbols Rounded, weight 500 / **Native to Android and ready for Compose**
+- An icon for every section / **For sale, housing, jobs, services, gigs and community**
+- Icons that say what they do / **Hide is an eye, saving is a bookmark**
+
+### 9. A few new pieces to build with
+Filter chips, the category and area buttons, the bottom nav, a listing card and the save-search button.
 
 ---
 
 ## Part 2: The walkthrough
 
-### 6. Part 2 · Design walkthrough: Let’s start with someone shopping for a bike
-Purple divider. “I live in Longfellow and want a used road bike for under $300.”
+### 10. Part 2 · Design walkthrough: Let’s look at someone shopping for a used bike
+Purple divider. “I live in Longfellow and want a used road bike for under $500.”
 
-### 7. Home gets you to listings right away
-- **Screens:** today [06](audit-screens/06-home-categories.jpg); redesign `04a-home`, `04b-home-scrolled`
-- Notification bell, added / **Timely updates, up front for returning users**
+### 11. Home offers more than categories
+- **Screens:** today [06](audit-screens/06-home-categories.jpg); redesign `04a-home`, `04b-home-scrolled` (the top of fresh near you)
 - Search, more prominent / **The primary way into the catalog**
 - Six sections, one small decision / **Subcategories move to the next screen**
 - Saved searches, out of a tab / **Get back to where you left off**
 - Fresh near you / **New items from your searches and recent views**
 
-### 8. A nav bar built around getting back home
+### 12. A nav bar built around getting back home
 - **Screens:** today's nav bar (cropped from [12](audit-screens/12-list-bicycles-grid.jpg)); the redesign's (cropped from `04a-home`)
 - Search becomes home / **A quick way to reset, and a home worth coming back to**
 - Favorites becomes saved / **You're bookmarking it for later, not picking a favorite**
 - Account moves to the end / **Saved, post and chat form a central group**
 
-### 9. Sections start with what people shop for most
+### 13. Sections start with what people shop for most
 - **Screens:** today [07](audit-screens/07-category-picker-modal.jpg); redesign `05a-section-for-sale`, `05b-section-a-z`
 - New category landing page / **A dedicated space to explore an entire category**
 - Popular or featured subcategories / **A personalized start, or scroll for the whole list**
 - Better browsing for browsers / **People who know what they want lean on search**
 
-### 10. Everything you need is right on the list
-- **Screens:** today [14](audit-screens/14-list-overflow-menu.jpg); redesign `06a-list-bicycles`, `17b-save-search-sheet`
+### 14. Everything you need is right on the list
+- **Screens:** today [14](audit-screens/14-list-overflow-menu.jpg); redesign `06a-list-bicycles` (under $500 on), `17b-save-search-sheet`
 - Category and area, front and center / **Tweak either without leaving the list**
 - Exposing important filters / **The full set is one tap away in filters**
 - Location and distance on every card / **Know how local it really is**
 - Prominent save search button / **Makes it easy to come back**
-- One page for browse and search / **A search is the same list, plus a keyword**
 
-### 11. See what a filter does before you apply it
-- **Screens:** today [33](audit-screens/33-filter-sort-bikes-top.jpg); redesign `07b-filters-live-count`, `08b-price-bracket`
+### 15. See what a filter does before you apply it
+- **Screens:** today [33](audit-screens/33-filter-sort-bikes-top.jpg); redesign `07b-filters-live-count`, `08b-price-bracket` ($0 to $500)
 - Every filter in one sheet / **Each group laid out as chips you can tap**
 - A live result count / **The button says how many listings you’ll get**
 - Pick a price on the chart / **Drag a range across what bikes actually sell for**
 
-### 12. Search helps before you finish typing
-- **Screens:** today [36](audit-screens/36-search-typeahead-bike.jpg); redesign `12d-search-typing-bike-device`, `12e-search-typing-bike-scrolled-device`
+### 16. Search helps before you finish typing
+- **Screens:** today [36](audit-screens/36-search-typeahead-bike.jpg); redesign `12d-search-typing-bike`, `12e-search-typing-bike-scrolled`
 - Suggestions finish your word / **What you typed stays plain, the rest is bold**
 - Listings right in the suggestions / **Jump straight to a listing, with its photo and price**
 - Search in a category / **Matching categories with counts, most relevant first**
 
-### 13. The essentials sit right at the top
-- **Screens:** today [24](audit-screens/24-detail-top-gallery.jpg); redesign `14a-detail-top`, `17a-save-from-card`
+### 17. The essentials sit right at the top
+- **Screens:** today [24](audit-screens/24-detail-top-gallery.jpg); redesign `14a-detail-top` (the Trek, 2 of 4), `14f-detail-next-saved` (back one to the Townie, saved)
 - Next and previous, kept / **Move between results without the back button**
 - Price and location up front / **A more prominent price, and distance with the location**
 - Save at the top / **The same spot as on the list, so saving several in a row is quick**
 
-### 14. The details are easy to browse
+### 18. The details are easy to browse
 - **Screens:** today [25](audit-screens/25-detail-specs.jpg); redesign `14b-detail-specs`, `14e-detail-similar`
-- Details in a grid / **Condition, frame, make and more, easy to browse**
-- Description and where, kept / **A map to easily understand where the item is**
+- Description first, details below / **The seller’s own words, then condition, frame size, make and more in a grid**
+- Where, kept / **A map to easily understand where the item is**
 - More to explore / **Similar items, and a small nudge to post your own**
-- *Note:* considering swapping the description with the details grid.
 
-### 15. Hide, share and message, all in one bar
+### 19. A measured step toward more trust
+- **Screens:** today [27](audit-screens/27-detail-overflow-sheet.jpg); redesign `15c-far-below-typical`, `15d-seller-report-safety-verified` (both the $50 choppers)
+- New price check / **Helps gauge an offer against typical local prices**
+- More about the seller / **Phone verified, and how many other listings they have**
+- Safety tips right where you need them / **A heads-up when the price looks too good, and where to meet**
+- Report where people look for it / **Right with the seller info, before you message**
+- *Notes:* the price check may be cut, since it gets complicated fast. Not in the UI yet: a rating system, or shadowbanning people with many negative reviews. Report is also in the hide flow, on the next slide, and could go at the very bottom.
+
+### 20. Hide, share and message, all in one bar
 - **Screens:** today [26](audit-screens/26-detail-map-actions.jpg); redesign `14d-hide-confirm`, `16a-message-seller`
 - A clearer hide icon / **Hiding asks first, and lets you report it too**
 - Share in the middle / **Prominent, so passing a listing along is easy**
 - Message on the right / **The main action, with quick replies to get started**
 
-### 16. A measured step toward more trust
-- **Screens:** today [27](audit-screens/27-detail-overflow-sheet.jpg); redesign `15c-far-below-typical`, `15b-seller-report-safety`
-- New price check / **Helps gauge an offer against typical local prices**
-- More about the seller / **Phone verified, and how many other listings they have**
-- Report where people look for it / **With the seller info, and in the hide flow**
-- *Notes:* the price check may be cut, since it gets complicated fast. Not in the UI yet: a rating system, or shadowbanning people with many negative reviews. Report could also go at the very bottom.
-
 ---
 
 ## Part 3: Recap and discussion
 
-### 17. Part 3 · Recap and discussion: Let’s talk it through
+### 21. Part 3 · Recap and discussion: Let’s talk it through
 Purple divider. “A quick look in the prototype, then your feedback on today’s screens.”
 
-### 18. See it for yourself
+### 22. See it for yourself
 Live demo on the phone, prototype at jonmorris.github.io/Craigslist.
 - **Browse:** home → for sale → bicycles → filters → a listing → message seller
 - **Search:** search “bike” → jump straight to a listing from the suggestions
 
-### 19. Questions?
+### 23. Questions?
+“What feels right, what doesn’t, and what’s missing?” Next to it, what we covered:
+- **Visual refresh:** same purple and peace sign, warmer type, new building blocks
+- **Home and navigation:** search up front, six sections, saved searches, a home worth coming back to
+- **Browsing a category:** a landing page per category, the list, and filters with a live count
+- **Search:** suggestions with listings, and the same list plus a keyword
+- **The listing:** essentials at the top, easy details, one action bar, and more trust
 
-### 20. Thank you
-“craigslist modern refresh · Android App Redesign”, with the prototype link.
+### 24. Here’s what happens next
+1. **Feedback due:** within a week. Take time to try the prototype on your phone before you send it.
+2. **How to send it:** one combined set. Gather everyone’s notes into a single list, with any conflicting asks settled on your side.
+3. **Next review:** iOS, posting and account. Creating a post, managing saved and created posts, and updates from your feedback.
 
----
-
-## Appendix: the visual refresh, in detail
-
-- Divider: “The visual refresh, in detail”
-- **Same purple, same peace sign, just a little brighter:** logo, app icon, core palette, section tints
-- **Warm headlines, and everything else easy to read:** Young Serif and Figtree specimens
-- **A few new pieces to build with:** icon set, bottom nav, chips, category and area buttons, a listing card, the save-search button
+### 25. Thank you
+Purple, with the peace sign reversed (purple on white) and “craigslist modern refresh · Android App Redesign”.
 
 ---
 
