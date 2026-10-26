@@ -90,12 +90,12 @@ Purple divider. “I live in Longfellow and want a used road bike for under $500
 - Prominent save search button / **Makes it easy to come back**
 
 ### 16. The same list, four more ways to see it
-A new layout: four redesign screenshots with a callout under each, and no “Today” column. The list slide shows the grid; this one shows the other four views from the view menu.
+A new layout: four redesign screenshots with the view’s name under each, and no “Today” column. The list slide shows the grid; this one shows the other four views from the view menu.
 - **Screens:** `06e-view-large-photos`, `06d-layout-list`, `06f-view-no-images`, `10a-map` (all bicycles under $500)
-- Large photos / **One listing at a time, photo first**
-- List / **More listings on screen, with a thumbnail**
-- No images / **The fastest scan, and the lightest on data**
-- Map / **Same filters, with a price on every pin**
+- **Large photos**
+- **List**
+- **No images**
+- **Map**
 
 ### 17. See what a filter does before you apply it
 - **Screens:** today [33](audit-screens/33-filter-sort-bikes-top.jpg); redesign `07b-filters-live-count`, `08b-price-bracket` ($0 to $500)
