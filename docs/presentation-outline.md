@@ -71,7 +71,7 @@ Purple divider. “I live in Longfellow and want a used road bike for under $300
 - Listings right in the suggestions / **Jump straight to a listing, with its photo and price**
 - Search in a category / **Matching categories with counts, most relevant first**
 
-### 12. Is it worth the trip? The listing tells you up front
+### 12. The essentials sit right at the top
 - **Screens:** today [24](audit-screens/24-detail-top-gallery.jpg); redesign `14a-detail-top`, `17a-save-from-card`
 - Next and previous, kept / **Move between results without the back button**
 - Price and location up front / **A more prominent price, and distance with the location**
