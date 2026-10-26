@@ -74,7 +74,7 @@ const priceChipLabel = (min, max) =>
 
 // Also renders search results: pass `query` (and optionally no sectionId = all sections).
 // layout menu: [key, icon, label]; the bar button always shows the current layout's icon
-const VIEWS = [['grid', 'grid', 'grid'], ['large', 'single', 'large photos'], ['row', 'list', 'list'], ['text', 'text', 'no images'], ['map', 'map', 'map']]
+const VIEWS = [['large', 'single', 'large images'], ['grid', 'grid', 'medium images'], ['row', 'list', 'small images'], ['text', 'text', 'no images'], ['map', 'map', 'map']]
 
 // `memory` / `onRemember` keep filters and sort with the route, so coming back from a listing
 // restores them (a top complaint about the current app). Layout is an app-wide preference.

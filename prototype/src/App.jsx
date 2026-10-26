@@ -16,7 +16,7 @@ import { BottomNav, Icon } from './ui.jsx'
 
 const SCREENS = [
   { id: 'a', name: 'home', status: 'built', note: 'Search, six section tiles, your saved searches, fresh listings near you.' },
-  { id: 'b', name: 'category → list', status: 'built', note: 'A landing page per section (popular subcategories, trending, just posted, the full taxonomy), then the list: filter chips in plain sight, category filters (frame size, make, bedrooms), a price sheet with the typical price, dealer reposts grouped, grid / large photos / list / no images / map layouts, save search with alerts on. Filters survive going back.' },
+  { id: 'b', name: 'category → list', status: 'built', note: 'A landing page per section (popular subcategories, trending, just posted, the full taxonomy), then the list: filter chips in plain sight, category filters (frame size, make, bedrooms), a price sheet with the typical price, dealer reposts grouped, large / medium / small images, no images and map layouts, save search with alerts on. Filters survive going back.' },
   { id: 'c', name: 'search', status: 'built', note: 'Full-screen search: recent, saved and trending; suggestions with "search in" category counts; results by category; no-results turns into an alert.' },
   { id: 'd', name: 'listing detail', status: 'built', note: 'Swipeable photos, price vs. typical, specs, approximate area, seller context and safety, one-tap message with quick replies, swipe or tap to the next listing.' },
 ]

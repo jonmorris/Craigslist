@@ -90,10 +90,10 @@ Purple divider. “I live in Longfellow and want a used road bike for under $500
 - Prominent save search button / **Makes it easy to come back**
 
 ### 16. The same list, four more ways to see it
-A new layout: four redesign screenshots with the view’s name under each, and no “Today” column. The list slide shows the grid; this one shows the other four views from the view menu.
-- **Screens:** `06e-view-large-photos`, `06d-layout-list`, `06f-view-no-images`, `10a-map` (all bicycles under $500)
-- **Large photos**
-- **List**
+A new layout: four redesign screenshots with the view’s name under each, and no “Today” column. The list slide shows medium images, the default; this one shows the other four views from the view menu.
+- **Screens:** `06e-view-large-photos` (large images), `06d-layout-list` (small images), `06f-view-no-images`, `10a-map` (all bicycles under $500)
+- **Large images**
+- **Small images**
 - **No images**
 - **Map**
 
