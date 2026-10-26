@@ -52,7 +52,7 @@ export default function SectionScreen({ area, favorites = new Set(), onToggleFav
         <div className="pad pop-grid">
           {popular.map(sub => (
             <button key={sub.name} type="button" className={'pop-tile tint-' + sectionId} onClick={() => openSub(sub)}>
-              <strong>{sub.name}</strong>
+              <strong>{sub.name.replace(/\//g, '/​')}</strong>{/* let "food/beverage/hospitality" wrap at the slashes */}
               <span>{fmt(sub.count)} listing{sub.count === 1 ? '' : 's'}{sub.fresh > 0 ? ` · ${sub.fresh} new` : ''}</span>
             </button>
           ))}

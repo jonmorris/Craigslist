@@ -446,7 +446,7 @@ button:disabled::before { display: none; }
 .browse-all { display: flex; align-items: center; gap: 16px; width: 100%; margin-top: 16px; padding: 16px; border-radius: var(--md-shape-md); border: 1px solid var(--md-sys-color-outline-variant); text-align: left; }
 .browse-all .sv-text strong { font: var(--md-title-medium); }
 .browse-all .sv-text span { font: var(--md-body-small); color: var(--md-sys-color-on-surface-variant); }
-.pop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.pop-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; } /* minmax(0) so a long name can’t widen its column */
 .pop-tile { min-height: 80px; padding: 14px 16px; border-radius: var(--md-shape-md); display: flex; flex-direction: column; justify-content: space-between; gap: 8px; text-align: left; }
 .pop-tile strong { font: var(--md-title-medium); }
 .pop-tile span { font: var(--md-label-medium); font-variant-numeric: tabular-nums; }
