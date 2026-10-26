@@ -2,7 +2,7 @@
 
 The deck: https://claude.ai/artifact/HfML2PPvNBSg19qWgBHqJh (private until shared from its Share menu).
 
-**Shape:** three parts. Part 1 frames the project (goals, where we are, the visual refresh). Part 2 walks through the four screens up for review today: home, browsing a category, search, and the listing. Part 3 recaps, demos the prototype and opens the discussion. 18 slides, plus a 4-slide appendix (22 in all).
+**Shape:** three parts. Part 1 frames the project (goals, where we are, the visual refresh). Part 2 walks through the four screens up for review today: home, browsing a category, search, and the listing. Part 3 recaps, demos the prototype and opens the discussion. 19 slides, plus a 4-slide appendix (23 in all).
 
 **Walkthrough slides:** today’s screen on the left (from [`audit-screens/`](audit-screens/)), the redesign on the right (from [`presentation-screens/`](presentation-screens/)), and three callouts. Each callout is a short grey label over a bold line, and describes a feature you can see in that slide’s screenshots. No claims about how today’s app works beyond what its screenshot shows.
 
@@ -72,38 +72,46 @@ Purple divider. “I live in Longfellow and want a used road bike for under $300
 - Search in a category / **Matching categories with counts, most relevant first**
 
 ### 12. Is it worth the trip? The listing tells you up front
-- **Screens:** today [24](audit-screens/24-detail-top-gallery.jpg); redesign `14a-detail-top`, `14c-detail-where`
-- Where and when, at a glance / **Neighborhood, distance and age right under the title**
-- Specs in a grid / **Condition, frame, make and more, easy to scan**
-- Actions where you expect them / **Save over the photo; hide, share and message at the bottom**
+- **Screens:** today [24](audit-screens/24-detail-top-gallery.jpg); redesign `14a-detail-top`, `17a-save-from-card`
+- Next and previous, kept / **Move between results without the back button**
+- Price and location up front / **A more prominent price, and distance with the location**
+- Save at the top / **The same spot as on the list, so saving several in a row is quick**
 
-### 13. If a deal looks too good, we say so
+### 13. Hide, share and message, all in one bar
+- **Screens:** today [26](audit-screens/26-detail-map-actions.jpg); redesign `14d-hide-confirm`, `16a-message-seller`
+- A clearer hide icon / **Hiding asks first, and lets you report it too**
+- Share in the middle / **Prominent, so passing a listing along is easy**
+- Message on the right / **The main action, with quick replies to get started**
+
+### 14. The details are easy to browse
+- **Screens:** today [25](audit-screens/25-detail-specs.jpg); redesign `14b-detail-specs`, `14e-detail-similar`
+- Details in a grid / **Condition, frame, make and more, easy to browse**
+- Description and where, kept / **A map to easily understand where the item is**
+- More to explore / **Similar items, and a small nudge to post your own**
+- *Note:* considering swapping the description with the details grid.
+
+### 15. A measured step toward more trust
 - **Screens:** today [27](audit-screens/27-detail-overflow-sheet.jpg); redesign `15c-far-below-typical`, `15b-seller-report-safety`
-- Price check / **The typical local price range, right on the listing**
-- A heads-up on prices far below typical / **See it in person before you pay anything**
-- Seller card and safety tip / **Who posted it, where to meet, and a report link**
-
-### 14. Reaching the seller takes one tap
-- **Screens:** today [28](audit-screens/28-detail-reply-sheet.jpg); redesign `16a-message-seller`
-- One message button / **Message seller is the main action on every listing**
-- Quick replies / **“Is this still available?” is one tap away**
-- Private by default / **Reply through craigslist chat or the email relay**
+- New price check / **Helps gauge an offer against typical local prices**
+- More about the seller / **Phone verified, and how many other listings they have**
+- Report where people look for it / **With the seller info, and in the hide flow**
+- *Notes:* the price check may be cut, since it gets complicated fast. Not in the UI yet: a rating system, or shadowbanning people with many negative reviews. Report could also go at the very bottom.
 
 ---
 
 ## Part 3: Recap and discussion
 
-### 15. Part 3 · Recap and discussion: Let’s talk it through
+### 16. Part 3 · Recap and discussion: Let’s talk it through
 Purple divider. “A quick look in the prototype, then your feedback on today’s screens.”
 
-### 16. See it for yourself
+### 17. See it for yourself
 Live demo on the phone, prototype at jonmorris.github.io/Craigslist.
 - **Browse:** home → for sale → bicycles → filters → a listing → message seller
 - **Search:** search “bike” → jump straight to a listing from the suggestions
 
-### 17. Questions?
+### 18. Questions?
 
-### 18. Thank you
+### 19. Thank you
 “craigslist modern refresh · Android App Redesign”, with the prototype link.
 
 ---
