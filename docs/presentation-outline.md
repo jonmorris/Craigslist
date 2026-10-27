@@ -4,7 +4,7 @@ The deck: https://claude.ai/artifact/HfML2PPvNBSg19qWgBHqJh (private until share
 
 **Shape:** four parts, 24 slides. Part 1 frames the project: goals and where we are. Part 2 is the visual refresh: a divider, then type, color, icons and the building blocks. Part 3 follows one shopper through the four screens up for review today: home, browsing a category, search, and the listing. Part 4 is one slide: questions, with the prototype link.
 
-**Walkthrough slides:** today’s screen on the left (from [`audit-screens/`](audit-screens/)), the redesign on the right (from [`presentation-screens/`](presentation-screens/)), and numbered callouts. Each callout is a short grey label over a bold 28px line, and describes a feature you can see in that slide’s screenshots. No claims about how today’s app works beyond what its screenshot shows.
+**Walkthrough slides:** most put today’s screen on the left (from [`audit-screens/`](audit-screens/)), the redesign on the right (from [`presentation-screens/`](presentation-screens/)), and numbered callouts. Each callout is a short grey label over a bold 28px line, and describes a feature you can see in that slide’s screenshots. No claims about how today’s app works beyond what its screenshot shows. Two slides (the four list views, and the action bar) show the redesign only.
 
 **The shopper:** “I live in Longfellow and want a used road bike for under $500.” The list, filter, listing, details and actions shots follow that search: bicycles under $500, the Trek 5200 road bike ($375, St. Louis Park) and the Electra Townie ($235, Longfellow). The trust slide uses the $50 Schwinn choppers on purpose, to show the warning a too-good price gets.
 
@@ -25,8 +25,8 @@ Five cards, each a goal with the reason under it:
 1. Relaunch mobile apps following modern design trends. *A UI that feels current, native on every screen.*
 2. Improve engagement with new and existing users. *Features that make the app more enjoyable to come back to.*
 3. Build up craigslist’s reputation around security and trust. *Digital security is at a premium. The UI has to show people they’re safe.*
-4. Modernize without losing what people love about craigslist. *No ads, the plain voice, privacy first.*
-5. Serve both sides of the marketplace: buyers and sellers. *Ensure browsers, buyers, community organizers have the tools they need.*
+4. Modernize without losing what people love about craigslist. *No ads, a simple experience, community focused, and privacy first.*
+5. Serve both sides of the marketplace: buyers and sellers. *Ensure browsers, buyers, and sellers have the tools they need.*
 
 ### 4. Where we are, and what we’re reviewing today
 - A strip of the seven stages: Discovery and Research, Brand and Visual Design, Concepts and Wireframes, User Testing (done) → **Design Phase** (now) → Development, Release.
@@ -59,30 +59,30 @@ Filter chips, the category and area buttons, the bottom nav, a listing card and 
 ### 10. Part 3 · Design walkthrough: Let’s look at someone shopping for a used bike
 Purple divider. “I live in Longfellow and want a used road bike for under $500.”
 
-### 11. Home offers more than categories
+### 11. Home enhanced with personalization
 - **Screens:** today [06](audit-screens/06-home-categories.jpg); redesign `04a-home`, `04b-home-scrolled` (the top of fresh near you)
 - Search, more prominent / **The primary way into the catalog**
 - Six sections, one small decision / **Subcategories move to the next screen**
-- Saved searches, out of a tab / **Get back to where you left off**
+- Saved searches easier to find / **Get back to where you left off**
 - Fresh near you / **New items from your searches and recent views**
 
-### 12. A nav bar built around getting back home
+### 12. A nav bar built for action
 - **Screens:** today's nav bar (cropped from [12](audit-screens/12-list-bicycles-grid.jpg)); the redesign's (cropped from `04a-home`)
-- Search becomes home / **A quick way to reset, and a home worth coming back to**
-- Post, the primary action / **Always filled, so adding to the catalog is obvious**
+- Search becomes home / **A quick way to reset your browsing**
+- Post, the primary action / **Always highlighted, so adding to the catalog is obvious**
 - Account moves to the end / **Saved, post and chat form a central group**
 - Favorites becomes saved / **You’re keeping it for later, so saved fits better**
 
-### 13. Sections start with what people shop for most
+### 13. Categories are for browsers
 - **Screens:** today [07](audit-screens/07-category-picker-modal.jpg); redesign `05a-section-for-sale`, `05b-section-a-z`
 - New category landing page / **A dedicated space to explore an entire category**
 - Popular or featured subcategories / **A personalized start, or scroll for the whole list**
 - Better browsing for browsers / **People who know what they want lean on search**
 
-### 14. Everything you need is right on the list
+### 14. Tools are where you need them
 - **Screens:** today [37](audit-screens/37-list-view-menu.jpg) (the view picker); redesign `06a-list-bicycles` (under $500 on), `06c-layout-menu` (the view menu open)
 - Category and area, front and center / **Tweak either without leaving the list**
-- Important filters, out front / **The full set is one tap away in filters**
+- Important filters, out front / **The full set is one tap away**
 - One menu for every view / **Large, medium or small images, no images, or the map**
 - Location and distance on every card / **Know how local it really is**
 - Save on every card / **Top right of the photo, the same spot as on the listing**
@@ -130,8 +130,9 @@ A new layout: four redesign screenshots with the view’s name under each, and n
 ### 21. The details are easy to browse
 - **Screens:** today [25](audit-screens/25-detail-specs.jpg); redesign `14b-detail-specs`, `15e-price-check-trek` (the Trek’s price check)
 - Description first, details below / **The seller’s own words, then condition, frame size, make and more in a grid**
-- Where, kept / **A map to easily understand where the item is**
+- Where is it? / **A map to easily understand where the item is**
 - New price check / **Helps gauge an offer against typical local prices**
+- *Notes:* the price check may be cut, since it gets complicated fast.
 
 ### 22. More trust, without giving up privacy
 - **Screens:** today [26](audit-screens/26-detail-map-actions.jpg) (the bottom of today’s listing); redesign `15d-seller-report-safety-verified` (the $50 choppers), `14e-detail-similar`
@@ -139,7 +140,7 @@ A new layout: four redesign screenshots with the view’s name under each, and n
 - Safety tips in context / **A heads-up when the price looks too good, and where to meet**
 - Report where people look for it / **Right with the seller info, before you message**
 - Similar items, right at the bottom / **More options right below**
-- *Notes:* the price check may be cut, since it gets complicated fast. Not in the UI yet: a rating system, or shadowbanning people with many negative reviews. Report is also in the hide flow, two slides back, and could go at the very bottom.
+- *Notes:* not in the UI yet: a rating system, or shadowbanning people with many negative reviews. Report is also in the hide flow, two slides back, and could go at the very bottom.
 
 ---
 
