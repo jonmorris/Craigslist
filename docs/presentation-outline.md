@@ -2,7 +2,7 @@
 
 The deck: https://claude.ai/artifact/HfML2PPvNBSg19qWgBHqJh (private until shared from its Share menu).
 
-**Shape:** three parts, 27 slides. Part 1 frames the project: goals, where we are, and the visual refresh as a summary slide, a divider, and four detail slides (we’ll keep one or the other). Part 2 follows one shopper through the four screens up for review today: home, browsing a category, search, and the listing. Part 3 recaps, demos the prototype, takes questions and sets out next steps.
+**Shape:** three parts, 28 slides. Part 1 frames the project: goals, where we are, and the visual refresh as a summary slide, a divider, and four detail slides (we’ll keep one or the other). Part 2 follows one shopper through the four screens up for review today: home, browsing a category, search, and the listing. Part 3 recaps, demos the prototype, takes questions and sets out next steps.
 
 **Walkthrough slides:** today’s screen on the left (from [`audit-screens/`](audit-screens/)), the redesign on the right (from [`presentation-screens/`](presentation-screens/)), and numbered callouts. Each callout is a short grey label over a bold 28px line, and describes a feature you can see in that slide’s screenshots. No claims about how today’s app works beyond what its screenshot shows.
 
@@ -82,12 +82,12 @@ Purple divider. “I live in Longfellow and want a used road bike for under $500
 - Better browsing for browsers / **People who know what they want lean on search**
 
 ### 15. Everything you need is right on the list
-- **Screens:** today [14](audit-screens/14-list-overflow-menu.jpg); redesign `06a-list-bicycles` (under $500 on), `17b-save-search-sheet`
+- **Screens:** today [14](audit-screens/14-list-overflow-menu.jpg); redesign `06a-list-bicycles` (under $500 on), `06c-layout-menu` (the view menu open)
 - Category and area, front and center / **Tweak either without leaving the list**
 - Exposing important filters / **The full set is one tap away in filters**
+- One menu for every view / **Large, medium or small images, no images, or the map**
 - Location and distance on every card / **Know how local it really is**
 - Save on every card / **Top right of the photo, the same spot as on the listing**
-- Prominent save search button / **Makes it easy to come back**
 
 ### 16. The same list, four more ways to see it
 A new layout: four redesign screenshots with the view’s name under each, and no “Today” column. The list slide shows medium images, the default; this one shows the other four views from the view menu.
@@ -97,38 +97,45 @@ A new layout: four redesign screenshots with the view’s name under each, and n
 - **No images**
 - **Map**
 
-### 17. See what a filter does before you apply it
+### 17. Save the search once, come back anytime
+- **Screens:** today [14](audit-screens/14-list-overflow-menu.jpg); redesign `17b-save-search-sheet`, `17d-saved-searches`
+- A summary of what you’re saving / **The name, price and area, right in the sheet**
+- Alerts, your way / **Tell me about new ones, instantly or once a day**
+- Every search in saved / **With how many new listings each one has**
+- Pick up where you left off / **Opening one brings back all of its filters**
+
+### 18. See what a filter does before you apply it
 - **Screens:** today [33](audit-screens/33-filter-sort-bikes-top.jpg); redesign `07b-filters-live-count`, `08b-price-bracket` ($0 to $500)
 - Every filter in one sheet / **Each group laid out as chips you can tap**
 - A live result count / **The button says how many listings you’ll get**
 - Pick a price on the chart / **Drag a range across what bikes actually sell for**
 
-### 18. Search helps before you finish typing
+### 19. Search helps before you finish typing
 - **Screens:** today [36](audit-screens/36-search-typeahead-bike.jpg); redesign `12d-search-typing-bike`, `12e-search-typing-bike-scrolled`
 - Suggestions finish your word / **What you typed stays plain, the rest is bold**
 - Listings right in the suggestions / **Jump straight to a listing, with its photo and price**
 - Search in a category / **Matching categories with counts, most relevant first**
 
-### 19. The essentials sit right at the top
+### 20. The essentials sit right at the top
 - **Screens:** today [24](audit-screens/24-detail-top-gallery.jpg); redesign `14a-detail-top` (the Trek, 2 of 4), `14f-detail-next-saved` (back one to the Townie, saved)
 - A back arrow, not an X / **You’re on a page, and back takes you to the list**
 - Next and previous, kept / **Move between results without the back button**
 - Price and location up front / **A more prominent price, and distance with the location**
 - Save at the top / **The same spot as on the list, so saving several in a row is quick**
 
-### 20. Hide, share and message, all in one bar
+### 21. Hide, share and message, all in one bar
 - **Screens:** today [26](audit-screens/26-detail-map-actions.jpg); redesign `14d-hide-confirm`, `16a-message-seller`
 - A clearer hide icon / **Hiding asks first, and lets you report it too**
 - Share in the middle / **Prominent, so passing a listing along is easy**
 - Message on the right / **The main action, with quick replies to get started**
 
-### 21. The details are easy to browse
+### 22. The details are easy to browse
 - **Screens:** today [25](audit-screens/25-detail-specs.jpg); redesign `14b-detail-specs`, `14e-detail-similar`
 - Description first, details below / **The seller’s own words, then condition, frame size, make and more in a grid**
 - Where, kept / **A map to easily understand where the item is**
 - More to explore / **Similar items, and a small nudge to post your own**
 
-### 22. A measured step toward more trust
+### 23. A measured step toward more trust
 - **Screens:** today [27](audit-screens/27-detail-overflow-sheet.jpg); redesign `15c-far-below-typical`, `15d-seller-report-safety-verified` (both the $50 choppers)
 - New price check / **Helps gauge an offer against typical local prices**
 - More about the seller / **Phone verified, and how many other listings they have**
@@ -140,15 +147,15 @@ A new layout: four redesign screenshots with the view’s name under each, and n
 
 ## Part 3: Recap and discussion
 
-### 23. Part 3 · Recap and discussion: Let’s talk it through
+### 24. Part 3 · Recap and discussion: Let’s talk it through
 Purple divider. “A quick look in the prototype, then your feedback on today’s screens.”
 
-### 24. See it for yourself
+### 25. See it for yourself
 Live demo on the phone, prototype at jonmorris.github.io/Craigslist.
 - **Browse:** home → for sale → bicycles → filters → a listing → message seller
 - **Search:** search “bike” → jump straight to a listing from the suggestions
 
-### 25. Questions?
+### 26. Questions?
 “What feels right, what doesn’t, and what’s missing?” Next to it, what we covered:
 - **Visual refresh:** same purple and peace sign, warmer type, new building blocks
 - **Home and navigation:** search up front, six sections, saved searches, a home worth coming back to
@@ -156,12 +163,12 @@ Live demo on the phone, prototype at jonmorris.github.io/Craigslist.
 - **Search:** suggestions with listings, and the same list plus a keyword
 - **The listing:** essentials at the top, easy details, one action bar, and more trust
 
-### 26. Here’s what happens next
+### 27. Here’s what happens next
 1. **Feedback due:** within a week. Take time to try the prototype on your phone before you send it.
 2. **How to send it:** one combined set. Gather everyone’s notes into a single list, with any conflicting asks settled on your side.
 3. **Next review:** iOS, posting and account. Creating a post, managing saved and created posts, and updates from your feedback.
 
-### 27. Thank you
+### 28. Thank you
 Purple, with the peace sign reversed (purple on white) and “craigslist modern refresh · Android App Redesign”.
 
 ---
