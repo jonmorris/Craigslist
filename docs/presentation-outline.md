@@ -101,7 +101,7 @@ A new layout: four redesign screenshots with the view’s name under each, and n
 - Every search in saved / **With how many new listings each one has**
 - Pick up where you left off / **Opening one brings back all of its filters**
 
-### 17. See what a filter does before you apply it
+### 17. Simpler filters, and price gets room of its own
 - **Screens:** today [33](audit-screens/33-filter-sort-bikes-top.jpg); redesign `07b-filters-live-count`, `08b-price-bracket` ($0 to $500)
 - Every filter in one sheet / **Each group laid out as chips you can tap**
 - A live result count / **The button says how many listings you’ll get**
