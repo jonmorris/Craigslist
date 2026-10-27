@@ -160,7 +160,7 @@ Live demo on the phone, prototype at jonmorris.github.io/Craigslist.
 - **The listing:** essentials at the top, easy details, one action bar, and more trust
 
 ### 26. Here’s what happens next
-1. **Feedback due:** within a week. Take time to try the prototype on your phone before you send it.
+1. **Feedback due:** within a week. Include any questions, and reach out if we should meet before then.
 2. **How to send it:** one combined set. Agreed on by your team, so we’re all working from one direction.
 3. **Next review:** iOS, posting and account. Creating a post, managing saved and created posts, and updates from your feedback.
 
