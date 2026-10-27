@@ -2,7 +2,7 @@
 
 The deck: https://claude.ai/artifact/HfML2PPvNBSg19qWgBHqJh (private until shared from its Share menu).
 
-**Shape:** three parts, 27 slides. Part 1 frames the project: goals, where we are, and and the visual refresh: a divider, then type, color, icons and the building blocks. Part 2 follows one shopper through the four screens up for review today: home, browsing a category, search, and the listing. Part 3 recaps, demos the prototype, takes questions and sets out next steps.
+**Shape:** three parts, 26 slides. Part 1 frames the project: goals, where we are, and and the visual refresh: a divider, then type, color, icons and the building blocks. Part 2 follows one shopper through the four screens up for review today: home, browsing a category, search, and the listing. Part 3 recaps, demos the prototype, and takes questions.
 
 **Walkthrough slides:** today’s screen on the left (from [`audit-screens/`](audit-screens/)), the redesign on the right (from [`presentation-screens/`](presentation-screens/)), and numbered callouts. Each callout is a short grey label over a bold 28px line, and describes a feature you can see in that slide’s screenshots. No claims about how today’s app works beyond what its screenshot shows.
 
@@ -159,12 +159,7 @@ Live demo on the phone, prototype at jonmorris.github.io/Craigslist.
 - **Search:** suggestions with listings, and the same list plus a keyword
 - **The listing:** essentials at the top, easy details, one action bar, and more trust
 
-### 26. Here’s what happens next
-1. **Feedback due:** on 10/30. Review the deck and try the prototype on your phone, then send us your notes.
-2. **How to send it:** one combined set. Agreed on by your team, so we’re all working from one direction.
-3. **Next review:** iOS, posting and account. Creating a post, managing saved and created posts, and updates from your feedback.
-
-### 27. Thank you
+### 26. Thank you
 Purple, with the peace sign reversed (purple on white) and “craigslist modern refresh · Android App Redesign”.
 
 ---
