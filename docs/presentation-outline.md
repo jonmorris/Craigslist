@@ -105,7 +105,7 @@ A new layout: four redesign screenshots with the view’s name under each, and n
 - **Screens:** today [33](audit-screens/33-filter-sort-bikes-top.jpg); redesign `07b-filters-live-count`, `08b-price-bracket` ($0 to $500)
 - Chips instead of accordions / **Every option visible, nothing to open and close**
 - Price gets its own sheet / **A chart of what bikes actually sell for, so the filter sheet stays short**
-- A count before you commit / **Both buttons say how many listings you’ll get**
+- Filters that fit the category / **Make, bike type and frame size, with popular brands one tap away**
 
 ### 18. Improving quick search
 - **Screens:** today [36](audit-screens/36-search-typeahead-bike.jpg); redesign `12d-search-typing-bike`, `12e-search-typing-bike-scrolled`
