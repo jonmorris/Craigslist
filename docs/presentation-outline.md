@@ -2,7 +2,7 @@
 
 The deck: https://claude.ai/artifact/HfML2PPvNBSg19qWgBHqJh (private until shared from its Share menu).
 
-**Shape:** three parts, 24 slides. Part 1 frames the project: goals, where we are, and the visual refresh: a divider, then type, color, icons and the building blocks. Part 2 follows one shopper through the four screens up for review today: home, browsing a category, search, and the listing. Part 3 is one slide: questions, with the prototype link.
+**Shape:** four parts, 24 slides. Part 1 frames the project: goals and where we are. Part 2 is the visual refresh: a divider, then type, color, icons and the building blocks. Part 3 follows one shopper through the four screens up for review today: home, browsing a category, search, and the listing. Part 4 is one slide: questions, with the prototype link.
 
 **Walkthrough slides:** today’s screen on the left (from [`audit-screens/`](audit-screens/)), the redesign on the right (from [`presentation-screens/`](presentation-screens/)), and numbered callouts. Each callout is a short grey label over a bold 28px line, and describes a feature you can see in that slide’s screenshots. No claims about how today’s app works beyond what its screenshot shows.
 
@@ -18,7 +18,7 @@ The deck: https://claude.ai/artifact/HfML2PPvNBSg19qWgBHqJh (private until share
 Cover: the peace sign icon, “craigslist / modern refresh” with “Android App Redesign” under it.
 
 ### 2. Part 1 · Introduction: First, where we’re headed
-Purple divider. “Our goals, where the project stands, and the visual refresh.”
+Purple divider. “Our goals, and where the project stands.”
 
 ### 3. What we set out to do
 Five cards, each a goal with the reason under it:
@@ -33,7 +33,11 @@ Five cards, each a goal with the reason under it:
 - **Today, for feedback and approval:** visual refresh, home screen, browsing a category, search for an item or post, viewing the details of an item or post.
 - **Next review:** iOS app, creating a post, managing saved and created posts, account.
 
-### 5. Visual refresh: Same purple, new style
+---
+
+## Part 2: Visual refresh
+
+### 5. Part 2 · Visual refresh: Same purple, new style
 Purple divider. “Type, color, icons and the building blocks.”
 
 ### 6. Two typefaces, each with a job
@@ -50,9 +54,9 @@ Filter chips, the category and area buttons, the bottom nav, a listing card and 
 
 ---
 
-## Part 2: The walkthrough
+## Part 3: The walkthrough
 
-### 10. Part 2 · Design walkthrough: Let’s look at someone shopping for a used bike
+### 10. Part 3 · Design walkthrough: Let’s look at someone shopping for a used bike
 Purple divider. “I live in Longfellow and want a used road bike for under $500.”
 
 ### 11. Home offers more than categories
@@ -139,7 +143,7 @@ A new layout: four redesign screenshots with the view’s name under each, and n
 
 ---
 
-## Part 3: Questions and discussion
+## Part 4: Questions and discussion
 
 ### 23. Questions?
 “What feels right, what doesn’t, and what’s missing?”, with the prototype link under it (jonmorris.github.io/Craigslist).
