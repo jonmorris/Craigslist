@@ -78,7 +78,7 @@ Purple divider. “I live in Longfellow and want a used road bike for under $500
 ### 14. Everything you need is right on the list
 - **Screens:** today [37](audit-screens/37-list-view-menu.jpg) (the view picker); redesign `06a-list-bicycles` (under $500 on), `06c-layout-menu` (the view menu open)
 - Category and area, front and center / **Tweak either without leaving the list**
-- Exposing important filters / **The full set is one tap away in filters**
+- Important filters, out front / **The full set is one tap away in filters**
 - One menu for every view / **Large, medium or small images, no images, or the map**
 - Location and distance on every card / **Know how local it really is**
 - Save on every card / **Top right of the photo, the same spot as on the listing**
@@ -94,13 +94,13 @@ A new layout: four redesign screenshots with the view’s name under each, and n
 ### 16. Save the search once, come back anytime
 - **Screens:** today [14](audit-screens/14-list-overflow-menu.jpg); redesign `17b-save-search-sheet`, `17d-saved-searches`
 - A summary of what you’re saving / **The name, price and area, right in the sheet**
-- Alerts, your way / **Tell me about new ones, instantly or once a day**
+- Alerts instantly or once a day / **Turned on as soon as you save**
 - Every search in saved / **With how many new listings each one has**
 - Pick up where you left off / **Opening one brings back all of its filters**
 
 ### 17. Simpler filters when you need them
 - **Screens:** today [33](audit-screens/33-filter-sort-bikes-top.jpg); redesign `07b-filters-live-count`, `08b-price-bracket` ($0 to $500)
-- Chips instead of accordions / **Every option visible, nothing to open and close**
+- Every option as a chip / **Every option visible, nothing to open and close**
 - Price gets its own sheet / **A chart of what bikes actually sell for, so the filter sheet stays short**
 - Filters that fit the category / **Make, bike type and frame size, with popular brands one tap away**
 
@@ -108,7 +108,7 @@ A new layout: four redesign screenshots with the view’s name under each, and n
 - **Screens:** today [36](audit-screens/36-search-typeahead-bike.jpg); redesign `12d-search-typing-bike`, `12e-search-typing-bike-scrolled`
 - A visual refresh / **Cleaner and easier to scan**
 - Four kinds of results as you type / **Your term, suggestions, the term in a category, and matching listings**
-- A preview of what you’ll get / **Photos and prices before you even hit search**
+- A preview of what you’ll get / **Photos and prices as you type**
 
 ### 19. The essentials sit right at the top
 - **Screens:** today [24](audit-screens/24-detail-top-gallery.jpg); redesign `14a-detail-top` (the Trek, 2 of 4), `14f-detail-next-saved` (back one to the Townie, saved)
@@ -124,17 +124,17 @@ A new layout: four redesign screenshots with the view’s name under each, and n
 - Message on the right / **The main action, with quick replies to get started**
 
 ### 21. The details are easy to browse
-- **Screens:** today [25](audit-screens/25-detail-specs.jpg); redesign `14b-detail-specs`, `15c-far-below-typical` (the $50 choppers’ price check)
+- **Screens:** today [25](audit-screens/25-detail-specs.jpg); redesign `14b-detail-specs`, `15e-price-check-trek` (the Trek’s price check)
 - Description first, details below / **The seller’s own words, then condition, frame size, make and more in a grid**
 - Where, kept / **A map to easily understand where the item is**
 - New price check / **Helps gauge an offer against typical local prices**
 
-### 22. A measured step toward more trust
+### 22. More trust, without giving up privacy
 - **Screens:** today [26](audit-screens/26-detail-map-actions.jpg) (the bottom of today’s listing); redesign `15d-seller-report-safety-verified` (the $50 choppers), `14e-detail-similar`
 - More about the seller / **Phone verified, and how many other listings they have**
-- Safety tips right where you need them / **A heads-up when the price looks too good, and where to meet**
+- Safety tips in context / **A heads-up when the price looks too good, and where to meet**
 - Report where people look for it / **Right with the seller info, before you message**
-- Similar items, right at the bottom / **Not quite right? The next option is one tap away**
+- Similar items, right at the bottom / **More options right below**
 - *Notes:* the price check may be cut, since it gets complicated fast. Not in the UI yet: a rating system, or shadowbanning people with many negative reviews. Report is also in the hide flow, two slides back, and could go at the very bottom.
 
 ---
