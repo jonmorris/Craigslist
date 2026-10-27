@@ -145,8 +145,8 @@ A new layout: four redesign screenshots with the view’s name under each, and n
 
 ## Part 4: Questions and discussion
 
-### 23. Questions?
-“What feels right, what doesn’t, and what’s missing?”, with the prototype link under it (jonmorris.github.io/Craigslist).
+### 23. Part 4 · Discussion: Questions?
+Purple divider. “What feels right, what doesn’t, and what’s missing?”, then “Try the prototype: jonmorris.github.io/Craigslist”.
 
 ### 24. Thank you
 Purple, with the peace sign reversed (purple on white) and “craigslist modern refresh · Android App Redesign”.
