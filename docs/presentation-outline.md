@@ -22,7 +22,7 @@ Purple divider. “Our goals, where the project stands, and the visual refresh.�
 
 ### 3. What we set out to do
 Five cards, each a goal with the reason under it:
-1. Re-launch mobile apps following modern design trends. *A UI that feels current, native on every screen.*
+1. Relaunch mobile apps following modern design trends. *A UI that feels current, native on every screen.*
 2. Improve engagement with new and existing users. *Features that make the app more enjoyable to come back to.*
 3. Build up craigslist’s reputation around security and trust. *Digital security is at a premium. The UI has to show people they’re safe.*
 4. Modernize without losing what people love about craigslist. *No ads, the plain voice, privacy first.*
@@ -36,17 +36,14 @@ Five cards, each a goal with the reason under it:
 ### 5. Visual refresh: Same purple, new style
 Purple divider. “Type, color, icons and the building blocks.”
 
-### 6. Warm headlines, and everything else easy to read
+### 6. Two typefaces, each with a job
 Young Serif for screen titles, section names and the wordmark; Figtree for prices, cards, chips and body text, in regular, semibold and bold.
 
-### 7. Same purple, same peace sign, just a little brighter
+### 7. Same purple and peace sign, extended
 Logo and app icon, the five core colors with their roles, and a tint per section, built from the original #9945C8 and passing 4.5:1 in light and dark.
 
 ### 8. One icon family, rounded and friendly
-The 24-icon set, with three callouts:
-- Material Symbols Rounded, weight 500 / **Native to Android and ready for Compose**
-- An icon for every section / **For sale, housing, jobs, services, gigs and community**
-- Icons that say what they do / **Hide is an eye, saving is a bookmark**
+The 24-icon set, full width, no callouts.
 
 ### 9. A few new pieces to build with
 Filter chips, the category and area buttons, the bottom nav, a listing card and the save-search button.
@@ -70,7 +67,7 @@ Purple divider. “I live in Longfellow and want a used road bike for under $500
 - Search becomes home / **A quick way to reset, and a home worth coming back to**
 - Post, the primary action / **Always filled, so adding to the catalog is obvious**
 - Account moves to the end / **Saved, post and chat form a central group**
-- Favorites becomes saved / **You're bookmarking it for later, not picking a favorite**
+- Favorites becomes saved / **You’re keeping it for later, so saved fits better**
 
 ### 13. Sections start with what people shop for most
 - **Screens:** today [07](audit-screens/07-category-picker-modal.jpg); redesign `05a-section-for-sale`, `05b-section-a-z`
