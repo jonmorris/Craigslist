@@ -127,17 +127,17 @@ A new layout: four redesign screenshots with the view’s name under each, and n
 - Message on the right / **The main action, with quick replies to get started**
 
 ### 21. The details are easy to browse
-- **Screens:** today [25](audit-screens/25-detail-specs.jpg); redesign `14b-detail-specs`, `14e-detail-similar`
+- **Screens:** today [25](audit-screens/25-detail-specs.jpg); redesign `14b-detail-specs`, `15c-far-below-typical` (the $50 choppers’ price check)
 - Description first, details below / **The seller’s own words, then condition, frame size, make and more in a grid**
 - Where, kept / **A map to easily understand where the item is**
-- Similar items, right at the bottom / **Not quite right? The next option is one tap away**
+- New price check / **Helps gauge an offer against typical local prices**
 
 ### 22. A measured step toward more trust
-- **Screens:** today [27](audit-screens/27-detail-overflow-sheet.jpg); redesign `15c-far-below-typical`, `15d-seller-report-safety-verified` (both the $50 choppers)
-- New price check / **Helps gauge an offer against typical local prices**
+- **Screens:** today [27](audit-screens/27-detail-overflow-sheet.jpg); redesign `15d-seller-report-safety-verified` (the $50 choppers), `14e-detail-similar`
 - More about the seller / **Phone verified, and how many other listings they have**
 - Safety tips right where you need them / **A heads-up when the price looks too good, and where to meet**
 - Report where people look for it / **Right with the seller info, before you message**
+- Similar items, right at the bottom / **Not quite right? The next option is one tap away**
 - *Notes:* the price check may be cut, since it gets complicated fast. Not in the UI yet: a rating system, or shadowbanning people with many negative reviews. Report is also in the hide flow, two slides back, and could go at the very bottom.
 
 ---
