@@ -82,7 +82,7 @@ Purple divider. “I live in Longfellow and want a used road bike for under $500
 - Better browsing for browsers / **People who know what they want lean on search**
 
 ### 15. Everything you need is right on the list
-- **Screens:** today [14](audit-screens/14-list-overflow-menu.jpg); redesign `06a-list-bicycles` (under $500 on), `06c-layout-menu` (the view menu open)
+- **Screens:** today [37](audit-screens/37-list-view-menu.jpg) (the view picker); redesign `06a-list-bicycles` (under $500 on), `06c-layout-menu` (the view menu open)
 - Category and area, front and center / **Tweak either without leaving the list**
 - Exposing important filters / **The full set is one tap away in filters**
 - One menu for every view / **Large, medium or small images, no images, or the map**
