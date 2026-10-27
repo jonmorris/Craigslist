@@ -133,7 +133,7 @@ A new layout: four redesign screenshots with the view’s name under each, and n
 - New price check / **Helps gauge an offer against typical local prices**
 
 ### 22. A measured step toward more trust
-- **Screens:** today [27](audit-screens/27-detail-overflow-sheet.jpg); redesign `15d-seller-report-safety-verified` (the $50 choppers), `14e-detail-similar`
+- **Screens:** today [26](audit-screens/26-detail-map-actions.jpg) (the bottom of today’s listing); redesign `15d-seller-report-safety-verified` (the $50 choppers), `14e-detail-similar`
 - More about the seller / **Phone verified, and how many other listings they have**
 - Safety tips right where you need them / **A heads-up when the price looks too good, and where to meet**
 - Report where people look for it / **Right with the seller info, before you message**
