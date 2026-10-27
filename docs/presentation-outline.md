@@ -145,7 +145,7 @@ A new layout: four redesign screenshots with the view’s name under each, and n
 ## Part 3: Recap and discussion
 
 ### 23. Part 3 · Recap and discussion: Let’s talk it through
-Purple divider. “A quick look in the prototype, then your feedback on today’s screens.”
+Purple divider. “Try it in the prototype, then tell us what you think.”
 
 ### 24. See it for yourself
 Live demo on the phone, prototype at jonmorris.github.io/Craigslist.
