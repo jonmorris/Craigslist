@@ -110,11 +110,11 @@ A new layout: four redesign screenshots with the view’s name under each, and n
 - A live result count / **The button says how many listings you’ll get**
 - Pick a price on the chart / **Drag a range across what bikes actually sell for**
 
-### 19. Search helps before you finish typing
+### 19. Improving quick search
 - **Screens:** today [36](audit-screens/36-search-typeahead-bike.jpg); redesign `12d-search-typing-bike`, `12e-search-typing-bike-scrolled`
-- Suggestions finish your word / **What you typed stays plain, the rest is bold**
-- Listings right in the suggestions / **Jump straight to a listing, with its photo and price**
-- Search in a category / **Matching categories with counts, most relevant first**
+- A visual refresh / **Cleaner and easier to scan**
+- Four kinds of results as you type / **Your term, suggestions, the term in a category, and matching listings**
+- A preview of what you’ll get / **Photos and prices before you even hit search**
 
 ### 20. The essentials sit right at the top
 - **Screens:** today [24](audit-screens/24-detail-top-gallery.jpg); redesign `14a-detail-top` (the Trek, 2 of 4), `14f-detail-next-saved` (back one to the Townie, saved)
