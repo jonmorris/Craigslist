@@ -130,7 +130,7 @@ A new layout: four redesign screenshots with the view’s name under each, and n
 - **Screens:** today [25](audit-screens/25-detail-specs.jpg); redesign `14b-detail-specs`, `14e-detail-similar`
 - Description first, details below / **The seller’s own words, then condition, frame size, make and more in a grid**
 - Where, kept / **A map to easily understand where the item is**
-- More to explore / **Similar items, and a small nudge to post your own**
+- Similar items, right at the bottom / **Not quite right? The next option is one tap away**
 
 ### 22. A measured step toward more trust
 - **Screens:** today [27](audit-screens/27-detail-overflow-sheet.jpg); redesign `15c-far-below-typical`, `15d-seller-report-safety-verified` (both the $50 choppers)
