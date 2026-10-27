@@ -2,7 +2,7 @@
 
 The deck: https://claude.ai/artifact/HfML2PPvNBSg19qWgBHqJh (private until shared from its Share menu).
 
-**Shape:** three parts, 24 slides. Part 1 frames the project: goals, where we are, and the visual refresh: a divider, then type, color, icons and the building blocks. Part 2 follows one shopper through the four screens up for review today: home, browsing a category, search, and the listing. Part 3 is one slide: questions, a recap of what we covered, and the prototype link.
+**Shape:** three parts, 24 slides. Part 1 frames the project: goals, where we are, and the visual refresh: a divider, then type, color, icons and the building blocks. Part 2 follows one shopper through the four screens up for review today: home, browsing a category, search, and the listing. Part 3 is one slide: questions, with the prototype link.
 
 **Walkthrough slides:** today’s screen on the left (from [`audit-screens/`](audit-screens/)), the redesign on the right (from [`presentation-screens/`](presentation-screens/)), and numbered callouts. Each callout is a short grey label over a bold 28px line, and describes a feature you can see in that slide’s screenshots. No claims about how today’s app works beyond what its screenshot shows.
 
@@ -145,12 +145,7 @@ A new layout: four redesign screenshots with the view’s name under each, and n
 ## Part 3: Questions and discussion
 
 ### 23. Questions?
-“What feels right, what doesn’t, and what’s missing?”, with the prototype link under it (jonmorris.github.io/Craigslist). Next to it, what we covered:
-- **Visual refresh:** same purple and peace sign, warmer type, new building blocks
-- **Home and navigation:** search up front, six sections, saved searches, a home worth coming back to
-- **Browsing a category:** a landing page per category, the list, and filters with a live count
-- **Search:** suggestions with listings, and the same list plus a keyword
-- **The listing:** essentials at the top, easy details, one action bar, and more trust
+“What feels right, what doesn’t, and what’s missing?”, with the prototype link under it (jonmorris.github.io/Craigslist).
 
 ### 24. Thank you
 Purple, with the peace sign reversed (purple on white) and “craigslist modern refresh · Android App Redesign”.
