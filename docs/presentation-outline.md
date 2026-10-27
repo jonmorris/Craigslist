@@ -121,7 +121,7 @@ A new layout: four redesign screenshots with the view’s name under each, and n
 - Save at the top / **The same spot as on the list, so saving several in a row is quick**
 
 ### 20. Hide, share and message, all in one bar
-- **Screens:** today [26](audit-screens/26-detail-map-actions.jpg); redesign `14d-hide-confirm`, `16a-message-seller`
+- **Screens:** redesign only, no “Today” column: `14a-detail-top` (the Trek with its action bar), `14d-hide-confirm`, `16a-message-seller` (both sheets over the top of the listing)
 - A clearer hide icon / **Hiding asks first, and lets you report it too**
 - Share in the middle / **Prominent, so passing a listing along is easy**
 - Message on the right / **The main action, with quick replies to get started**
