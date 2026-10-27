@@ -150,7 +150,6 @@ Purple divider. “A quick look in the prototype, then your feedback on today’
 ### 24. See it for yourself
 Live demo on the phone, prototype at jonmorris.github.io/Craigslist.
 - **Browse:** home → for sale → bicycles → filters → a listing → message seller
-- **Search:** search “bike” → jump straight to a listing from the suggestions
 
 ### 25. Questions?
 “What feels right, what doesn’t, and what’s missing?” Next to it, what we covered:
