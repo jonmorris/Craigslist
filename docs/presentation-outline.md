@@ -101,11 +101,11 @@ A new layout: four redesign screenshots with the view’s name under each, and n
 - Every search in saved / **With how many new listings each one has**
 - Pick up where you left off / **Opening one brings back all of its filters**
 
-### 17. Simpler filters, and price gets room of its own
+### 17. Simpler filters when you need them
 - **Screens:** today [33](audit-screens/33-filter-sort-bikes-top.jpg); redesign `07b-filters-live-count`, `08b-price-bracket` ($0 to $500)
-- Every filter in one sheet / **Each group laid out as chips you can tap**
-- A live result count / **The button says how many listings you’ll get**
-- Pick a price on the chart / **Drag a range across what bikes actually sell for**
+- Chips instead of accordions / **Every option visible, nothing to open and close**
+- Price gets its own sheet / **A chart of what bikes actually sell for, so the filter sheet stays short**
+- A count before you commit / **Both buttons say how many listings you’ll get**
 
 ### 18. Improving quick search
 - **Screens:** today [36](audit-screens/36-search-typeahead-bike.jpg); redesign `12d-search-typing-bike`, `12e-search-typing-bike-scrolled`
