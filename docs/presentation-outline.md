@@ -159,10 +159,10 @@ Live demo on the phone, prototype at jonmorris.github.io/Craigslist.
 - **Search:** suggestions with listings, and the same list plus a keyword
 - **The listing:** essentials at the top, easy details, one action bar, and more trust
 
-### 26. What happens next
-1. **Feedback due:** within a week. Questions are welcome. If they pile up, let’s set a quick call.
+### 26. Here’s what happens next
+1. **Feedback due:** within a week. Take time to try the prototype on your phone before you send it.
 2. **How to send it:** one combined set. Agreed on by your team, so we’re all working from one direction.
-3. **Next review:** iOS, posting and account. Plus updates from your feedback.
+3. **Next review:** iOS, posting and account. Creating a post, managing saved and created posts, and updates from your feedback.
 
 ### 27. Thank you
 Purple, with the peace sign reversed (purple on white) and “craigslist modern refresh · Android App Redesign”.
