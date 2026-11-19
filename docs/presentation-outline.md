@@ -6,7 +6,7 @@ The deck: https://claude.ai/artifact/HfML2PPvNBSg19qWgBHqJh (private until share
 
 **Walkthrough slides:** most put today’s screen on the left (from [`audit-screens/`](audit-screens/)), the redesign on the right (from [`presentation-screens/`](presentation-screens/)), and numbered callouts. Each callout is a short grey label over a bold 28px line, and describes a feature you can see in that slide’s screenshots. No claims about how today’s app works beyond what its screenshot shows. Two slides (the four list views, and the action bar) show the redesign only.
 
-**The shopper:** “I live in Longfellow and want a used road bike for under $500.” The list, filter, listing, details and actions shots follow that search: bicycles under $500, the Trek 5200 road bike ($375, St. Louis Park) and the Electra Townie ($235, Longfellow). The trust slide uses the $50 Schwinn choppers on purpose, to show the warning a too-good price gets.
+**The shopper:** “I live in Longfellow and want a used road bike for under $500.” The list, filter, listing, details and actions shots follow that search: bicycles under $500, the Trek 5200 road bike ($375, St. Louis Park) and the Electra Townie ($235, Longfellow). The trust slide’s seller card comes from the $50 Schwinn choppers listing, because that seller shows other listings and phone verification. There is no price estimate anywhere: it was removed after the client review (backlog FB14, FB15).
 
 **Every phone shot** is the Galaxy Z Fold 8 cover screen at 1248×1972, with its status bar and 3-button nav, redesign shots in light mode. Every slide has the footer “craigslist x Livefront”. Headlines sit in a fixed two-line box so content doesn’t move between slides. “craigslist” is always lowercase.
 
@@ -105,7 +105,7 @@ A new layout: four redesign screenshots with the view’s name under each, and n
 ### 17. Simpler filters when you need them
 - **Screens:** today [33](audit-screens/33-filter-sort-bikes-top.jpg); redesign `07b-filters-live-count`, `08b-price-bracket` ($0 to $500)
 - Every option as a chip / **Every option visible, nothing to open and close**
-- Price gets its own sheet / **A chart of what bikes actually sell for, so the filter sheet stays short**
+- Price gets its own sheet / **A chart of asking prices, so the filter sheet stays short**
 - Filters that fit the category / **Make, bike type and frame size, with popular brands one tap away**
 
 ### 18. Improving quick search
@@ -128,16 +128,14 @@ A new layout: four redesign screenshots with the view’s name under each, and n
 - Message on the right / **The main action, with quick replies to get started**
 
 ### 21. The details are easy to browse
-- **Screens:** today [25](audit-screens/25-detail-specs.jpg); redesign `14b-detail-specs`, `15e-price-check-trek` (the Trek’s price check)
+- **Screens:** today [25](audit-screens/25-detail-specs.jpg); redesign `14b-detail-specs`, `14g-detail-where` (the Trek’s approximate-area map)
 - Description first, details below / **The seller’s own words, then condition, frame size, make and more in a grid**
 - Where is it? / **A map to easily understand where the item is**
-- New price check / **Helps gauge an offer against typical local prices**
-- *Notes:* the price check may be cut, since it gets complicated fast.
 
 ### 22. More trust, without giving up privacy
 - **Screens:** today [26](audit-screens/26-detail-map-actions.jpg) (the bottom of today’s listing); redesign `15d-seller-report-safety-verified` (the $50 choppers), `14e-detail-similar`
 - More about the seller / **Phone verified, and how many other listings they have**
-- Safety tips in context / **A heads-up when the price looks too good, and where to meet**
+- Safety tips in context / **Where to meet, and never pay before you’ve seen it**
 - Report where people look for it / **Right with the seller info, before you message**
 - Similar items, right at the bottom / **More options right below**
 - *Notes:* not in the UI yet: a rating system, or shadowbanning people with many negative reviews. Report is also in the hide flow, two slides back, and could go at the very bottom.
