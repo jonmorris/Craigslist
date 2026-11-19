@@ -100,6 +100,8 @@ Use: section tiles = `<section>-container` / `on-<section>-container`. "free" = 
 
 These are M3 type scale roles. The brand serif goes on title and headline roles only; Figtree goes on everything else. Sizes are in sp.
 
+**Readability floor:** nothing you need to read is smaller than 14sp. The scale is customized for it: bodySmall and labelMedium are raised to 14sp, and labelSmall (12sp) is only for incidental text such as photo counts, chart axes and status pills. Raised after the client review (backlog FB1).
+
 | M3 role | Font | Size / line | Weight | Used for |
 |---|---|---|---|---|
 | headlineSmall | Young Serif | 24 / 32 | 400 | (reserved) |
@@ -107,12 +109,12 @@ These are M3 type scale roles. The brand serif goes on title and headline roles 
 | titleMedium | Figtree | 16 / 24 | 500 | tile names, button labels |
 | titleMedium (emphasized) | Figtree | 16 / 24 | 700 | prices, current location |
 | titleSmall | Figtree | 14 / 20 | 500 | tabs, saved-search names |
-| bodyLarge | Figtree | 16 / 24 | 400 | search placeholder, text fields, list rows |
-| bodyMedium | Figtree | 14 / 20 | 400 | listing titles, snackbar |
-| bodySmall | Figtree | 12 / 16 | 400 | listing meta (age · area · distance), subtitles |
+| bodyLarge | Figtree | 16 / 24 | 400 | listing titles on cards, search placeholder, text fields, list rows |
+| bodyMedium | Figtree | 14 / 20 | 400 | snackbar, sheet notes |
+| bodySmall | Figtree | 14 / 20 | 400 | listing meta (age · area · distance), subtitles, field hints (raised from 12) |
 | labelLarge | Figtree | 14 / 20 | 500 | chips, FAB, text buttons |
-| labelMedium | Figtree | 12 / 16 | 500 | nav labels, counts, badges |
-| labelSmall | Figtree | 11 / 16 | 500 | photo count |
+| labelMedium | Figtree | 14 / 20 | 500 | nav labels, counts, badges (raised from 12) |
+| labelSmall | Figtree | 12 / 16 | 500 | photo count, chart axes, status pills only (raised from 11) |
 
 Prices use tabular (equal-width) figures. Both fonts are free Google Fonts. In Compose, bundle them in `res/font` or use downloadable fonts.
 
@@ -135,7 +137,7 @@ All are standard M3 / Compose Material 3 components. Nothing is web-only.
 | search bar | `SearchBar` (56dp) |
 | home header, list header | `TopAppBar`, with the home brand row collapsing via `TopAppBarScrollBehavior` |
 | subcategory tabs | `PrimaryScrollableTabRow` |
-| filter chips | `FilterChip` (32dp, 48dp touch target) |
+| filter chips | `FilterChip` at 40dp tall (M3 default is 32), 12dp apart, 48dp touch target |
 | search | `SearchBar` expanding to a full-screen search view (`ExpandedFullScreenSearchBar`), with `ListItem` rows for recent, suggestions and "search in" scopes |
 | section tiles, saved searches | `Card` / `OutlinedCard` |
 | save search | `ExtendedFloatingActionButton` (primaryContainer) |

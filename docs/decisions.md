@@ -141,7 +141,7 @@ What the current app does here needs a hands-on check (Jon is trying it). From t
 | B5 | Kept: the lowercase, plain-spoken voice, the peace sign, and dark mode | Same voice everywhere, including empty states. Peace sign as the app mark | It's the brand's personality | audit |
 | B6 | — | **Post** stays a filled, highlighted item in the nav (an exception to M3). Every nav item, on the phone's bottom bar and the larger-screen rail, is a 64dp rounded square holding icon and label; the active one fills, and post is always filled in the brand color | Posting is the other half of the marketplace. The square makes the active state a full target that reads at a glance, instead of a small pill over the icon | review |
 | B7 | — | No hover states, only pressed and focus | It's a touch app | review, platform |
-| B8 | — | WCAG 2.1 AA: text at least 4.5:1, control outlines at least 3:1, both themes, 48dp+ touch targets, selection not shown by color alone | Accessibility is table stakes for a client-ready app | review |
+| B8 | — | WCAG 2.1 AA: text at least 4.5:1, control outlines at least 3:1, both themes, 48dp+ touch targets, selection not shown by color alone. Nothing you need to read is under 14sp (listing meta, nav labels, counts, field hints; titles on cards are 16sp), and chips are 40dp tall and 12dp apart | Accessibility is table stakes for a client-ready app. The text floor and roomier chips came from the client review: the first version leaned on 11–12sp text and tightly packed 32dp chips | review, client |
 
 ## Still open
 

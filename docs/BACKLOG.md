@@ -14,13 +14,13 @@ Livefront's "areas of opportunity" from the design challenge review ([verbatim](
 
 | # | Feedback | Where | Direction (to agree) | Size | Status |
 |---|---|---|---|---|---|
-| FB1 | Small text in listing metadata, filter chips, nav labels and supporting explanations | Prototype | Raise the type scale one step for metadata, chips, labels and helper text (M3 body-medium and label-large as the floor), and check every screen at the Fold's cover-screen width | M | To do |
+| FB1 | Small text in listing metadata, filter chips, nav labels and supporting explanations | Prototype | **Decided:** a 14sp floor for anything you need to read (listing meta, nav labels, counts, helper text), card titles at 16sp, photo counts at 12sp. Checked on every main screen at the cover-screen width | M | Done 2026-11-19 |
 | FB2 | Large images next to compressed titles and metadata | Prototype | Rebalance the medium-images card: shorter photo, two-line titles, metadata on its own line. Reconsider which view is the default | M | To do |
 | FB3 | Purple-tinted surfaces everywhere blur structure and controls | Prototype | Neutral surfaces for structure (nav, headers, sheets, fields), with purple only on interactive and selected elements. Goes with FB10 | M | To do |
 | FB4 | The filled Post button competes with the selected nav destination | Prototype | Post stops looking selected all the time. Goes with FB5 | S | To do |
 | FB5 | Post in the nav bar mixes an action with destinations | Prototype, deck | Move Post out of the nav: a floating action button on home and lists, or a top-bar action, leaving the nav to destinations only. Rethink with FB4 | M | To do |
 | FB6 | The floating Save search button overlaps listings and over-emphasizes a secondary action | Prototype | Move save search into the scope row or the top bar, or collapse it to an icon on scroll | S | To do |
-| FB7 | Small, tightly packed filter chips feel less comfortable than the rounded styling suggests | Prototype | Bigger chips with more spacing, and fewer chips in the row. Goes with FB1 | S | To do |
+| FB7 | Small, tightly packed filter chips feel less comfortable than the rounded styling suggests | Prototype | **Decided:** chips 40dp tall (from 32), 12dp apart (from 8), in the list's chip row and the filter and price sheets | S | Done 2026-11-19 |
 | FB8 | Search screenshots omit the keyboard, so the layout is unproven while typing | Deck | Retake the search shots with the keyboard up, and check what still fits above it | S | To do |
 | FB9 | Prev/next over the photo is easy to confuse with photo paging | Prototype | Move prev/next off the photo, into the top bar or a bar below the gallery, and keep the photo counter alone on the image | S | To do |
 | FB10 | Several surface colors with no clear pattern | Prototype, docs | Define a small surface hierarchy in `design-tokens.md` and apply it. Goes with FB3 | M | To do |
