@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite --host",
     "theme": "node scripts/theme.mjs",
-    "build": "vite build && node scripts/artifact.mjs"
+    "build": "vite build && node scripts/artifact.mjs",
+    "test": "node --test scripts/*.test.mjs",
+    "decision-log": "node scripts/decision-log.mjs"
   },
   "dependencies": {
     "leaflet": "^1.9.4",

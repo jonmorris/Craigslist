@@ -13,6 +13,12 @@ Whenever a change alters what the user sees or does compared with today's app (o
 - Things kept on purpose get a "Kept:" row.
 - Move resolved items out of "Still open".
 
+## Running records
+
+`docs/DECISION-LOG.md` (a dated one-line index of every decision) and `docs/CASE-STUDY.md` (a modular portfolio case study) are repo-only indexes over the other docs. The reasoning itself stays in `docs/decisions.md`, `docs/audit.md` and the rest.
+
+When a change makes a decision, add a decision-log entry in the same commit. When it's worth telling, amend a case-study module and add a row to its *Log of additions*. A decision-log entry is always a new file in `docs/decision-log/` (`YYYY-MM-DD-short-name.md`, one table row), never an edit to the table. `npm run decision-log` (from `prototype/`) checks pending entries; `npm test` fails on a malformed one; `--fold` moves them into the table, on main only.
+
 ## Native-feasible only
 
 This prototype stands in for a native Android app (Jetpack Compose, Material 3). Only design things a native app can do. If something is web-only or prototype-only, either avoid it or flag it in the "Native feasibility" section of `docs/decisions.md` in the same commit, with the native equivalent or the reason it's prototype-only.

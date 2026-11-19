@@ -1,0 +1,25 @@
+# Runs the repo's unit tests, including the check on pending decision-log entries.
+name: Test
+
+on:
+  push:
+    branches: [ccr-a766eefe-yp40gn, main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: prototype
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      # The tests use only Node's built-in runner, so no npm ci.
+      - run: npm test

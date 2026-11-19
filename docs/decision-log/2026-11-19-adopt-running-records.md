@@ -1,0 +1,1 @@
+| 2026-11-19 | Process | Decisions get a dated one-line index, added as one file per decision and folded on main, alongside a running case study | DECISION-LOG.md → How to keep this file; CLAUDE.md → Running records |
