@@ -10,7 +10,7 @@ import ResultsMap from '../ResultsMap.jsx'
 import { scaledIn, newTodayIn, shareOf } from '../counts.js'
 
 // (b) Category → list. Filters live in plain sight as chips; price uses the
-// fair-price histogram; repeat dealer posts collapse; save search = alerts on.
+// price histogram; repeat dealer posts collapse; save search = alerts on.
 const SORTS = [
   ['newest', 'newest first'], ['oldest', 'oldest first'], ['low', 'price: low to high'], ['high', 'price: high to low'], ['near', 'nearest first'],
 ]
@@ -446,12 +446,11 @@ function PriceSheet({ all, f, run, shown, onClose, onApply }) {
       <button type="button" className="btn-primary" onClick={() => onApply({ min: num(min), max: num(max) })}>show {count} listing{count === 1 ? '' : 's'}</button>
     }>
       <div className="histo-head">
-        <p className="sheet-note">what things sell for in Minneapolis · typical is <strong>{money(h.avg)}</strong></p>
+        <p className="sheet-note">asking prices of listings in {city.name}</p>
         {has && <button type="button" className="btn-text" onClick={() => put(0, h.max)}>clear</button>}
       </div>
       <div className="histo" ref={chart} onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up}>
         {h.bins.map((b, i) => <span key={i} className={'bar' + (has && inRange(i) ? ' bar-on' : '')} style={{ height: `${Math.max(4, (b / top) * 100)}%` }} />)}
-        <span className="histo-avg" style={{ left: `${(h.avg / h.max) * 100}%` }}><span>typical</span></span>
         {has ? (
           <span className="bracket" data-part="mid" style={{ left: pct(lo ?? 0), width: `calc(${pct(hi ?? h.max)} - ${pct(lo ?? 0)})` }}>
             <span className="bracket-end bracket-lo" data-part="lo" role="slider" tabIndex={0} aria-label="minimum price"

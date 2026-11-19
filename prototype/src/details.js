@@ -1,5 +1,4 @@
-// Mock detail content for listings: specs, descriptions, seller context,
-// and typical price ranges per subcategory (from the price histogram data).
+// Mock detail content for listings: specs, descriptions, seller context.
 
 const DETAILS = {
   1: { specs: [['condition', 'like new'], ['frame size', '54 cm'], ['type', 'gravel / touring'], ['make', 'surly'], ['brakes', 'mechanical disc']],

@@ -85,7 +85,7 @@ Section tints and price signals. These are hand-picked soft pastels (light) and 
 | `warn-container` | `#fbe6d8` | `#42261a` |
 | `on-warn-container` | `#8a3d12` | `#f3b48e` |
 
-Use: section tiles = `<section>-container` / `on-<section>-container`. "below typical" and "free" = `good`. "above typical" = `warn`.
+Use: section tiles = `<section>-container` / `on-<section>-container`. "free" = `good`.
 
 ### Accessibility (WCAG 2.1 AA)
 
@@ -112,14 +112,14 @@ These are M3 type scale roles. The brand serif goes on title and headline roles 
 | bodySmall | Figtree | 12 / 16 | 400 | listing meta (age · area · distance), subtitles |
 | labelLarge | Figtree | 14 / 20 | 500 | chips, FAB, text buttons |
 | labelMedium | Figtree | 12 / 16 | 500 | nav labels, counts, badges |
-| labelSmall | Figtree | 11 / 16 | 500 | fair-price badges, photo count |
+| labelSmall | Figtree | 11 / 16 | 500 | photo count |
 
 Prices use tabular (equal-width) figures. Both fonts are free Google Fonts. In Compose, bundle them in `res/font` or use downloadable fonts.
 
 ## Shape
 | M3 token | Radius | Used for |
 |---|---|---|
-| extraSmall | 4 | snackbar, text fields, fair-price badges |
+| extraSmall | 4 | snackbar, text fields |
 | small | 8 | chips |
 | medium | 12 | cards, section tiles, listing photos |
 | large | 16 | FAB, alert rows |
@@ -145,7 +145,7 @@ All are standard M3 / Compose Material 3 components. Nothing is web-only.
 | instantly / once a day | `SingleChoiceSegmentedButtonRow` |
 | sort options | `RadioButton` rows |
 | confirmations | `Snackbar` |
-| price histogram, fair-price range | custom `Canvas` composables |
+| price histogram | custom `Canvas` composables |
 | listing detail | `LazyColumn` with a `HorizontalPager` photo gallery, `BottomAppBar` with `FilledTonalIconButton` + `Button`, `ModalBottomSheet` for reply and overflow |
 
 **Interaction:** M3 state layers (pressed 10%, keyboard focus 10%) stand in for the ripple. No hover states: the app is touch-first. There are no scale or web-only effects. **Motion:** emphasized-decelerate easing; sheets slide up over 400ms.

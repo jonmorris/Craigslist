@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
-import { sections, photoLibrary, priceLabel, fmt, city } from '../data.js'
+import { sections, photoLibrary, priceLabel } from '../data.js'
 import { NEIGHBORHOODS } from '../area.js'
-import { BIKE_FIELDS, CONDITIONS, emptyPost, missing, typicalFor, EXAMPLE, miFor } from '../posts.js'
+import { BIKE_FIELDS, CONDITIONS, emptyPost, missing, EXAMPLE, miFor } from '../posts.js'
 import { Icon, Sheet, ListingCard } from '../ui.jsx'
 
 // Post (and edit) flow: a full-screen form in four short steps. Every field works;
@@ -22,7 +22,6 @@ export default function PostScreen({ draft, onCancel, onPublish }) {
   const dirty = JSON.stringify(p) !== JSON.stringify(draft ?? emptyPost())
   const gaps = missing(p)
   const section = sections.find(s => s.id === p.section)
-  const range = typicalFor(p.sub)
   const bikes = p.sub === 'bicycles'
 
   const close = () => (dirty ? setSheet('discard') : onCancel())
@@ -100,7 +99,7 @@ export default function PostScreen({ draft, onCancel, onPublish }) {
               <input id="pprice" inputMode="numeric" value={p.price} placeholder="0" onChange={e => set({ price: e.target.value.replace(/\D/g, '').slice(0, 7) })}
                 aria-invalid={tried && p.price === ''} />
               <span className="tf-label">price</span>
-              <span className="tf-support">{tried && p.price === '' ? <em>add a price, or 0 for free</em> : range ? <span>{p.sub} in {city.name} usually go for <strong>${fmt(range[0])}–${fmt(range[1])}</strong></span> : '0 lists it as free'}</span>
+              <span className="tf-support">{tried && p.price === '' ? <em>add a price, or 0 for free</em> : '0 lists it as free'}</span>
             </label>
 
             {p.section === 'sale' && (

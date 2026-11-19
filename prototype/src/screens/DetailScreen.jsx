@@ -1,11 +1,10 @@
 import React, { useRef, useState } from 'react'
-import { listings, sections, priceLabel, fmt, city, typicalRange, visible } from '../data.js'
+import { listings, sections, priceLabel, fmt, city, visible } from '../data.js'
 import { detailFor, sellerFor } from '../details.js'
-import { Icon, NoPhoto, FairBadge, Sheet, Thumb } from '../ui.jsx'
+import { Icon, NoPhoto, Sheet, Thumb } from '../ui.jsx'
 
-// (d) Listing detail — photos first, the decision context (price vs typical,
-// specs, distance), trust at the moment of contact, one-tap reply.
-const money = n => '$' + fmt(n)
+// (d) Listing detail — photos first, the decision context (specs, distance),
+// trust at the moment of contact, one-tap reply.
 
 export default function DetailScreen({ id, ids, enter, onPage, favorites, onToggleFav, onHide, onBack, onOpenListing, onOpenCategory, toast, onNewPost, onEditPost, onMarkSold, onRelist, onDeletePost }) {
   const l = listings.find(x => x.id === id)
@@ -59,7 +58,6 @@ export default function DetailScreen({ id, ids, enter, onPage, favorites, onTogg
       <div className="pad detail-body">
         <div className="detail-price-row">
           <span className={'detail-price' + (l.price === 0 ? ' price-free' : '')}>{priceLabel(l)}</span>
-          <FairBadge fair={l.fair} />
         </div>
         <h1 className="detail-title">{l.title}</h1>
         <p className="detail-meta"><Icon name="pin" size={16} />{l.hood} · {l.mi} mi away · posted {l.age === 'just now' ? 'just now' : l.age + ' ago'}</p>
@@ -102,9 +100,6 @@ export default function DetailScreen({ id, ids, enter, onPage, favorites, onTogg
             </div>
           </div>
         </section>
-
-        {/* moved below the listing itself for now: the listing first, market context after */}
-        <FairPrice l={l} />
 
         {!l.mine && <section className="detail-block">
           <h2>{seller.kind === 'dealer' ? 'seller' : 'posted by'}</h2>
@@ -238,28 +233,6 @@ function Gallery({ l }) {
   )
 }
 
-function FairPrice({ l }) {
-  const r = typicalRange[l.sub]
-  if (!r || !l.price) return null
-  const lo = 0, hi = Math.max(r[1] * 1.6, l.price * 1.1)
-  const pct = v => `${Math.min(100, (v / hi) * 100)}%`
-  const verdict = l.fair === 'typical' ? 'within' : l.fair
-  return (
-    <section className="detail-block">
-      <h2>price check</h2>
-      <div className={'fair-card fair-card-' + verdict}>
-      <div className="fair-head"><Icon name="tag" size={20} /><strong>{verdict === 'within' ? 'typical price' : verdict + ' typical'}</strong></div>
-      <div className="range" aria-hidden="true">
-        <span className="range-band" style={{ left: pct(r[0]), width: `calc(${pct(r[1])} - ${pct(r[0])})` }} />
-        <span className="range-dot" style={{ left: pct(l.price) }} />
-      </div>
-      <div className="range-axis"><span>{money(lo)}</span><span style={{ left: pct(r[0]) }}>{money(r[0])}</span><span style={{ left: pct(r[1]) }}>{money(r[1])}</span></div>
-      <p>{l.sub} in {city.name} usually go for <strong>{money(r[0])}–{money(r[1])}{l.per ? '/' + l.per : ''}</strong>. this one is {priceLabel(l)}.</p>
-      {l.price < r[0] * 0.4 && <p className="fair-nudge"><Icon name="shield" size={18} />well under the usual price. it may be a great deal, or a scam: see it in person before you pay anything.</p>}
-      </div>
-    </section>
-  )
-}
 
 // Stylized, privacy-first area map: a soft circle, never a pin.
 function AreaMap() {

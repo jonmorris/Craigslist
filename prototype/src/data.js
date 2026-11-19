@@ -36,7 +36,6 @@ export const savedSearches = [
   { id: 's3', label: 'fat bike', detail: 'any price', fresh: 1, section: 'sale', sub: 'bicycles' },
 ]
 
-// fair: 'below' | 'typical' | 'above' — derived from the category price histogram.
 export const listings = [
   { id: 1, section: 'sale', sub: 'bicycles', title: 'surly straggler 54cm, barely ridden', price: 1150, hood: 'Northeast', mi: 1.4, age: '12 min', photo: straggler, photos: 9 },
   { id: 2, section: 'sale', sub: 'tools', title: 'toro power max 824 snowblower — starts first pull', price: 350, hood: 'Richfield', mi: 6.2, age: '25 min', glyph: 'snow', delivery: true },
@@ -77,23 +76,12 @@ export const ageFrom = t => { const m = Math.max(0, Math.round((Date.now() - t) 
 // Stand-in photo library for the post flow's picker (a native app uses Android's photo picker)
 export const photoLibrary = [straggler, packRat, karate, moonlander, trek5200, austro, townie, fuji, haroGreen, haroRed, choppers]
 
-// Price spread for the fair-price histogram (for sale, all of minneapolis).
+// Price spread for the price histogram (for sale, all of minneapolis).
 export const priceHistogram = {
   max: 2000, avg: 264, step: 100,
   bins: [118, 86, 61, 40, 28, 22, 15, 12, 9, 8, 6, 5, 4, 4, 3, 3, 2, 2, 2, 1],
 }
 
-// Typical price range per subcategory (from the price histogram). The fair-price
-// badge on every card and the range on the detail screen both derive from this.
-export const typicalRange = {
-  bicycles: [300, 1200], furniture: [200, 600], tools: [400, 800], sporting: [60, 220],
-  household: [50, 120], apartments: [1100, 1500], 'rooms & shares': [750, 1000],
-}
-export const fairFor = l => { const r = typicalRange[l.sub]; return r && l.price ? (l.price < r[0] ? 'below' : l.price > r[1] ? 'above' : 'typical') : null }
-for (const l of listings) {
-  const r = typicalRange[l.sub]
-  l.fair = r && l.price ? (l.price < r[0] ? 'below' : l.price > r[1] ? 'above' : 'typical') : null
-}
 
 // Listings the viewer hid from the detail screen; every list skips them.
 export const hidden = new Set()

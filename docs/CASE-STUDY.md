@@ -109,16 +109,17 @@ Filters, sort and scroll survive going back, a fix for one of the most common co
 
 ## 7. Trust without giving up privacy
 
-*Core. Evidence: [x] seller card, safety tip and report (`docs/presentation-screens/15d-seller-report-safety-verified.png`); [x] the price check (`15e-price-check-trek.png`); [x] hide and report (`14d-hide-confirm.png`)*
+*Core. Evidence: [x] seller card, safety tip and report (`docs/presentation-screens/15d-seller-report-safety-verified.png`); [x] hide and report (`14d-hide-confirm.png`); [x] the removed price check, for the before (git history before 2026-11-19, `15e-price-check-trek.png`)*
 
 Scams are the number one complaint, but Craigslist's users also value anonymity, so trust had to come without surveillance. The redesign elevates a little meaningful information at the moment of contact:
 
 - **A seller card:** on craigslist since, how many other listings, phone verified.
-- **Safety tips in context:** meet somewhere public, and a heads-up when the price is far below typical.
+- **Safety tips in context:** meet somewhere public, and never pay before you've seen it in person.
 - **Report where people look for it:** with the seller info, and inside the hide flow, since people often hide a listing because something is wrong.
-- **A price check** built from Craigslist's own listing history: "bicycles in Minneapolis usually go for $300–$1,200."
 
-The most interesting call was the badge. "Below typical" is deliberately **neutral gray, not green good news,** because a price far under the going rate is a common scam signal. Under 40% of the typical low, the price check adds: "it may be a great deal, or a scam: see it in person before you pay anything" (`decisions.md` → D12). Contact stays anonymous: craigslist chat or the email relay by default, with a phone number off by default.
+Contact stays anonymous: craigslist chat or the email relay by default, with a phone number off by default.
+
+**What we took out.** The first version also judged prices: a "below typical" badge on cards (deliberately neutral gray, since a price far under the going rate is a scam signal), a price check on the listing ("bicycles in Minneapolis usually go for $300–$1,200"), and a scam nudge for very low prices. The client review caught the flaw: Craigslist only sees asking prices, never what things sell for, and a typical range can't account for condition, model or age. A confident verdict on weak data undermines the trust it was meant to build, so the whole feature was removed (`decisions.md` → D8, D12). The price histogram stays, labeled honestly as asking prices.
 
 ## 8. Native-feasible only
 
@@ -198,3 +199,4 @@ The prototype, the logs and the deck were built with Claude Code, directed by [[
 | Date | Module | Change |
 |---|---|---|
 | 2026-11-19 | 1–14 | First draft, from the decision log, `decisions.md`, `audit.md`, the deck outline and the git history |
+| 2026-11-19 | 7 | The price estimate removed after the client review; told as "what we took out" |

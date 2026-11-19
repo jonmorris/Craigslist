@@ -1,6 +1,6 @@
 // Your own posts: the post flow writes a record; publishing turns it into a real listing
 // (browse, search, filters and the map all see it). Records persist on the phone.
-import { listings, typicalRange, ageFrom, fairFor } from './data.js'
+import { listings, ageFrom } from './data.js'
 import { setDetail } from './details.js'
 import { setAttrs } from './facets.js'
 import { COORDS, distMeters, MI } from './area.js'
@@ -40,7 +40,6 @@ export function publish(rec) {
     glyph: 'tag', mine: true, status: rec.status || 'active', postedAt: rec.postedAt,
     views: rec.views ?? 0, saves: rec.saves ?? 0, messages: rec.messages ?? 0,
   }
-  l.fair = fairFor(l)
   const i = listings.findIndex(x => x.id === id)
   if (i >= 0) listings[i] = l
   else listings.unshift(l)
@@ -60,7 +59,6 @@ export function missing(rec) {
   ].filter(Boolean)
 }
 
-export const typicalFor = sub => typicalRange[sub]
 export const EXAMPLE = photos => ({
   ...emptyPost(), photos: photos.slice(0, 3), title: 'Surly Cross-Check 56cm, steel, new tires', price: '650', condition: 'excellent', make: 'Surly',
   attrs: { type: 'gravel', size: 'medium', wheel: '700c', material: 'steel', brakes: 'rim' },

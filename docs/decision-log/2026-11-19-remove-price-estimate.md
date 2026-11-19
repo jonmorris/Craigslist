@@ -1,0 +1,1 @@
+| 2026-11-19 | Reversed | The price estimate is removed: no below/above typical badges, no price check, no typical range when posting. The histogram stays, labeled as asking prices | decisions.md → Listing detail, D8, D12; Posting, P2 |

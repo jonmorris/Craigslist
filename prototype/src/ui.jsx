@@ -44,10 +44,6 @@ export function SearchBar({ placeholder = 'search craigslist', onTap }) {
   )
 }
 
-export function FairBadge({ fair }) {
-  if (!fair || fair === 'typical') return null
-  return <span className={'fair fair-' + fair}>{fair === 'below' ? 'below typical' : 'above typical'}</span>
-}
 
 // Intentional no-photo treatment: section tint + item glyph instead of a black box.
 export function NoPhoto({ listing, big }) {
@@ -78,7 +74,6 @@ export function ListingCard({ listing, variant = 'grid', onTap, similar = 0, fav
       <div className="card-body">
         <div className="card-price-row">
           <span className={'price' + (listing.price === 0 ? ' price-free' : '')}>{priceLabel(listing)}</span>
-          <FairBadge fair={listing.fair} />
         </div>
         <span className="card-title">{listing.title}</span>
         <span className="card-meta">{listing.age} · {listing.hood} · {listing.mi} mi</span>
