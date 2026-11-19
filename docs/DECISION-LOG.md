@@ -8,6 +8,7 @@ Where the reasoning lives:
 - [`audit.md`](audit.md): the UX audit of the current Android app: scope, what to keep, findings, principles.
 - [`design-tokens.md`](design-tokens.md): the visual system (color roles, type, shape, components, icons).
 - [`presentation-outline.md`](presentation-outline.md): the client deck, slide by slide.
+- [`BACKLOG.md`](BACKLOG.md): the review feedback, one item per point, with the direction agreed for each.
 - [`../CLAUDE.md`](../CLAUDE.md): the working rules (keep the log current, native-feasible only, the shareable tracker).
 - [`../prototype/README.md`](../prototype/README.md): how the prototype is built, run and installed.
 - `git history`: for the few early engineering choices nothing else explains.
